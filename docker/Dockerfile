@@ -12,8 +12,8 @@ RUN git clone https://github.com/font/pacman.git .
 # Install app dependencies
 RUN npm install
 
-# Expose port 3001
-EXPOSE 3001
+# Expose port 8080
+EXPOSE 8080
 
 # Run container
 CMD ["npm", "start"]
