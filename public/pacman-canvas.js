@@ -579,7 +579,7 @@ function geronimo() {
 
         /* ------------ Start Pre-Build Walls  ------------ */
         this.buildWalls = function() {
-            if (this.ghostMode === 0) game.wallColor = wallColor;
+            if (this.ghostMode === 0) game.wallColor = this.wallColor;
             else game.wallColor = "Red";
             canvas_walls = document.createElement('canvas');
             canvas_walls.width = game.canvas.width;
