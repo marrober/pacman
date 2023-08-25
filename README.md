@@ -27,7 +27,7 @@ The [Dockerfile](docker/Dockerfile) performs the following steps:
 
 1. It is based on Node.js LTS Version 6 (Boron).
 1. It then clones the Pac-Man game into the configured application directory.
-1. Exposes port 3001 for the web server.
+1. Exposes port 8080 for the web server.
 1. Starts the Node.js application using `npm start`.
 
 To build the image run:
@@ -40,7 +40,7 @@ docker build -t <registry>/<user>/pacman-nodejs-app .
 You can test the image by running:
 
 ```
-docker run -p 8000:3001 <registry>/<user>/pacman-nodejs-app
+docker run -p 8000:8080 <registry>/<user>/pacman-nodejs-app
 ```
 
 And going to `http://localhost:8000/` to see if you get the Pac-Man game.
