@@ -1,0 +1,47 @@
+apiVersion: tekton.dev/v1
+kind: PipelineRun
+metadata:
+  annotations:
+    chains.tekton.dev/signed: "true"
+  labels:
+    app.kubernetes.io/instance: pacman-git
+    app.kubernetes.io/name: pacman-git
+    pipeline.openshift.io/runtime: nodejs
+    pipeline.openshift.io/runtime-version: 16-ubi8
+    pipeline.openshift.io/type: kubernetes
+    tekton.dev/pipeline: pacman
+  generateName: pacman-pr-
+spec:
+  params:
+  - name: APP_NAME
+    value: pacman
+  - name: GIT_REPO
+    value: https://github.com/marrober/pacman.git
+  - name: GIT_REVISION
+    value: ""
+  - name: IMAGE_NAME
+    value: image-registry.openshift-image-registry.svc:5000/pacman/pacman
+  - name: PATH_CONTEXT
+    value: src
+  - name: VERSION
+    value: 16-ubi8
+  pipelineRef:
+    name: pacman
+  taskRunTemplate:
+    serviceAccountName: pipeline
+  timeouts:
+    pipeline: 1h0m0s
+  workspaces:
+  - name: workspace
+    volumeClaimTemplate:
+      metadata:
+        creationTimestamp: null
+        labels:
+          tekton.dev/pipeline: pacman
+      spec:
+        accessModes:
+        - ReadWriteOnce
+        resources:
+          requests:
+            storage: 1Gi
+    
