@@ -1,7 +1,11 @@
 FROM quay.io/marrober/rhel8-nodejs-14:latest
 USER 0
-COPY layer.js /opt/app-root/src/layer.js
+COPY app.js /opt/app-root/src/app.js
 COPY node_modules/ /opt/app-root/src/node_modules/
+COPY lib/ /opt/app-root/src/lib/
+COPY public/ /opt/app-root/src/public/
+COPY routes/ /opt/app-root/src/routes/
+COPY views/ /opt/app-root/src/views/
 RUN chmod a+w /var/log
 USER 1001
 ENTRYPOINT ["node"]
