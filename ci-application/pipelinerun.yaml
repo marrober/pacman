@@ -13,18 +13,27 @@ metadata:
   generateName: pacman-pr-
 spec:
   params:
-  - name: APP_NAME
-    value: pacman
+    ## repository parameters
   - name: GIT_REPO
     value: https://github.com/marrober/pacman.git
   - name: GIT_REVISION
     value: ""
+    ## Image build parameters
   - name: IMAGE_NAME
-    value: image-registry.openshift-image-registry.svc:5000/pacman/pacman
+    value: image-registry.openshift-image-registry.svc:5000/$(context.taskRun.namespace)/pacman
   - name: PATH_CONTEXT
     value: src
-  - name: VERSION
-    value: 16-ubi8
+#  - name: VERSION
+#    value: 16-ubi8
+  - name: STORAGE_DRIVER
+    value: vfs   
+    ## Image validation parameters
+  - name: acs_central_endpoint
+    value: acs-secret
+  - name: acs_api_token
+    value: acs-secret
+  - name: roxctl-output-format
+    value: "table"
   pipelineRef:
     name: pacman
   taskRunTemplate:
@@ -44,4 +53,16 @@ spec:
         resources:
           requests:
             storage: 1Gi
+  - name: files
+    volumeClaimTemplate:
+      metadata:
+        creationTimestamp: null
+        labels:
+          tekton.dev/pipeline: pacman
+      spec:
+        accessModes:
+        - ReadWriteOnce
+        resources:
+          requests:
+            storage: 10Gi
     
