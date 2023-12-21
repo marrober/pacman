@@ -9,4 +9,4 @@ COPY views/ /opt/app-root/src/views/
 RUN chmod a+w /var/log
 USER 1001
 ENTRYPOINT ["node"]
-CMD ["/opt/app-root/src/layer.js"]
+CMD ["/opt/app-root/src/app.js"]

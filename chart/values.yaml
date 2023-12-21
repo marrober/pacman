@@ -13,7 +13,7 @@ image:
   repository: image-registry.openshift-image-registry.svc:5000/pacman/pacman
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: pacman:g99jh
+  tag: q9z5b
 
 imagePullSecrets: []
 nameOverride: ""
@@ -33,7 +33,15 @@ securityContext: {}
   # runAsUser: 1000
 
 service:
+  type: ClusterIP
   port: 8080
+  portName: 8080-tcp
+  targetPort: 8080
+  name : pacman
+  weight: 100
+route:
+  termination: edge
+  
 
 ingress:
   enabled: false
