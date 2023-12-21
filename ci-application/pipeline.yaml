@@ -61,24 +61,6 @@ spec:
 ##------------------------------------------------------------------
 # Build Node.JS application
 ##------------------------------------------------------------------
-#  - name: build
-#    params:
-#    - name: IMAGE
-#      value: $(params.IMAGE_NAME)
-#    - name: TLSVERIFY
-#      value: "false"
-#    - name: PATH_CONTEXT
-#      value: $(params.PATH_CONTEXT)
-#    - name: VERSION
-#      value: $(params.VERSION)
-#    runAfter:
-#    - fetch-repository
-#    taskRef:
-#      kind: ClusterTask
-#      name: s2i-nodejs
-#    workspaces:
-#    - name: source
-#      workspace: workspace
   - name: build
     params:
     - name: TLSVERIFY
@@ -128,7 +110,7 @@ spec:
     - name: acs_api_token
       value: $(params.acs_api_token)
     - name: public-url
-      value: $(params.IMAGE_NAME)
+      value: $(params.IMAGE_NAME):$(tasks.push-image-to-imagestream.results.new-tag)
     - name: roxctl-output-format
       value: $(params.roxctl-output-format)
     taskRef:

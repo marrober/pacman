@@ -13,7 +13,7 @@ image:
   repository: image-registry.openshift-image-registry.svc:5000/pacman/pacman
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: xz884
+  tag: zjht7
 
 imagePullSecrets: []
 nameOverride: ""
