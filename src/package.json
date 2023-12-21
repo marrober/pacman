@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "description": "Pac-Man Node.js Game",
   "author": "Ivan Font <ivan@ivanfont.com>",
-  "main": "app.js",
+  "main": "bin/server.js",
   "scripts": {
     "start": "node .",
     "dev": "nodemon ."
