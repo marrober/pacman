@@ -48,15 +48,7 @@ Selector labels
 {{- define "pacman.selectorLabels" -}}
 app.kubernetes.io/name: {{ include "pacman.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
+app.openshift.io/runtime: {{ .Values.applicationFramework}}
+app.openshift.io/runtime-version: {{ .Values.applicationFrameworkVersion}}
 {{- end }}
 
-{{/*
-Create the name of the service account to use
-*/}}
-{{- define "pacman.serviceAccountName" -}}
-{{- if .Values.serviceAccount.create }}
-{{- default (include "pacman.fullname" .) .Values.serviceAccount.name }}
-{{- else }}
-{{- default "default" .Values.serviceAccount.name }}
-{{- end }}
-{{- end }}

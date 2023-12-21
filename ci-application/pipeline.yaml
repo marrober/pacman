@@ -17,16 +17,20 @@ spec:
     default: ""
     type: string
     ## Image build parameters
-  - name: IMAGE_NAME 
-    type: string
   - name: PATH_CONTEXT
     default: .
     type: string
   - name: STORAGE_DRIVER
     type: string
+  - name: TLSVERIFY
+    type: string
  # - name: VERSION
  #   default: 16-ubi8
  #   type: string
+    # OpenShift imagestream URL parameters
+    #
+  - name: IMAGE_NAME 
+    type: string
     ## Image validation parameters
   - name: acs_central_endpoint              
     type: string
@@ -93,6 +97,27 @@ spec:
       workspace: workspace
     - name: files
       workspace: files
+#------------------------------------------------------------------
+# Push the new runtime image to OpenShift imagestream
+#------------------------------------------------------------------
+  - name: push-image-to-imagestream
+    params:
+    - name: imagestream-url
+      value: $(params.IMAGE_NAME)
+    - name: STORAGE_DRIVER
+      value: $(params.STORAGE_DRIVER)
+    - name: TLSVERIFY
+      value: "$(params.TLSVERIFY)"
+    - name: pipelineRunName
+      value: $(context.pipelineRun.name)
+    taskRef:
+      kind: Task
+      name: push-image-to-ocp
+    runAfter:
+      - build
+    workspaces:
+    - name: files
+      workspace: files
 ##------------------------------------------------------------------
 # Perform image build check
 ##------------------------------------------------------------------
@@ -110,7 +135,7 @@ spec:
       kind: Task
       name: acs-image-build-check
     runAfter:
-    - build
+    - push-image-to-imagestream
   workspaces:
   - name: workspace
   - name: files

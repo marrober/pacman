@@ -27,6 +27,8 @@ spec:
 #    value: 16-ubi8
   - name: STORAGE_DRIVER
     value: vfs   
+  - name: TLSVERIFY
+    value: false
     ## Image validation parameters
   - name: acs_central_endpoint
     value: acs-secret
@@ -64,5 +66,5 @@ spec:
         - ReadWriteOnce
         resources:
           requests:
-            storage: 10Gi
+            storage: 20Gi
     

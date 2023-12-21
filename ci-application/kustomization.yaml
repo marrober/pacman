@@ -5,3 +5,4 @@ resources:
 - pipeline.yaml
 - tasks/acs-image-build-check.yaml
 - tasks/build.yaml
+- tasks/push-image-to-imagestream.yaml
