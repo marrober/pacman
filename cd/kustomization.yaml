@@ -3,4 +3,5 @@ kind: Kustomization
 
 resources:
 - pacman-project.yaml
+- argocd-app.yaml
 - ci-automation/tekton-resources.yaml
