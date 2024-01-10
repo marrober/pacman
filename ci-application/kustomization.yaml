@@ -3,6 +3,7 @@ kind: Kustomization
 
 resources:
 - namespace.yaml
+- rolebindings/argo-cd-admin.yaml
 - pipeline.yaml
 - tasks/acs-image-build-check.yaml
 - tasks/build.yaml
