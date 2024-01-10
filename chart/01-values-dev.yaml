@@ -3,6 +3,7 @@
 # Declare variables to be passed into your templates.
 
 deploymentName: pacman
+namespace: pacman-dev
 
 applicationFramework: nodejs
 applicationFrameworkVersion: 16-ubi8

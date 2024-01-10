@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ .Values.deploymentName }}
+  namespace: {{ .Values.namespace }}
   labels:
     {{- include "pacman.labels" . | nindent 4 }}
 spec:
