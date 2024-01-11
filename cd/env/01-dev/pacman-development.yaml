@@ -46,6 +46,14 @@ spec:
           value: pacman
         - name: route.termination
           value: edge
+        - name: autoscaling.enabled
+          value: "false"
+        - name: autoscaling.minReplicas
+          value: 1
+        - name: autoscaling.maxReplicas
+          value: 100
+        - name: autoscaling.targetCPUUtilizationPercentage
+          value: 80
   syncPolicy:
     automated: # automated sync by default retries failed attempts 5 times with following delays between attempts ( 5s, 10s, 20s, 40s, 80s ); retry controlled using `retry` field.
       prune: true # Specifies if resources should be pruned during auto-syncing ( false by default ).
