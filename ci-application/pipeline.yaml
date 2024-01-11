@@ -54,7 +54,7 @@ spec:
       value: "true"
     taskRef:
       kind: ClusterTask
-      name: git-clone
+      name: git-clone-1-12-0
     workspaces:
     - name: output
       workspace: workspace
