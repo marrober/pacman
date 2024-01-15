@@ -3,7 +3,7 @@ kind: RoleBinding
 metadata:
   creationTimestamp: null
   name: argocd-admin
-  namespace: {{ .Values.namespace }}
+  namespace: pacman-ci
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole

@@ -5,4 +5,5 @@ resources:
 - pacman-project.yaml
 - argocd-app.yaml
 - ci-automation/tekton-resources.yaml
+- env/01-dev/argo-cd-admin.yaml
 - env/01-dev/pacman-development.yaml
