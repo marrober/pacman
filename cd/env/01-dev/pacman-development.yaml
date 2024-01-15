@@ -41,9 +41,9 @@ spec:
         - name: namespace
           value: pacman-dev
         - name: image.repository
-          value: image-registry.openshift-image-registry.svc:5000/pacman/pacman
+          value: image-registry.openshift-image-registry.svc:5000/pacman-ci/pacman
         - name: image.tag
-          value: zjht7
+          value: jf5h8
         - name: applicationFramework
           value: nodejs
         - name: applicationFrameworkVersion
