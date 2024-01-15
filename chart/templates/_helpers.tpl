@@ -34,13 +34,21 @@ Create chart name and version as used by the chart label.
 Common labels
 */}}
 {{- define "pacman.labels" -}}
-helm.sh/chart: blah-blah
+helm.sh/chart: {{ include "pacman.chart" . }}
+{{ include "pacman.selectorLabels" . }}
+{{- if .Chart.AppVersion }}
+app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
+{{- end }}
+app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- end }}
 
 {{/*
 Selector labels
 */}}
 {{- define "pacman.selectorLabels" -}}
-app.kubernetes.io/name: blah
+app.kubernetes.io/name: {{ include "pacman.name" . }}
+app.kubernetes.io/instance: {{ .Release.Name }}
+app.openshift.io/runtime: {{ .Values.applicationFramework}}
+app.openshift.io/runtime-version: {{ .Values.applicationFrameworkVersion}}
 {{- end }}
 

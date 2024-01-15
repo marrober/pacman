@@ -34,7 +34,7 @@ spec:
     targetRevision: 0.1.0
     repoURL: https://marrober.github.io/helm-charts/
     helm:
-      releaseName: pacman
+      releaseName: pacman-dev
       parameters: 
         - name: deploymentName
           value: pacman
@@ -54,6 +54,11 @@ spec:
           value: "100"
         - name: autoscaling.targetCPUUtilizationPercentage
           value: "80"
+        - name: applicationFramework
+          value: nodejs
+        - name: applicationFrameworkVersion
+          value: 16-ubi8
+        
   syncPolicy:
     automated: # automated sync by default retries failed attempts 5 times with following delays between attempts ( 5s, 10s, 20s, 40s, 80s ); retry controlled using `retry` field.
       prune: true # Specifies if resources should be pruned during auto-syncing ( false by default ).
