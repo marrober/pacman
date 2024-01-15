@@ -34,13 +34,13 @@ Create chart name and version as used by the chart label.
 Common labels
 */}}
 {{- define "pacman.labels" -}}
-helm.sh/chart: {{ include "pacman.chart" . }}
+helm.sh/chart: blah-blah
 {{- end }}
 
 {{/*
 Selector labels
 */}}
 {{- define "pacman.selectorLabels" -}}
-app.kubernetes.io/name: {{ include "pacman.name" . }}
+app.kubernetes.io/name: blah
 {{- end }}
 
