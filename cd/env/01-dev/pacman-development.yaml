@@ -39,7 +39,7 @@ spec:
         - name: deploymentName
           value: pacman
         - name: namespace
-          value: pacman-dev
+          value: pacman-development
         - name: image.repository
           value: image-registry.openshift-image-registry.svc:5000/pacman-ci/pacman
         - name: image.tag
