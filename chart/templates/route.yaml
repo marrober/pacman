@@ -13,6 +13,3 @@ spec:
     weight: {{ .Values.service.weight }}
   port:
     targetPort: {{ .Values.service.portName }}
-  tls:
-    termination: {{ .Values.route.termination }}
-    insecureEdgeTerminationPolicy: Redirect
