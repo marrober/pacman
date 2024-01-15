@@ -42,8 +42,24 @@ spec:
           value: pacman-dev
         - name: image.repository
           value: image-registry.openshift-image-registry.svc:5000/pacman/pacman
+        - name: image.tag
+          value: zjht7
+        - name: applicationFramework
+          value: nodejs
+        - name: applicationFrameworkVersion
+          value: 16-ubi8          
         - name: service.name
           value: pacman
+        - name: service.type
+          value: ClusterIP
+        - name: service.port
+          value: "8080"
+        - name: service.portName
+          value: 8080-tcp
+        - name: service.targetPort
+          value: "8080"
+        - name: service.weight
+          value: "100"
         - name: route.termination
           value: edge
         - name: autoscaling.enabled
@@ -52,12 +68,11 @@ spec:
           value: "1"
         - name: autoscaling.maxReplicas
           value: "100"
+        - name: replicaCount
+          values: "1"
         - name: autoscaling.targetCPUUtilizationPercentage
           value: "80"
-        - name: applicationFramework
-          value: nodejs
-        - name: applicationFrameworkVersion
-          value: 16-ubi8
+
         
   syncPolicy:
     automated: # automated sync by default retries failed attempts 5 times with following delays between attempts ( 5s, 10s, 20s, 40s, 80s ); retry controlled using `retry` field.
