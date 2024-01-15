@@ -31,7 +31,7 @@ spec:
     kind: Route
   source:
     chart: pacman
-    targetRevision: 0.1.0
+    targetRevision: 0.1.1
     repoURL: https://marrober.github.io/helm-charts/
     helm:
       releaseName: pacman-dev
