@@ -150,7 +150,7 @@ spec:
     - name: GIT_PATH_TO_CONTENT
       value: $(params.cd-git-repo-path-to-content-development)
     - name: FILENAME
-      value: ($params.argocd-application-file)
+      value: $(params.argocd-application-file)
     - name: GIT_USER_NAME
       value: $(params.cd-git-user-name)
     - name: GIT_USER_EMAIL
