@@ -23,8 +23,6 @@ spec:
     value: image-registry.openshift-image-registry.svc:5000/$(context.taskRun.namespace)/pacman
   - name: PATH_CONTEXT
     value: src
-#  - name: VERSION
-#    value: 16-ubi8
   - name: STORAGE_DRIVER
     value: vfs   
   - name: TLSVERIFY

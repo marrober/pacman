@@ -1,0 +1,57 @@
+apiVersion: triggers.tekton.dev/v1alpha1
+kind: TriggerTemplate
+metadata:
+  name: pacman-ci-pipeline-template
+spec:
+  params:
+  - name: gitrepository.url
+  - name: gitrevision
+  - name: branch
+  resourcetemplates:
+  - apiVersion: tekton.dev/v1beta1
+    kind: PipelineRun
+    metadata:
+      generateName: pacman-ci-pipeline-1-run-tr-
+    spec:
+      serviceAccountName: pipeline
+      pipelineRef:
+        name: pacman
+      params:
+        - name: git-url
+          value: $(tt.params.gitrepository.url)
+        - name: git-revision
+          value: $(tt.params.gitrevision)
+        - name: branch
+          value: $(tt.params.branch)
+        - name: IMAGE_NAME
+          value: image-registry.openshift-image-registry.svc:5000/$(context.taskRun.namespace)/pacman
+        - name: PATH_CONTEXT
+          value: src
+        - name: STORAGE_DRIVER
+          value: vfs   
+        - name: TLSVERIFY
+          value: false
+          ## Image validation parameters
+        - name: acs_central_endpoint
+          value: acs-secret
+        - name: acs_api_token
+          value: acs-secret
+        - name: roxctl-output-format
+          value: "table"
+      workspaces:
+      - name: files
+        volumeClaimTemplate:
+          spec:
+            accessModes:
+            - ReadWriteOnce
+            resources:
+              requests:
+                storage: 20Gi
+      - name: resources
+        volumeClaimTemplate:
+          spec:
+            accessModes:
+            - ReadWriteOnce
+            resources:
+              requests:
+                storage: 5Gi
