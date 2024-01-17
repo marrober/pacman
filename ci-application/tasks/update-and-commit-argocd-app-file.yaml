@@ -107,7 +107,7 @@ spec:
 
         cat $(params.FILENAME)
 
-        yq -i '.spec.source.helm.parameters[3].value = "$(params.IMAGE_TAG)"' $(params.FILENAME) $(params.IMAGE)
+        yq -i '.spec.source.helm.parameters[3].value = "$(params.IMAGE_TAG)"' $(params.FILENAME)
 
         echo "-----------------------------------------------------------------"
 
