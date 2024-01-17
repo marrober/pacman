@@ -31,7 +31,7 @@ spec:
     kind: Route
   source:
     chart: pacman
-    targetRevision: 0.1.1
+    targetRevision: 0.1.2
     repoURL: https://marrober.github.io/helm-charts/
     helm:
       releaseName: pacman-dev
@@ -62,6 +62,8 @@ spec:
           value: "100"
         - name: route.termination
           value: edge
+        - name: clusterAPI
+          value: apps.skylake.demolab.local
         - name: autoscaling.enabled
           value: "false"
         - name: autoscaling.minReplicas
