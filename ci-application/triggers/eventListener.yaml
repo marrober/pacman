@@ -20,10 +20,10 @@ spec:
         params:
         - name: "filter"
           value: 'header.match("X-GitHub-Event", "push") && extensions.changed_files.matches("src")'    
-      - name: "overlays"
-        value:
-        - key: branch
-          expression: "body.ref.split('/')[2]"
+        - name: "overlays"
+          value:
+          - key: branch
+            expression: "body.ref.split('/')[2]"
     bindings:
       - ref: pacman-ci-binding
     template:
