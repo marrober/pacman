@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: smee-pacman
+  labels:
+    app.kubernetes.io/part-of: smee
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: gosmee
+  template:
+    metadata:
+      labels:
+        app: gosmee
+    spec:
+      containers:
+        - image: image-registry.openshift-image-registry.svc:5000/pacman-ci/gosmee:latest
+          imagePullPolicy: IfNotPresent
+          name: gosmee
+          args:
+            [
+              "client",
+              "--saveDir",
+              "/tmp/save",
+              "https://smee.io/vSantlzgFXh7ddOf",
+              "http://pacman-ci-listener-el-pacman-ci.apps.skylake.demolab.local"
+            ]
