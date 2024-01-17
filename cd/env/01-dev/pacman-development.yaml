@@ -9,33 +9,33 @@ spec:
     namespace: pacman-development
     server: https://kubernetes.default.svc
   ignoreDifferences:
-  - group: argoproj.io
-    jsonPointers:
-    - /status
-    kind: Application
-  - group: triggers.tekton.dev
-    jsonPointers:
-    - /status
-    kind: EventListener
-  - group: triggers.tekton.dev
-    jsonPointers:
-    - /status
-    kind: TriggerTemplate
-  - group: triggers.tekton.dev
-    jsonPointers:
-    - /status
-    kind: TriggerBinding
-  - group: route.openshift.io
-    jsonPointers:
-    - /spec/host
-    kind: Route
+    - group: argoproj.io
+      jsonPointers:
+        - /status
+      kind: Application
+    - group: triggers.tekton.dev
+      jsonPointers:
+        - /status
+      kind: EventListener
+    - group: triggers.tekton.dev
+      jsonPointers:
+        - /status
+      kind: TriggerTemplate
+    - group: triggers.tekton.dev
+      jsonPointers:
+        - /status
+      kind: TriggerBinding
+    - group: route.openshift.io
+      jsonPointers:
+        - /spec/host
+      kind: Route
   source:
     chart: pacman
     targetRevision: 0.1.2
     repoURL: https://marrober.github.io/helm-charts/
     helm:
       releaseName: pacman-dev
-      parameters: 
+      parameters:
         - name: deploymentName
           value: pacman
         - name: namespace
@@ -43,11 +43,11 @@ spec:
         - name: image.repository
           value: image-registry.openshift-image-registry.svc:5000/pacman-ci/pacman
         - name: image.tag
-          value: jf5h8
+          value: c7r2s
         - name: applicationFramework
           value: nodejs
         - name: applicationFrameworkVersion
-          value: 16-ubi8          
+          value: 16-ubi8
         - name: service.name
           value: pacman
         - name: service.type
@@ -73,17 +73,17 @@ spec:
         - name: replicaCount
           values: "1"
         - name: autoscaling.targetCPUUtilizationPercentage
-          value: "80"   
+          value: "80"
   syncPolicy:
     automated: # automated sync by default retries failed attempts 5 times with following delays between attempts ( 5s, 10s, 20s, 40s, 80s ); retry controlled using `retry` field.
       prune: true # Specifies if resources should be pruned during auto-syncing ( false by default ).
       selfHeal: true # Specifies if partial app sync should be executed when resources are changed only in target Kubernetes cluster and no git change detected ( false by default ).
       allowEmpty: false # Allows deleting all application resources during automatic syncing ( false by default ).
-    syncOptions:     # Sync options which modifies sync behavior
-    - Validate=true # disables resource validation (equivalent to 'kubectl apply --validate=false') ( true by default ).
-    - CreateNamespace=true # Namespace Auto-Creation ensures that namespace specified as the application destination exists in the destination cluster.
-    - PrunePropagationPolicy=foreground # Supported policies are background, foreground and orphan.
-    - PruneLast=true # Allow the ability for resource pruning to happen as a final, implicit wave of a sync operation
+    syncOptions: # Sync options which modifies sync behavior
+      - Validate=true # disables resource validation (equivalent to 'kubectl apply --validate=false') ( true by default ).
+      - CreateNamespace=true # Namespace Auto-Creation ensures that namespace specified as the application destination exists in the destination cluster.
+      - PrunePropagationPolicy=foreground # Supported policies are background, foreground and orphan.
+      - PruneLast=true # Allow the ability for resource pruning to happen as a final, implicit wave of a sync operation
     retry:
       limit: 1 # number of failed sync attempt retries; unlimited number of attempts if less than 0
       backoff:
