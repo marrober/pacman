@@ -38,6 +38,23 @@ spec:
           value: acs-secret
         - name: roxctl-output-format
           value: "table"
+          ## Update Argocd application and commit to GitHub
+        - name: repo_type
+          value: github.com
+        - name: cd-git-url
+          value: marrober/pacman
+        - name: cd-git-repo-name
+          value: pacman
+        - name: cd-git-repo-path-to-content-development
+          value: cd/env/01-dev
+        - name: argocd-application-file
+          value: pacman-development.yaml
+        - name: cd-git-commit-comment-dev
+          value: "Update from triggered ci process - dev"
+        - name: cd-git-user-name
+          value: "Mark Roberts"
+        - name: cd-git-user-email
+          value: "mroberts@redhat.com"
       workspaces:
       - name: files
         volumeClaimTemplate:
