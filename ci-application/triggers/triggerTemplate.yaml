@@ -68,11 +68,11 @@ spec:
             resources:
               requests:
                 storage: 20Gi
-      - name: resources
+      - name: workspace
         volumeClaimTemplate:
           spec:
             accessModes:
             - ReadWriteOnce
             resources:
               requests:
-                storage: 5Gi
+                storage: 1Gi
