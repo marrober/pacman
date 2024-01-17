@@ -38,6 +38,23 @@ spec:
     type: string
   - name: roxctl-output-format             
     type: string
+    ## Update Argocd application and commit to Github parameters
+  - name: repo_type
+    type: string
+  - name: cd-git-url
+    type: string
+  - name: cd-git-repo-name
+    type: string
+  - name: cd-git-repo-path-to-content-development
+    type: string
+  - name: argocd-application-file
+    type: string
+  - name: cd-git-user-name
+    type: string
+  - name: cd-git-user-email
+    type: string
+  - name: cd-git-commit-comment-dev 
+    type: string
   tasks:
 ##------------------------------------------------------------------
 # Fetch source to build
@@ -118,6 +135,40 @@ spec:
       name: acs-image-build-check
     runAfter:
     - push-image-to-imagestream
+##------------------------------------------------------------------
+# Clone the cd repository and update the argocd application file 
+# to refer to the new tagged image.
+##------------------------------------------------------------------
+  - name: update-and-commit-argocd-project-file
+    params:
+    - name: GIT_URL
+      value: $(params.repo_type)/$(params.cd-git-url)
+    - name: GIT_REPO_NAME
+      value: $(params.cd-git-repo-name)
+    - name: GIT_BRANCH
+      value: "main"
+    - name: GIT_PATH_TO_CONTENT
+      value: $(params.cd-git-repo-path-to-content-development)
+    - name: FILENAME
+      value: ($params.argocd-application-file)
+    - name: GIT_USER_NAME
+      value: $(params.cd-git-user-name)
+    - name: GIT_USER_EMAIL
+      value: $(params.cd-git-user-email)
+    - name: GIT_COMMIT_COMMENT
+      value: $(params.cd-git-commit-comment-dev)
+    - name: IMAGE_TAG
+      value: $(tasks.push-image-to-imagestream.results.new-tag)
+    - name: LOCATION
+      value: "dev"
+    taskRef:
+      kind: Task
+      name: update-and-commit-argocd-app-file
+    runAfter:
+    - push-image-to-imagestream
+    workspaces:
+    - name: files
+      workspace: files
   workspaces:
   - name: workspace
   - name: files
