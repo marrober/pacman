@@ -39,6 +39,10 @@ spec:
         - name: roxctl-output-format
           value: "table"
           ## Update Argocd application and commit to GitHub
+        - name: GIT_REPO
+          value: $(tt.params.gitrepository.url)
+        - name: GIT_REVISION
+          value: $(tt.params.gitrevision)
         - name: repo_type
           value: github.com
         - name: cd-git-url
