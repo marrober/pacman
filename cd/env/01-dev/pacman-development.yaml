@@ -63,7 +63,7 @@ spec:
         - name: route.termination
           value: edge
         - name: clusterAPI
-          value: apps.skylake.demolab.local
+          value: apps.conroe.demolab.local
         - name: autoscaling.enabled
           value: "false"
         - name: autoscaling.minReplicas
@@ -71,7 +71,7 @@ spec:
         - name: autoscaling.maxReplicas
           value: "100"
         - name: replicaCount
-          values: "1"
+          value: "1"
         - name: autoscaling.targetCPUUtilizationPercentage
           value: "80"
   syncPolicy:

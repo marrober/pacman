@@ -1,58 +1,16 @@
-# pacman
-Pac-Man
+# Creation of the assets
 
-## Install dependencies
+## Create argocd projects and applications
 
-```
-npm install
-```
+cd /Users/mroberts/data/git-repos/pacman
 
-## Getting started
+oc apply -k .
 
-```
-npm run start
-```
+## SMEE configuration for demolab
 
-## Development
+If using demolab and also using triggers from the github commits then the route in the smee deployment may need to change. Check the line below to see if it needs to be updated in the file ci-application/smee/deployment.yaml
 
-```
-npm run dev
-```
+````bash
+"http://pacman-ci-listener-el-pacman-ci.apps.conroe.demolab.local"
+````
 
-## Create Application Container Image
-
-### Docker Container Image
-
-The [Dockerfile](docker/Dockerfile) performs the following steps:
-
-1. It is based on Node.js LTS Version 6 (Boron).
-1. It then clones the Pac-Man game into the configured application directory.
-1. Exposes port 8080 for the web server.
-1. Starts the Node.js application using `npm start`.
-
-To build the image run:
-
-```
-cd docker
-docker build -t <registry>/<user>/pacman-nodejs-app .
-```
-
-You can test the image by running:
-
-```
-docker run -p 8000:8080 <registry>/<user>/pacman-nodejs-app
-```
-
-And going to `http://localhost:8000/` to see if you get the Pac-Man game.
-
-Once you're satisfied you can push the image to the container registry.
-
-```
-docker push <registry>/<user>/pacman-nodejs-app
-```
-
-### Building using an s2i image
-
-```
-s2i build . centos/nodejs-6-centos7 pacman
-```
