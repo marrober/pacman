@@ -3,7 +3,6 @@ kind: Kustomization
 
 resources:
 - ci-namespace.yaml
-- 01-dev-namespace.yaml
 - cd/pacman-project.yaml
 - cd/argocd-app.yaml
 - cd/ci-automation/tekton-resources.yaml
