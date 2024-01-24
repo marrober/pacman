@@ -31,7 +31,7 @@ spec:
     - /spec/host
     kind: Route
   source:
-    path: cd
+    path: /
     targetRevision: main
     repoURL: https://github.com/marrober/pacman.git
   syncPolicy:
