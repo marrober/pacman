@@ -39,7 +39,7 @@ spec:
             secretKeyRef:
               key: "token"
               name: "github-access-token"
-      image: image-registry.openshift-image-registry.svc:5000/pacman-ci/terminal:latest
+      image: image-registry.openshift-image-registry.svc:5000/$(context.taskRun.namespace)/terminal:latest
 # Changes for skylake
       securityContext:
         capabilities:

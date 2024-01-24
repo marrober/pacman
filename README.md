@@ -13,4 +13,13 @@ If using demolab and also using triggers from the github commits then the route 
 ````bash
 "http://pacman-ci-listener-el-pacman-ci.apps.conroe.demolab.local"
 ````
+## Pull images to local image streams
 
+````bash
+oc patch configs.imageregistry.operator.openshift.io/cluster --patch '{"spec":{"defaultRoute":true}}' --type=merge
+oc import-image ubi --from=registry.access.redhat.com/ubi8/ubi:latest --confirm
+oc import-image gosmee --from=quay.io/marrober/gosmee:latest --confirm
+oc import-image buildah --from=registry.redhat.io/rhel8/buildah:latest --confirm
+oc import-image terminal --from=quay.io/marrober/devex-terminal-4:full-terminal-1.5 --confirm
+oc import-image nodejs-16 --from=registry.redhat.io/rhel9/nodejs-16 --confirm
+````
