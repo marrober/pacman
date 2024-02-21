@@ -14,9 +14,6 @@ If using demolab and also using triggers from the github commits then the route 
 "http://pacman-ci-listener-el-pacman-ci.apps.conroe.demolab.local"
 ````
 
-
-
-
 ## Pull images to local image streams
 
 ````bash
@@ -27,6 +24,14 @@ oc import-image gosmee --from=quay.io/marrober/gosmee:latest --confirm
 oc import-image buildah --from=registry.redhat.io/rhel8/buildah:latest --confirm
 oc import-image terminal --from=quay.io/marrober/devex-terminal-4:full-terminal-1.5 --confirm
 oc import-image nodejs-16 --from=registry.redhat.io/rhel9/nodejs-16 --confirm
+````
+
+## Update the dockerfile 
+
+Update the dockerfile in src/dockerfile to reference the imagestream for the nodejs-16 image imported above. Get the publicDockerImageRepository property from the command : 
+
+````bash
+oc get is/nodejs-16 -o yaml
 ````
 
 ## Create github access token
