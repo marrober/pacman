@@ -1,4 +1,4 @@
-FROM default-route-openshift-image-registry.apps.cluster-km75j.sandbox1936.opentlc.com/pacman-ci/nodejs-16:latest
+FROM default-route-openshift-image-registry.apps.conroe.demolab.local/pacman-ci/nodejs-16:latest
 USER 0
 COPY . /opt/app-root/src/
 RUN chmod a+w /var/log
