@@ -51,6 +51,14 @@ spec:
     value: "Mark Roberts"
   - name: cd-git-user-email
     value: "mroberts@redhat.com"
+  - name: argocd-project-name-development
+    value: "pacman-development"
+  - name: argocd-revision
+    value: "HEAD"
+  - name: argocd-flags
+    value: "--insecure"
+  - name: argocd-version
+    value: "v2.4.14"
     
   pipelineRef:
     name: pacman
