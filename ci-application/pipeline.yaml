@@ -183,9 +183,6 @@ spec:
     workspaces:
     - name: files
       workspace: files
-  workspaces:
-  - name: workspace
-  - name: files
 ##------------------------------------------------------------------
 # Force ArgoCD sync
 ##------------------------------------------------------------------
@@ -204,3 +201,9 @@ spec:
       name: argocd-task-sync-and-wait
     runAfter:
     - update-and-commit-argocd-project-file
+##------------------------------------------------------------------
+# Workspaces
+##------------------------------------------------------------------
+  workspaces:
+  - name: workspace
+  - name: files
