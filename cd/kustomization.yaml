@@ -2,8 +2,8 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
 resources:
-- cd/argocd-app.yaml
-- cd/ci-automation/tekton-resources.yaml
-- cd/env/01-dev/argo-cd-admin.yaml
-- cd/env/01-dev/image-pull-role-binding.yaml
-- cd/env/01-dev/pacman-development.yaml
+- argocd-app.yaml
+- ci-automation/tekton-resources.yaml
+- env/01-dev/argo-cd-admin.yaml
+- env/01-dev/image-pull-role-binding.yaml
+- env/01-dev/pacman-development.yaml
