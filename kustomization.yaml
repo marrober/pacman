@@ -3,7 +3,5 @@ kind: Kustomization
 
 resources:
 - ci-namespace.yaml
-- cd/pacman-project.yaml
-
-bases:
-- cd 
+- pacman-project.yaml
+- cd
