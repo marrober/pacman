@@ -16,4 +16,5 @@ resources:
 - triggers/triggerBinding.yaml
 - triggers/triggerTemplate.yaml
 - smee/deployment.yaml
-- argo/argocd-auth-token.yaml
+- argocd/argocd-auth-token.yaml
+- argocd/argocd-platform-cm.yaml
