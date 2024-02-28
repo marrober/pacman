@@ -197,8 +197,8 @@ spec:
     - name: argocd-version
       value: $(params.argocd-version)
     taskRef:
-      kind: ClusterTask
-      name: argocd-task-sync-and-wait
+      kind: Task
+      name: argocd-sync-and-wait
     runAfter:
     - update-and-commit-argocd-project-file
 ##------------------------------------------------------------------
