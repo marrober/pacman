@@ -56,14 +56,14 @@ spec:
   - name: cd-git-commit-comment-dev 
     type: string
     ## ArgoCD Sync
-#  - name: argocd-project-name-development
-#    type: string
-#  - name: argocd-revision
-#    type: string
-#  - name: argocd-flags
-#    type: string
-#  - name: argocd-version
-#    type: string
+  - name: argocd-project-name-development
+    type: string
+  - name: argocd-revision
+    type: string
+  - name: argocd-flags
+    type: string
+  - name: argocd-version
+    type: string
   tasks:
 ##------------------------------------------------------------------
 # Fetch source to build
@@ -186,21 +186,21 @@ spec:
 ##------------------------------------------------------------------
 # Force ArgoCD sync
 ##------------------------------------------------------------------
-#  - name: sync-argocd
-#    params:
-#    - name: application-name
-#      value: $(params.argocd-project-name-development)
-#    - name: revision
-#      value: $(params.argocd-revision)
-#    - name: flags
-#      value: $(params.argocd-flags)
-#    - name: argocd-version
-#      value: $(params.argocd-version)
-#    taskRef:
-#      kind: ClusterTask
-#      name: argocd-task-sync-and-wait
-#    runAfter:
-#    - update-and-commit-argocd-project-file
+  - name: sync-argocd
+    params:
+    - name: application-name
+      value: $(params.argocd-project-name-development)
+    - name: revision
+      value: $(params.argocd-revision)
+    - name: flags
+      value: $(params.argocd-flags)
+    - name: argocd-version
+      value: $(params.argocd-version)
+    taskRef:
+      kind: ClusterTask
+      name: argocd-task-sync-and-wait
+    runAfter:
+    - update-and-commit-argocd-project-file
 ##------------------------------------------------------------------
 # Workspaces
 ##------------------------------------------------------------------
