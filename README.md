@@ -2,7 +2,7 @@
 
 ## Create argocd projects and applications
 
-cd <<clone-location>>/pacman
+cd < clone-location >/pacman
 
 oc apply -k .
 
