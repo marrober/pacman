@@ -2,7 +2,7 @@
 
 ## Create argocd projects and applications
 
-cd /Users/mroberts/data/git-repos/pacman
+cd <clone-location>/pacman
 
 oc apply -k .
 
