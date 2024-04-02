@@ -11,6 +11,7 @@ resources:
 - tasks/build.yaml
 - tasks/push-image-to-imagestream.yaml
 - tasks/update-and-commit-argocd-app-file.yaml
+- tasks/argocd-sync-and-wait.yaml
 - triggers/eventListener.yaml
 - triggers/eventListenerRoute.yaml
 - triggers/triggerBinding.yaml
