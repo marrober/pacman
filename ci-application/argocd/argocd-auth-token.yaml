@@ -3,4 +3,4 @@ kind: Secret
 metadata:
   name: argocd-env-secret
 data:
-  ARGOCD_PASSWORD: RlpmT0EybWx4eWI1dnFldXRDVFJLOUJjNkROcm5QTDg=
+  ARGOCD_PASSWORD: N0ZMcHJFQ2h6MGIyb0FWeGdEbFhlSmFuTUhCNlI5R3c=
