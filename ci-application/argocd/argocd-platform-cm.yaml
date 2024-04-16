@@ -3,5 +3,5 @@ kind: ConfigMap
 metadata:
   name: argocd-env-configmap
 data:
-  ARGOCD_SERVER: console-openshift-console.apps.conroe.demolab.local
+  ARGOCD_SERVER: openshift-gitops-server-openshift-gitops.apps.conroe.demolab.local
   ARGOCD_USERNAME: admin
