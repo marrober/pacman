@@ -3,5 +3,5 @@ kind: ConfigMap
 metadata:
   name: argocd-env-configmap
 data:
-  ARGOCD_SERVER: argocd-server-openshift-gitops.apps.cluster-dmkpx.sandbox1294.opentlc.com
+  ARGOCD_SERVER: console-openshift-console.apps.conroe.demolab.local
   ARGOCD_USERNAME: admin
