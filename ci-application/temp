@@ -120,7 +120,7 @@ metadata:
           'f:ingress': {}
       subresource: status
 spec:
-  host: pacman-pacman.apps.conroe.demolab.local
+  host: pacman-pacman.apps.cluster-vhdnd.sandbox2089.opentlc.com
   to:
     kind: Service
     name: pacman
@@ -133,14 +133,14 @@ spec:
   wildcardPolicy: None
 status:
   ingress:
-    - host: pacman-pacman.apps.conroe.demolab.local
+    - host: pacman-pacman.apps.cluster-vhdnd.sandbox2089.opentlc.com
       routerName: default
       conditions:
         - type: Admitted
           status: 'True'
           lastTransitionTime: '2023-12-21T12:06:28Z'
       wildcardPolicy: None
-      routerCanonicalHostname: router-default.apps.conroe.demolab.local
+      routerCanonicalHostname: router-default.apps.cluster-vhdnd.sandbox2089.opentlc.com
 ----
 kind: Service
 apiVersion: v1
