@@ -63,7 +63,7 @@ spec:
         - name: route.termination
           value: edge
         - name: clusterAPI
-          value: apps.conroe.demolab.local
+          value: apps.cluster-vhdnd.sandbox2089.opentlc.com
         - name: autoscaling.enabled
           value: "false"
         - name: autoscaling.minReplicas
