@@ -9,7 +9,8 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      app: gosmee
+      app: smee-development
+      deployment: smee-pacman
   template:
     metadata:
       labels:
