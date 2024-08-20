@@ -1,6 +1,0 @@
-apiVersion: v1
-kind: Secret
-metadata:
-  name: argocd-env-secret
-data:
-  ARGOCD_PASSWORD: N0ZMcHJFQ2h6MGIyb0FWeGdEbFhlSmFuTUhCNlI5R3c=
