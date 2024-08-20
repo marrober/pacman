@@ -6,3 +6,4 @@ resources:
 - gosmee-image.yaml
 - rhel8-nodejs16-image.yaml
 - terminal-image.yaml
+- nodejs-16-image.yaml
