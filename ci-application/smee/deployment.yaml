@@ -13,7 +13,8 @@ spec:
   template:
     metadata:
       labels:
-        app: gosmee
+        app: smee-development
+        deployment: smee-pacman
     spec:
       containers:
         - image: image-registry.openshift-image-registry.svc:5000/pacman-ci/gosmee:latest
