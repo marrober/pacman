@@ -27,5 +27,5 @@ spec:
               "--saveDir",
               "/tmp/save",
               "https://smee.io/vSantlzgFXh7ddOf",
-              "http://pacman-ci-listener-el-pacman-ci.apps.cluster-vhdnd.sandbox2089.opentlc.com"
+              "http://pacman-ci-listener-el-pacman-ci.apps.skylake.demolab.local"
             ]
