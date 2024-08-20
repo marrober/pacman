@@ -8,3 +8,4 @@ resources:
 - env/01-dev/argo-cd-admin.yaml
 - env/01-dev/image-pull-role-binding.yaml
 - env/01-dev/pacman-development.yaml
+- image-streams/
