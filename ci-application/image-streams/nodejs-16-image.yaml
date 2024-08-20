@@ -1,7 +1,7 @@
 kind: ImageStream
 apiVersion: image.openshift.io/v1
 metadata:
-  name: buildah
+  name: nodejs-16
 spec:
   lookupPolicy:
     local: false
@@ -9,7 +9,7 @@ spec:
     - name: latest
       from:
         kind: DockerImage
-        name: 'registry.redhat.io/rhel8/buildah:latest'
+        name: 'registry.redhat.io/rhel9/nodejs-16:latest'
       importPolicy:
         importMode: Legacy
       referencePolicy:
