@@ -193,8 +193,6 @@ spec:
       value: $(params.argocd-project-name-development)
     - name: revision
       value: $(params.argocd-revision)
-    - name: flags
-      value: $(params.argocd-flags)
     - name: argocd-version
       value: $(params.argocd-version)
     taskRef:
