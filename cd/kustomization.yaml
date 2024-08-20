@@ -8,3 +8,5 @@ resources:
 - env/01-dev/argo-cd-admin.yaml
 - env/01-dev/image-pull-role-binding.yaml
 - env/01-dev/pacman-development.yaml
+- env/01-dev/argocd-auth-token.yaml
+- env/01-dev/argocd-platform-cm.yaml

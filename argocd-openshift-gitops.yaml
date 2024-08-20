@@ -1,0 +1,148 @@
+apiVersion: argoproj.io/v1beta1
+kind: ArgoCD
+metadata:
+  creationTimestamp: "2024-08-13T09:31:43Z"
+  finalizers:
+  - argoproj.io/finalizer
+  generation: 1
+  name: openshift-gitops
+  namespace: openshift-gitops
+  ownerReferences:
+  - apiVersion: pipelines.openshift.io/v1alpha1
+    blockOwnerDeletion: true
+    controller: true
+    kind: GitopsService
+    name: cluster
+    uid: b734ff2a-c137-4c0c-9572-1c991d2bcd31
+  resourceVersion: "3314738"
+  uid: 48217021-8600-4e59-9e2e-89c177685ae7
+spec:
+  extraConfig:
+    accounts.mark: 'apiKey, login'
+  applicationSet:
+    resources:
+      limits:
+        cpu: "2"
+        memory: 1Gi
+      requests:
+        cpu: 250m
+        memory: 512Mi
+    webhookServer:
+      ingress:
+        enabled: false
+      route:
+        enabled: false
+  controller:
+    processors: {}
+    resources:
+      limits:
+        cpu: "2"
+        memory: 2Gi
+      requests:
+        cpu: 250m
+        memory: 1Gi
+    sharding: {}
+  grafana:
+    enabled: false
+    ingress:
+      enabled: false
+    resources:
+      limits:
+        cpu: 500m
+        memory: 256Mi
+      requests:
+        cpu: 250m
+        memory: 128Mi
+    route:
+      enabled: false
+  ha:
+    enabled: false
+    resources:
+      limits:
+        cpu: 500m
+        memory: 256Mi
+      requests:
+        cpu: 250m
+        memory: 128Mi
+  initialSSHKnownHosts: {}
+  monitoring:
+    enabled: false
+  notifications:
+    enabled: false
+  prometheus:
+    enabled: false
+    ingress:
+      enabled: false
+    route:
+      enabled: false
+  rbac:
+    defaultPolicy: ""
+    policy: |
+      g, system:cluster-admins, role:admin
+      g, cluster-admins, role:admin
+    scopes: '[groups]'
+  redis:
+    resources:
+      limits:
+        cpu: 500m
+        memory: 256Mi
+      requests:
+        cpu: 250m
+        memory: 128Mi
+  repo:
+    resources:
+      limits:
+        cpu: "1"
+        memory: 1Gi
+      requests:
+        cpu: 250m
+        memory: 256Mi
+  resourceExclusions: |
+    - apiGroups:
+      - tekton.dev
+      clusters:
+      - '*'
+      kinds:
+      - TaskRun
+      - PipelineRun
+  server:
+    autoscale:
+      enabled: false
+    grpc:
+      ingress:
+        enabled: false
+    ingress:
+      enabled: false
+    resources:
+      limits:
+        cpu: 500m
+        memory: 256Mi
+      requests:
+        cpu: 125m
+        memory: 128Mi
+    route:
+      enabled: true
+    service:
+      type: ""
+  sso:
+    dex:
+      openShiftOAuth: true
+      resources:
+        limits:
+          cpu: 500m
+          memory: 256Mi
+        requests:
+          cpu: 250m
+          memory: 128Mi
+    provider: dex
+  tls:
+    ca: {}
+status:
+  applicationController: Running
+  applicationSetController: Running
+  host: openshift-gitops-server-openshift-gitops.apps.skylake.demolab.local
+  phase: Available
+  redis: Running
+  repo: Running
+  server: Running
+  sso: Running
