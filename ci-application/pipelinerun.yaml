@@ -55,8 +55,6 @@ spec:
     value: "pacman-development"
   - name: argocd-revision
     value: "0.1.2"
-  - name: argocd-flags
-    value: "--insecure --grpc-web"
   - name: argocd-version
     value: "v2.4.14"
     
