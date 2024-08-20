@@ -3,7 +3,8 @@ kind: Deployment
 metadata:
   name: smee-pacman
   labels:
-    app.kubernetes.io/part-of: smee
+    app: smee-development
+    deployment: smee-pacman
 spec:
   replicas: 1
   selector:
