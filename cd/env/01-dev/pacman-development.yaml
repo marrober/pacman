@@ -43,7 +43,7 @@ spec:
         - name: image.repository
           value: image-registry.openshift-image-registry.svc:5000/pacman-ci/pacman
         - name: image.tag
-          value: "6ztln"
+          value: "j4q8z"
         - name: applicationFramework
           value: nodejs
         - name: applicationFrameworkVersion
