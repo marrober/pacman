@@ -1,4 +1,4 @@
-FROM image-registry.openshift-image-registry.svc:5000/pacman-ci/nodejs-16:latest
+FROM registry.redhat.io/rhel9/nodejs-16:latest
 USER 0
 COPY . /opt/app-root/src/
 RUN chmod a+w /var/log

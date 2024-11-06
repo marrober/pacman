@@ -33,7 +33,7 @@ spec:
             secretKeyRef:
               key: acs_central_endpoint
               name: $(params.acs_central_endpoint)
-      image: image-registry.openshift-image-registry.svc:5000/$(context.taskRun.namespace)/ubi:latest
+      image: registry.access.redhat.com/ubi8/ubi:latest
       resources: {}
       script: >-
         #!/usr/bin/env bash

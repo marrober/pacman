@@ -39,7 +39,7 @@ spec:
             secretKeyRef:
               key: "token"
               name: "github-access-token"
-      image: image-registry.openshift-image-registry.svc:5000/$(context.taskRun.namespace)/terminal:latest
+      image: quay.io/marrober/devex-terminal-4:full-terminal-1.5 
 # Changes for skylake
       securityContext:
         capabilities:

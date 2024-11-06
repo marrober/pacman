@@ -16,5 +16,4 @@ resources:
 - triggers/eventListenerRoute.yaml
 - triggers/triggerBinding.yaml
 - triggers/triggerTemplate.yaml
-- smee/deployment.yaml
 - image-streams/
