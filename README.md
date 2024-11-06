@@ -29,7 +29,12 @@ argocd login --insecure <argocd-server-url-without-https://>
 
 argocd proj role create pacman pacman-sync
 argocd proj role add-policy pacman pacman-sync --action 'sync' --permission allow --object pacman-development
-argocd proj role create-token pacman pacman-sync
+// argocd proj role create-token pacman pacman-sync (not required)
+
+
+Create a secret using the following config :
+
+oc create secret generic -n pacman-ci argocd-env-secret --from-literal=ARGOCD_PASSWORD=MTY<password> --from-literal=ARGOCD_USERNAME=admin
 
 Copy token to the file cd/env/01-dev/argocd-auth-token.yaml
 
