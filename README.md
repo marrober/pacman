@@ -20,6 +20,17 @@ Use the command shown below, with an appropriate token :
 ````bash
 oc create secret generic github-access-token --from-literal=token=
 ````
+## ArgoCD Sync config
+
+argocd login --insecure <argocd-server-url-without-https://>
+
+argocd proj role create pacman pacman-sync
+argocd proj role add-policy pacman pacman-sync --action 'sync' --permission allow --object pacman-development
+argocd proj role create-token pacman pacman-sync
+
+Copy token to the file cd/env/01-dev/argocd-auth-token.yaml
+
+Copy the Argocd URL (Without  https://) to cd/env/01-dev/argocd-platform-cm.yaml
 
 ## Create a secret for access to the ACS CI/CD process
 

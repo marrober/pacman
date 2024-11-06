@@ -1,4 +1,4 @@
-FROM registry.redhat.io/rhel9/nodejs-16:latest
+FROM default-route-openshift-image-registry.apps.cluster-7qtb6.7qtb6.sandbox2603.opentlc.com/pacman-ci/rhel9-nodejs-16:latest
 USER 0
 COPY . /opt/app-root/src/
 RUN chmod a+w /var/log
