@@ -27,7 +27,7 @@ spec:
         npm install -g npm@9.2.0
         npm install
         ls -al
-      image: image-registry.openshift-image-registry.svc:5000/$(context.taskRun.namespace)/rhel8-nodejs-16:latest
+      image: registry.redhat.io/rhel9/nodejs-16:latest
       resources: {}
       workingDir: /resources/$(params.app-dir)
     - name: build
@@ -44,7 +44,7 @@ spec:
       - -t
       - my-container-image
       - .
-      image: image-registry.openshift-image-registry.svc:5000/$(context.taskRun.namespace)/buildah:latest
+      image: registry.redhat.io/rhel8/buildah:latest
       resources: {}
       securityContext:
         capabilities:
@@ -58,7 +58,7 @@ spec:
       - --storage-driver=$(params.STORAGE_DRIVER)
       - --root
       - /files/buildah-containers
-      image: image-registry.openshift-image-registry.svc:5000/$(context.taskRun.namespace)/buildah:latest
+      image: registry.redhat.io/rhel8/buildah:latest
       resources: {}
       securityContext:
         capabilities:

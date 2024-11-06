@@ -45,7 +45,7 @@ spec:
 
         docker://$(params.imagestream-url):$tag
 
-      image: image-registry.openshift-image-registry.svc:5000/$(context.taskRun.namespace)/buildah:latest   
+      image: registry.redhat.io/rhel8/buildah:latest  
       securityContext:
         capabilities:
           add: ["SETFCAP"]
