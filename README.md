@@ -11,7 +11,10 @@ oc apply -k .
 ````bash
 oc project pacman-ci
 oc patch configs.imageregistry.operator.openshift.io/cluster --patch '{"spec":{"defaultRoute":true}}' --type=merge
+oc import-image rhel9-nodejs-16 --from=registry.redhat.io/rhel9/nodejs-16 --confirm
 ````
+
+Update the dockerfile at pacman/src/dockerfile to the local path to the rhel9-nodejs-16 image.
 
 ## Create github access token
 
