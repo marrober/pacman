@@ -19,43 +19,11 @@ spec:
     - name: STORAGE_DRIVER
       description: The Buildah storage STORAGE_DRIVER
       type: string
-    - name: pipelineRunName
+    - name: imageTag
       type: string
   results:
     - name: quay-image-repo-location
-    - name: new-tag
   steps:
-#    - name: echo-image-name
-#      script: >-
-#        #!/usr/bin/env bash
-
-#        echo "$(params.image-stream-location)"
-
-#      image: image-registry.openshift-image-registry.svc:5000/myapp-ci/buildah:latest
-#      resources: {}
-    - name: generate-tag
-      script: >-
-        #!/usr/bin/env bash
-
-        set +x
-
-        var1=$(params.pipelineRunName)
-
-        echo $var1
-
-        var2=${var1:(${#var1} - 5):${#var1}}
-
-        tag=$var2
-
-        echo $tag
-
-        echo -n $tag >  $(results.new-tag.path)
-
-      image: registry.redhat.io/rhel8/buildah:latest  
-      securityContext:
-        capabilities:
-          add: ["SETFCAP"]
-      resources: {}
     - name: buildah-pull-image
       command:
         - buildah
@@ -63,7 +31,7 @@ spec:
         - '--storage-driver=$(params.STORAGE_DRIVER)'
         - '--root'
         - '/files/buildah-containers'
-        - $(params.image-stream-location):$(results.new-tag.path)
+        - $(params.image-stream-location):$(params.imageTag)
       image: image-registry.openshift-image-registry.svc:5000/pacman-ci/buildah:latest
       securityContext:
         capabilities:
@@ -82,7 +50,7 @@ spec:
         - '--storage-driver=$(params.STORAGE_DRIVER)'
         - '--root'
         - '/files/buildah-containers'
-        - $(params.image-stream-location):$(results.new-tag.path)
+        - $(params.image-stream-location):$(params.imageTag)
         - quay.io/$(params.quay-io-account)/$(params.quay-io-repository):$(results.new-tag.path)
       image: image-registry.openshift-image-registry.svc:5000/pacman-ci/buildah:latest
       securityContext:
