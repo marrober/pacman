@@ -63,7 +63,7 @@ spec:
         - '--storage-driver=$(params.STORAGE_DRIVER)'
         - '--root'
         - '/files/buildah-containers'
-        - $(params.image-stream-location)
+        - $(params.image-stream-location):$(results.new-tag.path)
       image: image-registry.openshift-image-registry.svc:5000/pacman-ci/buildah:latest
       securityContext:
         capabilities:
@@ -82,7 +82,7 @@ spec:
         - '--storage-driver=$(params.STORAGE_DRIVER)'
         - '--root'
         - '/files/buildah-containers'
-        - $(params.image-stream-location)
+        - $(params.image-stream-location):$(results.new-tag.path)
         - quay.io/$(params.quay-io-account)/$(params.quay-io-repository):$(results.new-tag.path)
       image: image-registry.openshift-image-registry.svc:5000/pacman-ci/buildah:latest
       securityContext:
