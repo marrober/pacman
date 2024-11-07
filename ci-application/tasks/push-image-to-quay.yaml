@@ -122,4 +122,4 @@ spec:
   - name: files
     mountPath: /files
   - name: resources
-    mountPath /resources
+    mountPath: /resources
