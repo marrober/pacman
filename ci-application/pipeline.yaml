@@ -125,6 +125,27 @@ spec:
     - name: files
       workspace: files
 ##------------------------------------------------------------------
+# Push the new runtime image to quay.io
+##------------------------------------------------------------------
+  - name: push-image-to-quay
+    params:
+    - name: quay-io-account
+      value: $(params.quay-io-account)
+    - name: quay-io-repository
+      value: $(params.quay-io-repository)
+    - name: image-stream-location
+      value: $(params.IMAGE_NAME)
+    - name: STORAGE_DRIVER
+      value: $(params.STORAGE_DRIVER)
+    taskRef:
+      kind: Task
+      name: push-image-to-quay
+    runAfter:
+      - build
+    workspaces:
+    - name: files
+      workspace: files
+##------------------------------------------------------------------
 # Perform image build check
 ##------------------------------------------------------------------
 #  - name: image-build-check

@@ -93,6 +93,7 @@ spec:
         syft dir:$(cat /workspace/container_path) --output cyclonedx-json=$(workspaces.resources.path)/sbom-image.json
 
         cat $(workspaces.resources.path)/sbom-image.json
+
   volumes:
     - emptyDir: {}
       name: envparams
