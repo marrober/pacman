@@ -88,11 +88,11 @@ spec:
       image: quay.io/redhat-appstudio/syft:v0.94.0
       script: |
 
-        syft dir:$(workspaces.files.path)/$(params.app-dir) --output cyclonedx-json=$(workspaces.files.path)/sbom-source.json
+        syft dir:$(workspaces.resources.path)/$(params.app-dir) --output cyclonedx-json=$(workspaces.resources.path)/sbom-source.json
         find $(cat /workspace/container_path) -xtype l -delete
-        syft dir:$(cat /workspace/container_path) --output cyclonedx-json=$(workspaces.files.path)/sbom-image.json
+        syft dir:$(cat /workspace/container_path) --output cyclonedx-json=$(workspaces.resources.path)/sbom-image.json
 
-        cat $(workspaces.files.path)/sbom-image.json
+        cat $(workspaces.resources.path)/sbom-image.json
 
   volumes:
     - emptyDir: {}
@@ -100,4 +100,6 @@ spec:
   workspaces:
     - mountPath: /files
       name: files
+    - mountPath: /resources
+      name: resources
 
