@@ -109,7 +109,7 @@ spec:
         - attach
         - sbom
         - --sbom
-        - $(workspaces.resources.path)/sbom-image.json
+        - $(workspaces.files.path)/sbom-image.json
         - --type
         - cyclonedx
         - quay.io/$(params.quay-io-account)/$(params.quay-io-repository):$(params.imageTag)
@@ -121,5 +121,3 @@ spec:
   workspaces:
   - name: files
     mountPath: /files
-  - name: resources
-    mountPath: /resources
