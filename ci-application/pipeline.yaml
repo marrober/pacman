@@ -150,6 +150,8 @@ spec:
     runAfter:
       - build
     workspaces:
+    - name: resources
+      workspace: workspace
     - name: files
       workspace: files
 ##------------------------------------------------------------------

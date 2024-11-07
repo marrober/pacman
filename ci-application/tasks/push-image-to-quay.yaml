@@ -109,11 +109,11 @@ spec:
         - attach
         - sbom
         - --sbom
-        - $(workspaces.files.path)/sbom-image.json
+        - $(workspaces.resources.path)/sbom-image.json
         - --type
         - cyclonedx
         - quay.io/$(params.quay-io-account)/$(params.quay-io-repository):$(params.imageTag)
-      workingDir: $(workspaces.source.path)
+      workingDir: $(workspaces.resources.path)
   volumes:
     - name: quay-auth-secret
       secret:
@@ -121,3 +121,5 @@ spec:
   workspaces:
   - name: files
     mountPath: /files
+  - name: resources
+    mountPath /resources
