@@ -142,6 +142,8 @@ spec:
       value: $(params.IMAGE_NAME)
     - name: STORAGE_DRIVER
       value: $(params.STORAGE_DRIVER)
+    - name: pipelineRunName
+      value: $(context.pipelineRun.name)
     taskRef:
       kind: Task
       name: push-image-to-quay
