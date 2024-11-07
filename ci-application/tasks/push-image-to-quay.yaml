@@ -1,0 +1,144 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: push-image-to-quay
+spec:
+  params:
+    - name: quay-io-account
+      description: The quay.io account that matches the credentials stored in the mounted secret.
+      type: string
+      default: ""
+    - name: quay-io-repository
+      description: The quay.io repository in which to store the image.
+      type: string
+      default: ""
+    - name: image-stream-location
+      type: string
+      default: ""
+      description: The full image url in the OpenShift image stream
+    - name: STORAGE_DRIVER
+      description: The Buildah storage STORAGE_DRIVER
+      type: string
+    - name: pipelineRunName
+      type: string
+  results:
+    - name: quay-image-repo-location
+    - name: new-tag
+  steps:
+#    - name: echo-image-name
+#      script: >-
+#        #!/usr/bin/env bash
+
+#        echo "$(params.image-stream-location)"
+
+#      image: image-registry.openshift-image-registry.svc:5000/myapp-ci/buildah:latest
+#      resources: {}
+    - name: generate-tag
+      script: >-
+        #!/usr/bin/env bash
+
+        set +x
+
+        var1=$(params.pipelineRunName)
+
+        echo $var1
+
+        var2=${var1:(${#var1} - 5):${#var1}}
+
+        tag=$var2
+
+        echo $tag
+
+        echo -n $tag >  $(results.new-tag.path)
+
+      image: registry.redhat.io/rhel8/buildah:latest  
+      securityContext:
+        capabilities:
+          add: ["SETFCAP"]
+      resources: {}
+    - name: buildah-pull-image
+      command:
+        - buildah
+        - pull
+        - '--storage-driver=$(params.STORAGE_DRIVER)'
+        - '--root'
+        - '/files/buildah-containers'
+        - $(params.image-stream-location)
+      image: image-registry.openshift-image-registry.svc:5000/myapp-ci/buildah:latest
+      securityContext:
+        capabilities:
+          add: ["SETFCAP"]
+      resources:
+        requests:
+          memory: 2Gi
+          cpu: '1'
+        limits:
+          memory: 4Gi
+          cpu: '2'
+    - name: buildah-tag-image
+      command:
+        - buildah
+        - tag
+        - '--storage-driver=$(params.STORAGE_DRIVER)'
+        - '--root'
+        - '/files/buildah-containers'
+        - $(params.image-stream-location)
+        - quay.io/$(params.quay-io-account)/$(params.quay-io-repository):$(results.new-tag.path)
+      image: image-registry.openshift-image-registry.svc:5000/myapp-ci/buildah:latest
+      securityContext:
+        capabilities:
+          add: ["SETFCAP"]
+      resources:
+        requests:
+          memory: 2Gi
+          cpu: '1'
+        limits:
+          memory: 4Gi
+          cpu: '2'
+    - name: push-image-to-quay
+      command:
+        - buildah
+        - push
+        - '--storage-driver=$(params.STORAGE_DRIVER)'
+        - '--authfile'
+        - /etc/secret-volume/.dockerconfigjson
+        - '--root'
+        - '/files/buildah-containers'
+        - quay.io/$(params.quay-io-account)/$(params.quay-io-repository):$(results.new-tag.path)
+      image: image-registry.openshift-image-registry.svc:5000/myapp-ci/buildah:latest
+      securityContext:
+        capabilities:
+          add: ["SETFCAP"]
+      resources:
+        requests:
+          memory: 2Gi
+          cpu: '1'
+        limits:
+          memory: 4Gi
+          cpu: '2'
+      volumeMounts:
+        - name: quay-auth-secret
+          mountPath: /etc/secret-volume
+          readOnly: true
+    - name: get-quay-repository-url
+      command:
+        - /bin/sh
+        - '-c'
+      args:
+        - |-
+
+          echo "quay.io/$(params.quay-io-account)/$(params.quay-io-repository):$(results.new-tag.path)" > $(results.quay-image-repo-location.path)
+
+          echo -------------------------------------
+
+          cat $(results.quay-image-repo-location.path)
+
+      image: image-registry.openshift-image-registry.svc:5000/openshift/cli:latest
+      resources: {}
+  volumes:
+    - name: quay-auth-secret
+      secret:
+        secretName: quay-auth-secret
+  workspaces:
+  - name: files
+    mountPath: /files
