@@ -60,9 +60,7 @@ spec:
   - name: quay-io-account
     value: "marrober"
   - name: quay-io-repository
-    value: "pacman"
-
-    
+    value: "pacman"    
   pipelineRef:
     name: pacman
   taskRunTemplate:
