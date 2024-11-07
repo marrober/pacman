@@ -69,8 +69,8 @@ spec:
     - name: mount-container
       image: registry.redhat.io/rhel8/buildah:latest
       script: |
-        container=$(buildah from --pull-never localhost/my-container-image:latest)
-        buildah mount $container | tee /workspace/container_path
+        container=$(buildah --storage-driver=$(params.STORAGE_DRIVER) --root files/buildah-containers from --pull-never localhost/my-container-image:latest)
+        buildah mount --storage-driver=$(params.STORAGE_DRIVER) --root files/buildah-containers $container | tee /workspace/container_path
         echo $container > /workspace/container_name
       securityContext:
         capabilities:
