@@ -103,6 +103,17 @@ spec:
 
       image: image-registry.openshift-image-registry.svc:5000/openshift/cli:latest
       resources: {}
+    - name: upload-sbom
+      image: quay.io/redhat-appstudio/cosign:v2.1.1
+      args:
+        - attach
+        - sbom
+        - --sbom
+        - $(workspaces.resources.path)/sbom-image.json
+        - --type
+        - cyclonedx
+        - quay.io/$(params.quay-io-account)/$(params.quay-io-repository):$(params.imageTag)
+      workingDir: $(workspaces.source.path)
   volumes:
     - name: quay-auth-secret
       secret:
@@ -110,3 +121,5 @@ spec:
   workspaces:
   - name: files
     mountPath: /files
+  - name: resources
+    mountPath: /resources
