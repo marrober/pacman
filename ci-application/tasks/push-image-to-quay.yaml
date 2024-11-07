@@ -72,7 +72,7 @@ spec:
         - /etc/secret-volume/.dockerconfigjson
         - '--root'
         - '/files/buildah-containers'
-        - quay.io/$(params.quay-io-account)/$(params.quay-io-repository):$$(params.imageTag)
+        - quay.io/$(params.quay-io-account)/$(params.quay-io-repository):$(params.imageTag)
       image: image-registry.openshift-image-registry.svc:5000/pacman-ci/buildah:latest
       securityContext:
         capabilities:
