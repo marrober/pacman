@@ -67,8 +67,6 @@ spec:
     type: string
   - name: quay-io-repository                # Quay.io repository name
     type: string
-  - name: imageTag
-    type: string
   tasks:
 ##------------------------------------------------------------------
 # Fetch source to build
