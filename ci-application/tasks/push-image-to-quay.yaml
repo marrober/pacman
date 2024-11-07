@@ -51,7 +51,7 @@ spec:
         - '--root'
         - '/files/buildah-containers'
         - $(params.image-stream-location):$(params.imageTag)
-        - quay.io/$(params.quay-io-account)/$(params.quay-io-repository):$(results.new-tag.path)
+        - quay.io/$(params.quay-io-account)/$(params.quay-io-repository):$(params.imageTag)
       image: image-registry.openshift-image-registry.svc:5000/pacman-ci/buildah:latest
       securityContext:
         capabilities:
@@ -72,7 +72,7 @@ spec:
         - /etc/secret-volume/.dockerconfigjson
         - '--root'
         - '/files/buildah-containers'
-        - quay.io/$(params.quay-io-account)/$(params.quay-io-repository):$(results.new-tag.path)
+        - quay.io/$(params.quay-io-account)/$(params.quay-io-repository):$$(params.imageTag)
       image: image-registry.openshift-image-registry.svc:5000/pacman-ci/buildah:latest
       securityContext:
         capabilities:
@@ -95,7 +95,7 @@ spec:
       args:
         - |-
 
-          echo "quay.io/$(params.quay-io-account)/$(params.quay-io-repository):$(results.new-tag.path)" > $(results.quay-image-repo-location.path)
+          echo "quay.io/$(params.quay-io-account)/$(params.quay-io-repository):$(params.imageTag)" > $(results.quay-image-repo-location.path)
 
           echo -------------------------------------
 
