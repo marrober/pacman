@@ -77,12 +77,12 @@ spec:
           add:
             - SETFCAP
       resources:
-      limits:
-        memory: 4Gi
-        cpu: '2'
-      requests:
-        memory: 512Mi
-        cpu: 250m
+        limits:
+          memory: 4Gi
+          cpu: '2'
+        requests:
+          memory: 512Mi
+          cpu: 250m
 
     - name: sbom-syft-generate
       image: quay.io/redhat-appstudio/syft:v0.94.0
