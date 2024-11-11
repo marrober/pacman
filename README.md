@@ -10,7 +10,6 @@ oc apply -k .
 
 ````bash
 oc project pacman-ci
-oc patch configs.imageregistry.operator.openshift.io/cluster --patch '{"spec":{"defaultRoute":true}}' --type=merge
 oc import-image rhel9-nodejs-16 --from=registry.redhat.io/rhel9/nodejs-16 --confirm
 ````
 
@@ -27,18 +26,21 @@ oc create secret generic github-access-token --from-literal=token=
 
 argocd login --insecure <argocd-server-url-without-https://>
 
-argocd proj role create pacman pacman-sync
-argocd proj role add-policy pacman pacman-sync --action 'sync' --permission allow --object pacman-development
+argocd proj role create pacman pacman-sync --grpc-web
+argocd proj role add-policy pacman pacman-sync --action 'sync' --permission allow --object pacman-development --grpc-web
+
+### instructions for using a token
+
 // argocd proj role create-token pacman pacman-sync (not required)
+// Copy token to the file cd/env/01-dev/argocd-auth-token.yaml
 
-
+### instructions for using a secret created from the ArgoCD username and password
 Create a secret using the following config :
 
-oc create secret generic -n pacman-ci argocd-env-secret --from-literal=ARGOCD_PASSWORD=MTY<password> --from-literal=ARGOCD_USERNAME=admin
+oc create secret generic -n pacman-ci argocd-env-secret --from-literal=ARGOCD_PASSWORD=<password> --from-literal=ARGOCD_USERNAME=admin
 
-Copy token to the file cd/env/01-dev/argocd-auth-token.yaml
-
-Copy the Argocd URL (Without  https://) to cd/env/01-dev/argocd-platform-cm.yaml
+### get the ArgoCD URL
+Copy the Argocd URL (Without  https://) and paste it into the file cd/env/01-dev/argocd-platform-cm.yaml
 
 ## Create a secret for access to the ACS CI/CD process
 
@@ -53,20 +55,21 @@ oc create secret generic acs-secret \
 
 ## ACS read the Openshift Image Registry
 
-Get the secret name and token within the secret
+Patch the cluster to enable image streams for external access.
+Get the route and a user token for access to the image streams. 
 
 ````bash
-oc get secret/$(oc get sa/builder -o jsonpath='{.secrets[0].name}') -o jsonpath='{.metadata.annotations}' | jq '."openshift.io/token-secret.value"' 
-````
+oc patch configs.imageregistry.operator.openshift.io/cluster --patch '{"spec":{"defaultRoute":true}}' --type=merge
 
-Extract the field : openshift.io/token-secret.value into the copy-paste buffer.
+oc get route default-route -n openshift-image-registry --template='{{ .spec.host }}'
+````
 
 In ACS go to Platform configurations -> Integrations -> Image integration -> Generic Docker Registry and press the ‘Create integration’ button.
 Fill in the details as :
 	Integration name : OCP Registry
 	Endpoint : https://image-registry.openshift-image-registry.svc:5000
-	Username : serviceaccount
-	Password : <as copied from the secret previously>
+	Username : admin
+	Password : <token from prior command>
 	Check the option : Disable TLS certificate validation (insecure)
 Test the integration and save if successful.
 

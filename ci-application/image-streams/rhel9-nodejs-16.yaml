@@ -1,7 +1,7 @@
 kind: ImageStream
 apiVersion: image.openshift.io/v1
 metadata:
-  name: nodejs-16
+  name: rhel9-nodejs-16
 spec:
   lookupPolicy:
     local: false
