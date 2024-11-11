@@ -6,11 +6,10 @@ cd < clone-location >/pacman
 
 oc apply -k .
 
-## Pull images to local image streams
+## Get image information for dockerfile
 
 ````bash
-oc project pacman-ci
-oc import-image rhel9-nodejs-16 --from=registry.redhat.io/rhel9/nodejs-16 --confirm
+oc get is/rhel9-nodejs-16 -o jsonpath='{.status.publicDockerImageRepository}''{"\n"}'
 ````
 
 Update the dockerfile at pacman/src/dockerfile to the local path to the rhel9-nodejs-16 image.
