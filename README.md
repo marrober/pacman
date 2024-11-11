@@ -44,6 +44,7 @@ Copy the Argocd URL (Without  https://) to cd/env/01-dev/argocd-platform-cm.yaml
 
 Generate the CI/CD token inside ACS. Go to Platform configurations -> Integrations -> Authentication tokens.
 Generate a new CI/CD Scoped token.
+
 Execute the following command :
 
 oc create secret generic acs-secret \
