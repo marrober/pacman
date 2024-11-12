@@ -64,15 +64,27 @@ spec:
           memory: 4Gi
           cpu: '2'
     - name: push-image-to-quay
-      command:
-        - buildah
-        - push
-        - '--storage-driver=$(params.STORAGE_DRIVER)'
-        - '--authfile'
-        - /etc/secret-volume/.dockerconfigjson
-        - '--root'
-        - '/files/buildah-containers'
-        - quay.io/$(params.quay-io-account)/$(params.quay-io-repository):$(params.imageTag)
+      script: |
+        buildah images --format '{{`{{ .Name }}:{{ .Tag }}@{{ .Digest }}`}}' | grep -v quay.io/$(params.quay-io-account)/$(params.quay-io-repository):$(params.imageTag) > $(results.BASE_IMAGES_DIGESTS.path)
+
+        echo $(results.BASE_IMAGES_DIGESTS.path)
+
+        base_image_name=$(buildah inspect --format '{{`{{ index .ImageAnnotations "org.opencontainers.image.base.name"}}`}}' $(results.BASE_IMAGES_DIGESTS.path) | cut -f1 -d'@')
+
+        echo $base_image_name
+        
+        base_image_digest=$(buildah inspect --format '{{`{{ index .ImageAnnotations "org.opencontainers.image.base.digest"}}`}}' quay.io/$(params.quay-io-account)/$(params.quay-io-repository):$(params.imageTag))
+
+        echo $base_image_digest
+
+        container=$(buildah from --pull-never quay.io/$(params.quay-io-account)/$(params.quay-io-repository):$(params.imageTag))
+        buildah copy $container  $(workspaces.resources.path)/sbom-image.json /root/buildinfo/content_manifests/
+        buildah config -a org.opencontainers.image.base.name=${base_image_name} -a org.opencontainers.image.base.digest=${base_image_digest} $container
+        buildah commit $container quay.io/$(params.quay-io-account)/$(params.quay-io-repository):$(params.imageTag)
+
+
+        buildah push --storage-driver=$(params.STORAGE_DRIVER) --authfile /etc/secret-volume/.dockerconfigjson --root /files/buildah-containers quay.io/$(params.quay-io-account)/$(params.quay-io-repository):$(params.imageTag
+
       image: image-registry.openshift-image-registry.svc:5000/pacman-ci/buildah:latest
       securityContext:
         capabilities:
