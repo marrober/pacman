@@ -67,7 +67,7 @@ spec:
 
     - name: push-image-to-quay-prior
       script: |
-        buildah images --format '{{ .Name }}:{{ .Tag }}@{{ .Digest }}' | grep -v quay.io/$(params.quay-io-account)/$(params.quay-io-repository):$(params.imageTag) > $(results.BASE_IMAGES_DIGESTS.path)
+        buildah images
 
       image: image-registry.openshift-image-registry.svc:5000/pacman-ci/buildah:latest
       securityContext:
