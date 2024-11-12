@@ -91,6 +91,8 @@ spec:
       script: |
         buildah images --storage-driver=$(params.STORAGE_DRIVER) --root /files/buildah-containers --format '{{ .Name }}:{{ .Tag }}@{{ .Digest }}' | grep -v quay.io/$(params.quay-io-account)/$(params.quay-io-repository):$(params.imageTag) > $(results.BASE_IMAGES_DIGESTS.path)
 
+        buildah inspect --storage-driver=$(params.STORAGE_DRIVER) --root /files/buildah-containers --format '{{ index .ImageAnnotations "org.opencontainers.image.base.name"}}'
+
         base_image_name=$(buildah inspect --storage-driver=$(params.STORAGE_DRIVER) --root /files/buildah-containers --format '{{ index .ImageAnnotations "org.opencontainers.image.base.name"}}' $(results.BASE_IMAGES_DIGESTS.path) | cut -f1 -d'@')
 
         echo $base_image_name
@@ -99,7 +101,7 @@ spec:
 
         echo $base_image_digest
 
-        container=$(buildah from --storage-driver=$(params.STORAGE_DRIVER) --root /files/buildah-containers --pull-never quay.io/$(params.quay-io-account)/$(params.quay-io-repository):$(params.imageTag))
+        container=$(buildah from --storage-driver=$(params.STORAGE_DRIVER) --root /files/buildah-containers --pull-never quay.io/$(params.quay-io-account)/$(params.quay-io-repository):$(params.imageTag)
         buildah copy --storage-driver=$(params.STORAGE_DRIVER) --root /files/buildah-containers $container  $(workspaces.resources.path)/sbom-image.json /root/buildinfo/content_manifests/
         buildah config --storage-driver=$(params.STORAGE_DRIVER) --root /files/buildah-containers -a org.opencontainers.image.base.name=${base_image_name} -a org.opencontainers.image.base.digest=${base_image_digest} $container
         buildah --storage-driver=$(params.STORAGE_DRIVER) --root /files/buildah-containers commit $container quay.io/$(params.quay-io-account)/$(params.quay-io-repository):$(params.imageTag)
