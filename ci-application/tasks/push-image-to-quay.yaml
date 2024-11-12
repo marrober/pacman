@@ -112,10 +112,6 @@ spec:
         - $(workspaces.resources.path)/sbom-image.json
         - --type
         - cyclonedx
-        - --registry-username
-        - marrober+temp
-        - --registry-password
-        - C6GL8JFF19HY1QC7AGVMWSBTFCLNXYIFIZOO5IMBKZ6HIFFA6VZ5FB1DEMBN1UIE
         - quay.io/$(params.quay-io-account)/$(params.quay-io-repository):$(params.imageTag)
       workingDir: $(workspaces.resources.path)
   volumes:

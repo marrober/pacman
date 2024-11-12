@@ -21,6 +21,13 @@ Use the command shown below, with an appropriate token :
 ````bash
 oc create secret generic github-access-token --from-literal=token=
 ````
+
+## Create a secret for access to quay.
+
+````bash
+oc apply -f ~/Downloads/marrober-secret.yml
+````
+
 ## ArgoCD Sync config
 
 argocd login --insecure <argocd-server-url-without-https://>
