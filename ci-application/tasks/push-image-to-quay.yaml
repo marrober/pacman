@@ -23,6 +23,7 @@ spec:
       type: string
   results:
     - name: quay-image-repo-location
+    - name: BASE_IMAGES_DIGESTS
   steps:
     - name: buildah-pull-image
       command:
