@@ -71,7 +71,7 @@ spec:
 
         buildah images --storage-driver=$(params.STORAGE_DRIVER) --root /files/buildah-containers --format '{{ .Name }}:{{ .Tag }}@{{ .Digest }}' | grep rhel9-nodejs-16
 
-        $base_image_name=$(cat $(results.BASE_IMAGES_DIGESTS.path))
+        $base_image_name=$(buildah images --storage-driver=$(params.STORAGE_DRIVER) --root /files/buildah-containers --format '{{ .Name }}:{{ .Tag }}@{{ .Digest }}' | grep rhel9-nodejs-16)
 
         echo $base_image_name
 
