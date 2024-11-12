@@ -69,16 +69,6 @@ spec:
       script: |
         buildah images --format '{{`{{ .Name }}:{{ .Tag }}@{{ .Digest }}`}}' | grep -v quay.io/$(params.quay-io-account)/$(params.quay-io-repository):$(params.imageTag) > $(results.BASE_IMAGES_DIGESTS.path)
 
-        echo $(results.BASE_IMAGES_DIGESTS.path)
-
-        base_image_name=$(buildah inspect --format '{{`{{ index .ImageAnnotations "org.opencontainers.image.base.name"}}`}}' $(results.BASE_IMAGES_DIGESTS.path) | cut -f1 -d'@')
-
-        echo $base_image_name
-        
-        base_image_digest=$(buildah inspect --format '{{`{{ index .ImageAnnotations "org.opencontainers.image.base.digest"}}`}}' quay.io/$(params.quay-io-account)/$(params.quay-io-repository):$(params.imageTag))
-
-        echo $base_image_digest
-
       image: image-registry.openshift-image-registry.svc:5000/pacman-ci/buildah:latest
       securityContext:
         capabilities:
