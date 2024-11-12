@@ -3,7 +3,5 @@ kind: Kustomization
 
 resources:
 - buildah-image.yaml
-- gosmee-image.yaml
-- rhel8-nodejs16-image.yaml
 - terminal-image.yaml
-- nodejs-16-image.yaml
+- rhel9-nodejs-16.yaml
