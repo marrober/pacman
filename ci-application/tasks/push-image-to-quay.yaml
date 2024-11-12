@@ -75,7 +75,9 @@ spec:
 
         echo $base_image_name
 
-#        buildah inspect --storage-driver=$(params.STORAGE_DRIVER) --root /files/buildah-containers --format '{{ index .ImageAnnotations "org.opencontainers.image.base.name"}}' quay.io/$(params.quay-io-account)/$(params.quay-io-repository):$(params.imageTag)
+        buildah inspect --storage-driver=$(params.STORAGE_DRIVER) --root /files/buildah-containers --format '{{ index .ImageAnnotations "org.opencontainers.image.base.name"}}' $base_image_name
+
+        buildah inspect --storage-driver=$(params.STORAGE_DRIVER) --root /files/buildah-containers --format '{{ index .ImageAnnotations "org.opencontainers.image.base.name"}}' quay.io/$(params.quay-io-account)/$(params.quay-io-repository):$(params.imageTag)
 
  #       base_image_name=$(buildah inspect --storage-driver=$(params.STORAGE_DRIVER) --root /files/buildah-containers --format '{{ index .ImageAnnotations "org.opencontainers.image.base.name"}}' $(results.BASE_IMAGES_DIGESTS.path) | cut -f1 -d'@')
 
