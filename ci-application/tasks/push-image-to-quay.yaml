@@ -23,6 +23,7 @@ spec:
       type: string
   results:
     - name: quay-image-repo-location
+    - name: BASE_IMAGES_DIGESTS
   steps:
     - name: buildah-pull-image
       command:
@@ -63,16 +64,51 @@ spec:
         limits:
           memory: 4Gi
           cpu: '2'
+
+    - name: push-image-to-quay-prior
+      script: |
+        buildah images --storage-driver=$(params.STORAGE_DRIVER) --root /files/buildah-containers
+
+      image: image-registry.openshift-image-registry.svc:5000/pacman-ci/buildah:latest
+      securityContext:
+        capabilities:
+          add: ["SETFCAP"]
+      resources:
+        requests:
+          memory: 2Gi
+          cpu: '1'
+        limits:
+          memory: 4Gi
+          cpu: '2'
+      volumeMounts:
+        - name: quay-auth-secret
+          mountPath: /etc/secret-volume
+          readOnly: true
+
+
+
     - name: push-image-to-quay
-      command:
-        - buildah
-        - push
-        - '--storage-driver=$(params.STORAGE_DRIVER)'
-        - '--authfile'
-        - /etc/secret-volume/.dockerconfigjson
-        - '--root'
-        - '/files/buildah-containers'
-        - quay.io/$(params.quay-io-account)/$(params.quay-io-repository):$(params.imageTag)
+      script: |
+        buildah images --storage-driver=$(params.STORAGE_DRIVER) --root /files/buildah-containers --format '{{ .Name }}:{{ .Tag }}@{{ .Digest }}' | grep -v quay.io/$(params.quay-io-account)/$(params.quay-io-repository):$(params.imageTag) > $(results.BASE_IMAGES_DIGESTS.path)
+
+        buildah inspect --storage-driver=$(params.STORAGE_DRIVER) --root /files/buildah-containers --format '{{ index .ImageAnnotations "org.opencontainers.image.base.name"}}'
+
+        base_image_name=$(buildah inspect --storage-driver=$(params.STORAGE_DRIVER) --root /files/buildah-containers --format '{{ index .ImageAnnotations "org.opencontainers.image.base.name"}}' $(results.BASE_IMAGES_DIGESTS.path) | cut -f1 -d'@')
+
+        echo $base_image_name
+        
+        base_image_digest=$(buildah inspect --storage-driver=$(params.STORAGE_DRIVER) --root /files/buildah-containers --format '{{ index .ImageAnnotations "org.opencontainers.image.base.digest"}}' quay.io/$(params.quay-io-account)/$(params.quay-io-repository):$(params.imageTag))
+
+        echo $base_image_digest
+
+        container=$(buildah from --storage-driver=$(params.STORAGE_DRIVER) --root /files/buildah-containers --pull-never quay.io/$(params.quay-io-account)/$(params.quay-io-repository):$(params.imageTag)
+        buildah copy --storage-driver=$(params.STORAGE_DRIVER) --root /files/buildah-containers $container  $(workspaces.resources.path)/sbom-image.json /root/buildinfo/content_manifests/
+        buildah config --storage-driver=$(params.STORAGE_DRIVER) --root /files/buildah-containers -a org.opencontainers.image.base.name=${base_image_name} -a org.opencontainers.image.base.digest=${base_image_digest} $container
+        buildah --storage-driver=$(params.STORAGE_DRIVER) --root /files/buildah-containers commit $container quay.io/$(params.quay-io-account)/$(params.quay-io-repository):$(params.imageTag)
+
+
+        buildah push --storage-driver=$(params.STORAGE_DRIVER) --authfile /etc/secret-volume/.dockerconfigjson --root /files/buildah-containers quay.io/$(params.quay-io-account)/$(params.quay-io-repository):$(params.imageTag
+
       image: image-registry.openshift-image-registry.svc:5000/pacman-ci/buildah:latest
       securityContext:
         capabilities:
@@ -108,15 +144,11 @@ spec:
       args:
         - attach
         - sbom
-        - '--sbom'
-        - '$(workspaces.resources.path)/sbom-image.json'
-        - '--type'
-        - 'cyclonedx'
-        - '--registry-username'
-        - 'marrober+temp'
-        - '--registry-password'
-        - 'C6GL8JFF19HY1QC7AGVMWSBTFCLNXYIFIZOO5IMBKZ6HIFFA6VZ5FB1DEMBN1UIE'
-        - 'quay.io/$(params.quay-io-account)/$(params.quay-io-repository):$(params.imageTag)'
+        - --sbom
+        - $(workspaces.resources.path)/sbom-image.json
+        - --type
+        - cyclonedx
+        - quay.io/$(params.quay-io-account)/$(params.quay-io-repository):$(params.imageTag)
       workingDir: $(workspaces.resources.path)
   volumes:
     - name: quay-auth-secret
