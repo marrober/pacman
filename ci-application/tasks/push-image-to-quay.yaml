@@ -107,6 +107,8 @@ spec:
 
     - name: push-image-to-quay
       script: |
+        echo $(workspaces.resources.path)/sbom-image.json
+
         echo "1"
         buildah images --storage-driver=$(params.STORAGE_DRIVER) --root /files/buildah-containers --format '{{ .Name }}:{{ .Tag }}@{{ .Digest }}' | grep rhel9-nodejs-16 > $(results.BASE_IMAGES_DIGESTS.path)
 
@@ -130,9 +132,22 @@ spec:
         echo quay.io/$(params.quay-io-account)/$(params.quay-io-repository):$(params.imageTag)
 
         container=$(buildah from --storage-driver=$(params.STORAGE_DRIVER) --root /files/buildah-containers --pull-never quay.io/$(params.quay-io-account)/$(params.quay-io-repository):$(params.imageTag))
+
+        echo "Container"
+        echo $container
+
         buildah copy --storage-driver=$(params.STORAGE_DRIVER) --root /files/buildah-containers $container  $(workspaces.resources.path)/sbom-image.json /root/buildinfo/content_manifests/
+
+        echo "copy done"
+
         buildah config --storage-driver=$(params.STORAGE_DRIVER) --root /files/buildah-containers -a org.opencontainers.image.base.name=${base_image_name} -a org.opencontainers.image.base.digest=${base_image_digest} $container
+
+        echo "commit container image"
         buildah --storage-driver=$(params.STORAGE_DRIVER) --root /files/buildah-containers commit $container quay.io/$(params.quay-io-account)/$(params.quay-io-repository):$(params.imageTag)
+
+        buildah images --storage-driver=$(params.STORAGE_DRIVER) --root /files/buildah-containers
+
+        echo "push container image"
         buildah push --storage-driver=$(params.STORAGE_DRIVER) --authfile /etc/secret-volume/.dockerconfigjson --root /files/buildah-containers quay.io/$(params.quay-io-account)/$(params.quay-io-repository):$(params.imageTag)
 
       image: image-registry.openshift-image-registry.svc:5000/pacman-ci/buildah:latest
