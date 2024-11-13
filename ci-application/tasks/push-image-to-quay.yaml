@@ -67,25 +67,24 @@ spec:
 
     - name: push-image-to-quay-prior
       script: |
+
+        echo "1"
         buildah images --storage-driver=$(params.STORAGE_DRIVER) --root /files/buildah-containers --format '{{ .Name }}:{{ .Tag }}@{{ .Digest }}' | grep rhel9-nodejs-16 > $(results.BASE_IMAGES_DIGESTS.path)
 
+        echo "2 - base image name"
         buildah images --storage-driver=$(params.STORAGE_DRIVER) --root /files/buildah-containers --format '{{ .Name }}:{{ .Tag }}@{{ .Digest }}' | grep rhel9-nodejs-16
 
-        base_image_name=$(buildah images --storage-driver=$(params.STORAGE_DRIVER) --root /files/buildah-containers --format '{{ .Name }}:{{ .Tag }}@{{ .Digest }}' | grep rhel9-nodejs-16)
+        echo "3"
+        base_image_name=$(buildah images --storage-driver=$(params.STORAGE_DRIVER) --root /files/buildah-containers --format '{{ index .ImageAnnotations "org.opencontainers.image.base.name"}}' quay.io/$(params.quay-io-account)/$(params.quay-io-repository):$(params.imageTag) | cut -f1 -d'@')
 
+        echo "4 - base image name taken from the built image"
         echo $base_image_name
+     
+        base_image_digest=$(buildah inspect --storage-driver=$(params.STORAGE_DRIVER) --root /files/buildah-containers --format '{{ index .ImageAnnotations "org.opencontainers.image.base.digest"}}' quay.io/$(params.quay-io-account)/$(params.quay-io-repository):$(params.imageTag))
 
-        buildah inspect --storage-driver=$(params.STORAGE_DRIVER) --root /files/buildah-containers --format '{{ index .ImageAnnotations "org.opencontainers.image.base.name"}}' $base_image_name
+        echo "5 - base image digest taken from the built image"
 
-        buildah inspect --storage-driver=$(params.STORAGE_DRIVER) --root /files/buildah-containers --format '{{ index .ImageAnnotations "org.opencontainers.image.base.name"}}' quay.io/$(params.quay-io-account)/$(params.quay-io-repository):$(params.imageTag)
-
- #       base_image_name=$(buildah inspect --storage-driver=$(params.STORAGE_DRIVER) --root /files/buildah-containers --format '{{ index .ImageAnnotations "org.opencontainers.image.base.name"}}' $(results.BASE_IMAGES_DIGESTS.path) | cut -f1 -d'@')
-
-  #      echo $base_image_name
-        
-   #     base_image_digest=$(buildah inspect --storage-driver=$(params.STORAGE_DRIVER) --root /files/buildah-containers --format '{{ index .ImageAnnotations "org.opencontainers.image.base.digest"}}' quay.io/$(params.quay-io-account)/$(params.quay-io-repository):$(params.imageTag))
-
-    #    echo $base_image_digest
+        echo $base_image_digest 
 
 
       image: image-registry.openshift-image-registry.svc:5000/pacman-ci/buildah:latest
@@ -108,24 +107,32 @@ spec:
 
     - name: push-image-to-quay
       script: |
-        buildah images --storage-driver=$(params.STORAGE_DRIVER) --root /files/buildah-containers --format '{{ .Name }}:{{ .Tag }}@{{ .Digest }}' | rhel9-nodejs-16 > $(results.BASE_IMAGES_DIGESTS.path)
+        echo "1"
+        buildah images --storage-driver=$(params.STORAGE_DRIVER) --root /files/buildah-containers --format '{{ .Name }}:{{ .Tag }}@{{ .Digest }}' | grep rhel9-nodejs-16 > $(results.BASE_IMAGES_DIGESTS.path)
 
-        buildah inspect --storage-driver=$(params.STORAGE_DRIVER) --root /files/buildah-containers --format '{{ index .ImageAnnotations "org.opencontainers.image.base.name"}}'
+        echo "2 - base image name"
+        buildah images --storage-driver=$(params.STORAGE_DRIVER) --root /files/buildah-containers --format '{{ .Name }}:{{ .Tag }}@{{ .Digest }}' | grep rhel9-nodejs-16
 
-        base_image_name=$(buildah inspect --storage-driver=$(params.STORAGE_DRIVER) --root /files/buildah-containers --format '{{ index .ImageAnnotations "org.opencontainers.image.base.name"}}' $(results.BASE_IMAGES_DIGESTS.path) | cut -f1 -d'@')
+        echo "3"
+        base_image_name=$(buildah images --storage-driver=$(params.STORAGE_DRIVER) --root /files/buildah-containers --format '{{ index .ImageAnnotations "org.opencontainers.image.base.name"}}' quay.io/$(params.quay-io-account)/$(params.quay-io-repository):$(params.imageTag) | cut -f1 -d'@')
 
+        echo "4 - base image name taken from the built image"
         echo $base_image_name
-        
+     
         base_image_digest=$(buildah inspect --storage-driver=$(params.STORAGE_DRIVER) --root /files/buildah-containers --format '{{ index .ImageAnnotations "org.opencontainers.image.base.digest"}}' quay.io/$(params.quay-io-account)/$(params.quay-io-repository):$(params.imageTag))
 
-        echo $base_image_digest
+        echo "5 - base image digest taken from the built image"
+
+        echo $base_image_digest 
+
+        echo "Image to update"
+
+        echo quay.io/$(params.quay-io-account)/$(params.quay-io-repository):$(params.imageTag)
 
         container=$(buildah from --storage-driver=$(params.STORAGE_DRIVER) --root /files/buildah-containers --pull-never quay.io/$(params.quay-io-account)/$(params.quay-io-repository):$(params.imageTag)
         buildah copy --storage-driver=$(params.STORAGE_DRIVER) --root /files/buildah-containers $container  $(workspaces.resources.path)/sbom-image.json /root/buildinfo/content_manifests/
         buildah config --storage-driver=$(params.STORAGE_DRIVER) --root /files/buildah-containers -a org.opencontainers.image.base.name=${base_image_name} -a org.opencontainers.image.base.digest=${base_image_digest} $container
         buildah --storage-driver=$(params.STORAGE_DRIVER) --root /files/buildah-containers commit $container quay.io/$(params.quay-io-account)/$(params.quay-io-repository):$(params.imageTag)
-
-
         buildah push --storage-driver=$(params.STORAGE_DRIVER) --authfile /etc/secret-volume/.dockerconfigjson --root /files/buildah-containers quay.io/$(params.quay-io-account)/$(params.quay-io-repository):$(params.imageTag
 
       image: image-registry.openshift-image-registry.svc:5000/pacman-ci/buildah:latest
