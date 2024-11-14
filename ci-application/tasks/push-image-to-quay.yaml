@@ -194,7 +194,7 @@ spec:
   volumes:
     - name: quay-auth-secret
       secret:
-        secretName: quay-auth-secret
+        secretName: docker-config-local-quay
   workspaces:
   - name: files
     mountPath: /files
