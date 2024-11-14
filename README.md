@@ -30,7 +30,7 @@ oc apply -f ~/Downloads/marrober-secret.yml
 
 ## ArgoCD Sync config
 
-argocd login --insecure <argocd-server-url-without-https://>
+argocd login --insecure --grpc-web <argocd-server-url-without-https://>
 
 argocd proj role create pacman pacman-sync --grpc-web
 argocd proj role add-policy pacman pacman-sync --action 'sync' --permission allow --object pacman-development --grpc-web
