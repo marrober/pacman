@@ -24,6 +24,10 @@ spec:
   results:
     - name: quay-image-repo-location
     - name: BASE_IMAGES_DIGESTS
+    - description: Digest of the image just built
+      name: IMAGE_DIGEST
+    - description: Image repository where the built image was pushed
+      name: IMAGE_URL
   steps:
     - name: buildah-pull-image
       command:
@@ -86,6 +90,10 @@ spec:
 
         echo $base_image_digest 
 
+        cat "$(workspaces.source.path)"/image-digest | tee $(results.IMAGE_DIGEST.path)
+
+        echo -n "quay-5rkzk.apps.cluster-5rkzk.5rkzk.sandbox2492.opentlc.com/$(params.quay-io-account)/$(params.quay-io-repository):$(params.imageTag)" | tee $(results.IMAGE_URL.path)
+
 
       image: image-registry.openshift-image-registry.svc:5000/pacman-ci/buildah:latest
       securityContext:
@@ -102,8 +110,6 @@ spec:
         - name: quay-auth-secret
           mountPath: /etc/secret-volume
           readOnly: true
-
-
 
     - name: push-image-to-quay
       script: |
@@ -148,7 +154,13 @@ spec:
         buildah images --storage-driver=$(params.STORAGE_DRIVER) --root /files/buildah-containers
 
         echo "push container image"
-        buildah push --storage-driver=$(params.STORAGE_DRIVER) --authfile /etc/secret-volume/.dockerconfigjson --root /files/buildah-containers quay-5rkzk.apps.cluster-5rkzk.5rkzk.sandbox2492.opentlc.com/$(params.quay-io-account)/$(params.quay-io-repository):$(params.imageTag)
+        buildah push --storage-driver=$(params.STORAGE_DRIVER) --authfile /etc/secret-volume/.dockerconfigjson --root /files/buildah-containers --digestfile $(workspaces.files.path)/image-digest quay-5rkzk.apps.cluster-5rkzk.5rkzk.sandbox2492.opentlc.com/$(params.quay-io-account)/$(params.quay-io-repository):$(params.imageTag)
+
+        cat "$(workspaces.files.path)"/image-digest | tee $(results.IMAGE_DIGEST.path)
+
+        echo -n "quay-5rkzk.apps.cluster-5rkzk.5rkzk.sandbox2492.opentlc.com/$(params.quay-io-account)/$(params.quay-io-repository):$(params.imageTag)" | tee $(results.IMAGE_URL.path)
+
+
 
       image: image-registry.openshift-image-registry.svc:5000/pacman-ci/buildah:latest
       securityContext:
