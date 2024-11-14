@@ -233,9 +233,9 @@ spec:
 ##------------------------------------------------------------------
   results:
     - name: IMAGE_URL
-      value: "$(tasks.build-sign-image.results.IMAGE_URL)"
+      value: "$(tasks.push-image-to-quay.results.IMAGE_URL)"
     - name: IMAGE_DIGEST
-      value: "$(tasks.build-sign-image.results.IMAGE_DIGEST)"
+      value: "$(tasks.push-image-to-quay.results.IMAGE_DIGEST)"
     - name: CHAINS-GIT_URL
       value: "$(tasks.fetch-repository.results.url)"
     - name: CHAINS-GIT_COMMIT
