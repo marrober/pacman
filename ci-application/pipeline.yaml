@@ -63,9 +63,11 @@ spec:
   - name: argocd-version
     type: string
     ## Push to quay
-  - name: quay-io-account                   # Quay.io account name
+  - name: quay-instance-url
     type: string
-  - name: quay-io-repository                # Quay.io repository name
+  - name: quay-account                   # Quay account name
+    type: string
+  - name: quay-repository                # Quay repository name
     type: string
   tasks:
 ##------------------------------------------------------------------
@@ -136,10 +138,10 @@ spec:
     params:
     - name: quay-instance-url
       value: $(params.quay-instance-url)
-    - name: quay-io-account
-      value: $(params.quay-io-account)
-    - name: quay-io-repository
-      value: $(params.quay-io-repository)
+    - name: quay-account
+      value: $(params.quay-account)
+    - name: quay-repository
+      value: $(params.quay-repository)
     - name: image-stream-location
       value: $(params.IMAGE_NAME)
     - name: STORAGE_DRIVER

@@ -59,9 +59,9 @@ spec:
     value: "v2.4.14"
   - name: quay-instance-url
     value: "quay.io"
-  - name: quay-io-account
+  - name: quay-account
     value: "marrober"
-  - name: quay-io-repository
+  - name: quay-repository
     value: "pacman"    
   pipelineRef:
     name: pacman
