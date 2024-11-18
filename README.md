@@ -31,10 +31,12 @@ oc apply -f ~/Downloads/marrober-secret.yml
 
 ## ArgoCD Sync config
 
-Get the admin password for the argocd instance 
+Get the admin password and url for the argocd instance 
 
 ````bash
 oc get secret/argocd-cluster  -n openshift-gitops -o jsonpath='{.data.admin\.password}' | base64 -d
+echo ""
+oc get route/argocd-server -n openshift-gitops -o jsonpath='{"https://"}{.spec.host}{"\n"}'
 ````
 
 Login to the ArgoCD instance and create the role and policy

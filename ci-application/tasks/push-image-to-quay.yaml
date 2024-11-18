@@ -4,12 +4,16 @@ metadata:
   name: push-image-to-quay
 spec:
   params:
+    - name: quay-instance-url
+      description: The URL of the quay instance
+      type: string
+      default: ""
     - name: quay-io-account
-      description: The quay.io account that matches the credentials stored in the mounted secret.
+      description: The quay account that matches the credentials stored in the mounted secret.
       type: string
       default: ""
     - name: quay-io-repository
-      description: The quay.io repository in which to store the image.
+      description: The quay repository in which to store the image.
       type: string
       default: ""
     - name: image-stream-location
@@ -56,7 +60,7 @@ spec:
         - '--root'
         - '/files/buildah-containers'
         - $(params.image-stream-location):$(params.imageTag)
-        - quay.io/$(params.quay-io-account)/$(params.quay-io-repository):$(params.imageTag)
+        - $(params.quay-instance-url)/$(params.quay-io-account)/$(params.quay-io-repository):$(params.imageTag)
       image: image-registry.openshift-image-registry.svc:5000/pacman-ci/buildah:latest
       securityContext:
         capabilities:
@@ -79,12 +83,12 @@ spec:
         buildah images --storage-driver=$(params.STORAGE_DRIVER) --root /files/buildah-containers --format '{{ .Name }}:{{ .Tag }}@{{ .Digest }}' | grep rhel9-nodejs-16
 
         echo "3"
-        base_image_name=$(buildah inspect --storage-driver=$(params.STORAGE_DRIVER) --root /files/buildah-containers --format '{{ index .ImageAnnotations "org.opencontainers.image.base.name"}}' quay.io/$(params.quay-io-account)/$(params.quay-io-repository):$(params.imageTag) | cut -f1 -d'@')
+        base_image_name=$(buildah inspect --storage-driver=$(params.STORAGE_DRIVER) --root /files/buildah-containers --format '{{ index .ImageAnnotations "org.opencontainers.image.base.name"}}' $(params.quay-instance-url)/$(params.quay-io-account)/$(params.quay-io-repository):$(params.imageTag) | cut -f1 -d'@')
 
         echo "4 - base image name taken from the built image"
         echo $base_image_name
      
-        base_image_digest=$(buildah inspect --storage-driver=$(params.STORAGE_DRIVER) --root /files/buildah-containers --format '{{ index .ImageAnnotations "org.opencontainers.image.base.digest"}}' quay.io/$(params.quay-io-account)/$(params.quay-io-repository):$(params.imageTag))
+        base_image_digest=$(buildah inspect --storage-driver=$(params.STORAGE_DRIVER) --root /files/buildah-containers --format '{{ index .ImageAnnotations "org.opencontainers.image.base.digest"}}' $(params.quay-instance-url)/$(params.quay-io-account)/$(params.quay-io-repository):$(params.imageTag))
 
         echo "5 - base image digest taken from the built image"
 
@@ -92,7 +96,7 @@ spec:
 
         cat "$(workspaces.source.path)"/image-digest | tee $(results.IMAGE_DIGEST.path)
 
-        echo -n "quay.io/$(params.quay-io-account)/$(params.quay-io-repository):$(params.imageTag)" | tee $(results.IMAGE_URL.path)
+        echo -n "$(params.quay-instance-url)/$(params.quay-io-account)/$(params.quay-io-repository):$(params.imageTag)" | tee $(results.IMAGE_URL.path)
 
 
       image: image-registry.openshift-image-registry.svc:5000/pacman-ci/buildah:latest
@@ -122,12 +126,12 @@ spec:
         buildah images --storage-driver=$(params.STORAGE_DRIVER) --root /files/buildah-containers --format '{{ .Name }}:{{ .Tag }}@{{ .Digest }}' | grep rhel9-nodejs-16
 
         echo "3"
-        base_image_name=$(buildah inspect --storage-driver=$(params.STORAGE_DRIVER) --root /files/buildah-containers --format '{{ index .ImageAnnotations "org.opencontainers.image.base.name"}}' quay.io/$(params.quay-io-account)/$(params.quay-io-repository):$(params.imageTag) | cut -f1 -d'@')
+        base_image_name=$(buildah inspect --storage-driver=$(params.STORAGE_DRIVER) --root /files/buildah-containers --format '{{ index .ImageAnnotations "org.opencontainers.image.base.name"}}' $(params.quay-instance-url)/$(params.quay-io-account)/$(params.quay-io-repository):$(params.imageTag) | cut -f1 -d'@')
 
         echo "4 - base image name taken from the built image"
         echo $base_image_name
      
-        base_image_digest=$(buildah inspect --storage-driver=$(params.STORAGE_DRIVER) --root /files/buildah-containers --format '{{ index .ImageAnnotations "org.opencontainers.image.base.digest"}}' quay.io/$(params.quay-io-account)/$(params.quay-io-repository):$(params.imageTag))
+        base_image_digest=$(buildah inspect --storage-driver=$(params.STORAGE_DRIVER) --root /files/buildah-containers --format '{{ index .ImageAnnotations "org.opencontainers.image.base.digest"}}' $(params.quay-instance-url)/$(params.quay-io-account)/$(params.quay-io-repository):$(params.imageTag))
 
         echo "5 - base image digest taken from the built image"
 
@@ -135,9 +139,9 @@ spec:
 
         echo "Image to update"
 
-        echo quay.io/$(params.quay-io-account)/$(params.quay-io-repository):$(params.imageTag)
+        echo $(params.quay-instance-url)/$(params.quay-io-account)/$(params.quay-io-repository):$(params.imageTag)
 
-        container=$(buildah from --storage-driver=$(params.STORAGE_DRIVER) --root /files/buildah-containers --pull-never quay.io/$(params.quay-io-account)/$(params.quay-io-repository):$(params.imageTag))
+        container=$(buildah from --storage-driver=$(params.STORAGE_DRIVER) --root /files/buildah-containers --pull-never $(params.quay-instance-url)/$(params.quay-io-account)/$(params.quay-io-repository):$(params.imageTag))
 
         echo "Container"
         echo $container
@@ -149,16 +153,16 @@ spec:
         buildah config --storage-driver=$(params.STORAGE_DRIVER) --root /files/buildah-containers -a org.opencontainers.image.base.name=${base_image_name} -a org.opencontainers.image.base.digest=${base_image_digest} $container
 
         echo "commit container image"
-        buildah --storage-driver=$(params.STORAGE_DRIVER) --root /files/buildah-containers commit $container quay.io/$(params.quay-io-account)/$(params.quay-io-repository):$(params.imageTag)
+        buildah --storage-driver=$(params.STORAGE_DRIVER) --root /files/buildah-containers commit $container $(params.quay-instance-url)/$(params.quay-io-account)/$(params.quay-io-repository):$(params.imageTag)
 
         buildah images --storage-driver=$(params.STORAGE_DRIVER) --root /files/buildah-containers
 
         echo "push container image"
-        buildah push --storage-driver=$(params.STORAGE_DRIVER) --authfile /etc/secret-volume/.dockerconfigjson --root /files/buildah-containers --digestfile $(workspaces.files.path)/image-digest quay.io/$(params.quay-io-account)/$(params.quay-io-repository):$(params.imageTag)
+        buildah push --storage-driver=$(params.STORAGE_DRIVER) --authfile /etc/secret-volume/.dockerconfigjson --root /files/buildah-containers --digestfile $(workspaces.files.path)/image-digest $(params.quay-instance-url)/$(params.quay-io-account)/$(params.quay-io-repository):$(params.imageTag)
 
         cat "$(workspaces.files.path)"/image-digest | tee $(results.IMAGE_DIGEST.path)
 
-        echo -n "quay.io/$(params.quay-io-account)/$(params.quay-io-repository):$(params.imageTag)" | tee $(results.IMAGE_URL.path)
+        echo -n "$(params.quay-instance-url)/$(params.quay-io-account)/$(params.quay-io-repository):$(params.imageTag)" | tee $(results.IMAGE_URL.path)
 
 
 
@@ -184,7 +188,7 @@ spec:
       args:
         - |-
 
-          echo "quay.io/$(params.quay-io-account)/$(params.quay-io-repository):$(params.imageTag)" > $(results.quay-image-repo-location.path)
+          echo "$(params.quay-instance-url)/$(params.quay-io-account)/$(params.quay-io-repository):$(params.imageTag)" > $(results.quay-image-repo-location.path)
 
           echo -------------------------------------
 
@@ -201,7 +205,7 @@ spec:
         - sbom-image.json
         - --type
         - cyclonedx
-        - quay.io/$(params.quay-io-account)/$(params.quay-io-repository):$(params.imageTag)
+        - $(params.quay-instance-url)/$(params.quay-io-account)/$(params.quay-io-repository):$(params.imageTag)
       workingDir: $(workspaces.resources.path)
   volumes:
     - name: quay-auth-secret
