@@ -1,0 +1,10 @@
+git config --global user.email user1@demo.redhat.com
+git config --global user.name user1
+git config --global commit.gpgsign true
+git config --global tag.gpgsign true
+git config --global gpg.x509.program gitsign
+git config --global gpg.format x509
+git config --global gitsign.fulcio https://fulcio-server-trusted-artifact-signer.<openshift-apps-domain>
+git config --global gitsign.issuer https://keycloak-rhsso.<openshift-apps-domain>/auth/realms/openshift
+git config --global gitsign.rekor https://rekor-server-trusted-artifact-signer.<openshift-apps-domain>
+git config --global gitsign.clientid trusted-artifact-signer
