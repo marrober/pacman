@@ -201,6 +201,7 @@ spec:
       args:
         - attest
         - -y
+        - --verbose
         - --predicate
         - sbom-image.json
         - --type
