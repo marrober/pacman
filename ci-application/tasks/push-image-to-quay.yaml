@@ -200,6 +200,7 @@ spec:
       image: quay.io/redhat-appstudio/cosign:v2.1.1
       args:
         - attest
+        - -y
         - --predicate
         - sbom-image.json
         - --type
