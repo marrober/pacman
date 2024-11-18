@@ -134,6 +134,8 @@ spec:
 ##------------------------------------------------------------------
   - name: push-image-to-quay
     params:
+    - name: quay-instance-url
+      value: $(params.quay-instance-url)
     - name: quay-io-account
       value: $(params.quay-io-account)
     - name: quay-io-repository

@@ -9,6 +9,7 @@ oc apply -k .
 ## Get image information for dockerfile
 
 ````bash
+oc project pacman-ci
 oc get is/rhel9-nodejs-16 -o jsonpath='{.status.publicDockerImageRepository}''{"\n"}'
 ````
 
@@ -30,10 +31,20 @@ oc apply -f ~/Downloads/marrober-secret.yml
 
 ## ArgoCD Sync config
 
-argocd login --insecure --grpc-web <argocd-server-url-without-https://>
+Get the admin password for the argocd instance 
+
+````bash
+oc get secret/argocd-cluster  -n openshift-gitops -o jsonpath='{.data.admin\.password}' | base64 -d
+````
+
+Login to the ArgoCD instance and create the role and policy
+
+````bash
+argocd login --username admin --password $(oc get secret/argocd-cluster  -n openshift-gitops -o jsonpath='{.data.admin\.password}' | base64 -d) --insecure --grpc-web $(oc get route/argocd-server -n openshift-gitops -o jsonpath='{.spec.host}')
 
 argocd proj role create pacman pacman-sync --grpc-web
 argocd proj role add-policy pacman pacman-sync --action 'sync' --permission allow --object pacman-development --grpc-web
+````
 
 ### instructions for using a token
 
@@ -43,9 +54,17 @@ argocd proj role add-policy pacman pacman-sync --action 'sync' --permission allo
 ### instructions for using a secret created from the ArgoCD username and password
 Create a secret using the following config :
 
-oc create secret generic -n pacman-ci argocd-env-secret --from-literal=ARGOCD_PASSWORD=<password> --from-literal=ARGOCD_USERNAME=admin
+````bash
+oc create secret generic -n pacman-ci argocd-env-secret --from-literal=ARGOCD_PASSWORD=$(oc get secret/argocd-cluster  -n openshift-gitops -o jsonpath='{.data.admin\.password}' | base64 -d) --from-literal=ARGOCD_USERNAME=admin
+````
 
 ### get the ArgoCD URL
+
+
+````bash
+oc get route/argocd-server -n openshift-gitops -o jsonpath='{.spec.host}{"\n"}'
+````
+
 Copy the Argocd URL (Without  https://) and paste it into the file cd/env/01-dev/argocd-platform-cm.yaml
 
 ## Create a secret for access to the ACS CI/CD process
