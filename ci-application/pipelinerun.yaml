@@ -57,6 +57,8 @@ spec:
     value: "0.1.2"
   - name: argocd-version
     value: "v2.4.14"
+  - name: quay-instance-url
+    value: "quay.io"
   - name: quay-io-account
     value: "marrober"
   - name: quay-io-repository
