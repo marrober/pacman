@@ -199,9 +199,8 @@ spec:
     - name: upload-sbom
       image: quay.io/redhat-appstudio/cosign:v2.1.1
       args:
-        - attach
-        - sbom
-        - --sbom
+        - attest
+        - --predicate
         - sbom-image.json
         - --type
         - cyclonedx
