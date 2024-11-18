@@ -196,6 +196,15 @@ spec:
 
       image: image-registry.openshift-image-registry.svc:5000/openshift/cli:latest
       resources: {}
+    - name: extract-signing-secret
+      command:
+        - /bin/bash
+        - '-c'
+      args:
+        - >-
+          oc get secret signing-secrets -n openshift-pipelines -o json > /workspace/signing-secrets
+      image: 'quay.io/openshift/origin-cli:latest'
+      resources: {}
     - name: extract-cosign-public-key
       image: quay.io/redhat-gpte/jq
       resources: {}
