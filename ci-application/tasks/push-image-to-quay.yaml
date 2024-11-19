@@ -196,32 +196,14 @@ spec:
 
       image: image-registry.openshift-image-registry.svc:5000/openshift/cli:latest
       resources: {}
-    - name: extract-signing-secret
-      command:
-        - /bin/bash
-        - '-c'
-      args:
-        - >-
-          oc get secret signing-secrets -n openshift-pipelines -o json > /workspace/signing-secrets
-      image: 'quay.io/openshift/origin-cli:latest'
-      resources: {}
-    - name: extract-cosign-public-key
-      image: quay.io/redhat-gpte/jq
-      resources: {}
-      script: |
-        set +x
-        cat /workspace/signing-secrets | jq -r '.data."cosign.pub"' | base64 --decode > /workspace/cosign.pub
-        cat /workspace/cosign.pub
     - name: upload-sbom
       image: quay.io/redhat-appstudio/cosign:v2.1.1
       args:
-        - attest
-        - -y
-        - --verbose
-        - --predicate
-        - --key
-        - /workspace/cosign.pub
+        - attach
+        - sbom
+        - --sbom
         - sbom-image.json
+        - --verbose
         - --type
         - cyclonedx
         - $(params.quay-instance-url)/$(params.quay-account)/$(params.quay-repository):$(params.imageTag)
