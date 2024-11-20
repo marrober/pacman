@@ -1,0 +1,38 @@
+#
+# To use this policy with the ec command line:
+#   ec validate image \
+#     --image $IMAGE \
+#     --public-key key.pub \
+#     --policy github.com/enterprise-contract/config//default
+#
+# To use with an Konflux Enterprise Contract Integration Test CR:
+#   ...
+#   spec:
+#     params:
+#     - name: POLICY_CONFIGURATION
+#       value: github.com/enterprise-contract/config//default
+#     ...
+#
+# Copied from original source at : https://github.com/redhat-gpe/config/blob/main/default/policy.yaml
+#
+name: Default
+description: >-
+  Includes rules for levels 1, 2 & 3 of SLSA v0.1. This is the default config used for new Konflux applications.
+  Available collections are defined in
+  https://redhat-appstudio.github.io/docs.stonesoup.io/ec-policies/release_policy.html#_available_rule_collections.
+  If a different policy configuration is desired, this resource can serve as a starting point.
+  See the docs on how to include and exclude rules
+  https://redhat-appstudio.github.io/docs.stonesoup.io/ec-policies/policy_configuration.html#_including_and_excluding_rules.
+
+sources:
+  - name: Default
+    policy:
+      - github.com/redhat-gpe/ec-policies//policy/lib
+      - github.com/redhat-gpe/ec-policies//policy/release
+    data:
+      - oci::quay.io/redhat-appstudio-tekton-catalog/data-acceptable-bundles:1714135376
+      - github.com/redhat-gpe/rhtap-ec-policy//data
+    config:
+      include:
+        - '@slsa3'
+      exclude: []
