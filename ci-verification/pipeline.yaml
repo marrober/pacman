@@ -1,0 +1,56 @@
+apiVersion: tekton.dev/v1
+kind: Pipeline
+metadata:
+  labels:
+    app.kubernetes.io/instance: pacman-git
+    app.kubernetes.io/name: pacman-git
+    pipeline.openshift.io/runtime: nodejs
+    pipeline.openshift.io/runtime-version: 16-ubi8
+    pipeline.openshift.io/type: kubernetes
+  name: pacman-verification
+spec:
+  params:
+    ## repository parameters
+  - name: git-repo-url
+    type: string
+  - name: git-revision
+    default: ""
+    type: string
+## Verify enterprise contract
+  - name: quay-instance-url
+    type: string
+  - name: quay-account                   # Quay account name
+    type: string
+  - name: quay-repository                # Quay repository name
+    type: string
+  - name: image-tag
+    type: string
+  - name: component_id
+    type: string
+  - name: rekor_host
+    type: string
+  - name: policy_configuration
+    type: string
+  - name: tuf_mirror
+    type: string
+
+  tasks:
+    - name: verify-enterprise-contract
+      params:
+        - name: IMAGE
+          value: '$(params.quay-instance-url)/$(params.quay-account)/$(params.quay-repository):$(params.image-tag)'
+        - name: COMPONENT_ID
+          value: $(params.component_id)
+        - name: REKOR_HOST
+          value: '$(params.rekor_host)'
+        - name: POLICY_CONFIGURATION
+          value: '$(params.policy_configuration)'
+        - name: TUF_MIRROR
+          value: '$(params.tuf_mirror)'
+        - name: CI_PROJECT_URL
+          value: '$(params.git-repo-url)'
+        - name: GIT_REVISION
+          value: '$(params.git-revision)'
+      taskRef:
+        kind: Task
+        name: verify-enterprise-contract
