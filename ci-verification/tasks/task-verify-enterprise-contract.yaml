@@ -110,7 +110,7 @@ spec:
   volumes:
     - name: docker-config
       secret:
-        secretName: $(params.COMPONENT_ID)-docker-config
+        secretName: quay-auth-secret
         items:
         - key: .dockerconfigjson
           path: config.json
