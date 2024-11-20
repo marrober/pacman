@@ -7,36 +7,43 @@ metadata:
     tekton.dev/pipeline: pacman-verification
   generateName: pacman-verification-pr-
 spec:
-  taskRunSpecs:
-  - pipelineTaskName: verify-enterprise-contract
-    taskServiceAccountName: job-runner
-  params:
-    ## Image repository parameters
-  - name: git-repo-url
-    value: https://github.com/marrober/pacman.git
-  - name: git-revision
-    value: main
-    ## Verify enterprise contract
-  - name: quay-instance-url
-    value: "quay.io"
-  - name: quay-account                   
-    value: "marrober"
-  - name: quay-repository                
-    value: "pacman"
-  - name: image-tag
-    value: "491nr"
-  - name: component_id
-    value: "pacman"
-  - name: rekor_host
-    value: http://rekor-server.trusted-artifact-signer.svc
-  - name: policy_configuration
-    value: 'git::github.com/redhat-gpe/config//default'
-  - name: tuf_mirror
-    value: http://tuf.trusted-artifact-signer.svc
-
-  pipelineRef:
-    name: pacman-verification
-  taskRunTemplate:
-    serviceAccountName: image-pusher
-  timeouts:
-    pipeline: 1h0m0s
+  resourcetemplates:
+    - apiVersion: tekton.dev/v1beta1
+      kind: PipelineRun
+      metadata:
+        generateName: pacman-verification-pr-
+      spec:
+        taskRunSpecs:
+        - pipelineTaskName: verify-enterprise-contract
+          taskServiceAccountName: job-runner
+        params:
+          ## Image repository parameters
+        - name: git-repo-url
+          value: https://github.com/marrober/pacman.git
+        - name: git-revision
+          value: main
+          ## Verify enterprise contract
+        - name: quay-instance-url
+          value: "quay.io"
+        - name: quay-account                   
+          value: "marrober"
+        - name: quay-repository                
+          value: "pacman"
+        - name: image-tag
+          value: "491nr"
+        - name: component_id
+          value: "pacman"
+        - name: rekor_host
+          value: http://rekor-server.trusted-artifact-signer.svc
+        - name: policy_configuration
+          value: 'git::github.com/redhat-gpe/config//default'
+        - name: tuf_mirror
+          value: http://tuf.trusted-artifact-signer.svc
+        pipelineRef:
+          name: pacman-verification
+        serviceAccountName: image-pusher
+        timeouts:
+          pipeline: 1h0m0s
+        workspaces:
+          - name: images-url
+            emptyDir: {}
