@@ -4,3 +4,5 @@ kind: Kustomization
 resources:
 - tasks/task-verify-enterprise-contract.yaml
 - pipeline.yaml
+- role-bindings/job-runner-sa.yaml
+- role-bindings/job-runner-cluster-role-binding.yaml
