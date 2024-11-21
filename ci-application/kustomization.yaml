@@ -14,6 +14,7 @@ resources:
 - tasks/update-and-commit-argocd-app-file.yaml
 - tasks/argocd-sync-and-wait.yaml
 - tasks/push-image-to-quay.yaml
+- tasks/task-verify-commit.yaml
 - triggers/eventListener.yaml
 - triggers/eventListenerRoute.yaml
 - triggers/triggerBinding.yaml
