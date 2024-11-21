@@ -24,8 +24,8 @@ echo "COSIGN_MIRROR        = $COSIGN_MIRROR"
 echo "COSIGN_ROOT          = $COSIGN_ROOT"
 echo "TUF_URL              = $TUF_URL"
 
-git config --global user.email marrober@redhat.com
-git config --global user.name marrober
+git config --global user.email user1@demo.redhat.com
+git config --global user.name user1
 git config --global commit.gpgsign true
 git config --global tag.gpgsign true
 git config --global gpg.x509.program gitsign
