@@ -10,11 +10,20 @@ metadata:
   name: pacman
 spec:
   params:
-    ## repository parameters
+    ## Repository parameters
   - name: GIT_REPO
     type: string
   - name: GIT_REVISION
     default: ""
+    type: string
+    ## Git signed verification parameters
+  - name: certificate-identity
+    type: string
+  - name: oidc-issuer
+    type: string
+  - name: rekor-url
+    type: string
+  - name: tuf-mirror
     type: string
     ## Image build parameters
   - name: PATH_CONTEXT
