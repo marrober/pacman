@@ -20,7 +20,7 @@ spec:
     value: ""
     ## Verify git commit parameters
   - name: certificate-identity
-    value: marrober@redhat.com
+    value: user1@demo.redhat.com
     # value: $(tt.params.git-committer)
   - name: oidc-issuer
     value:  https://keycloak-rhsso.apps.cluster-vfrqd.vfrqd.sandbox1099.opentlc.com/auth/realms/openshift
