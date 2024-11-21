@@ -112,16 +112,13 @@ spec:
     - name: tuf-mirror
       value: $(params.tuf-mirror)
     runAfter:
-      - git-clone
+      - fetch-repository
     taskRef:
       kind: Task
       name: verify-commit
     workspaces:
       - name: repository
         workspace: workspace
-  - name: package
-    runAfter:
-      - fetch-repository
 ##------------------------------------------------------------------
 # Build Node.JS application
 ##------------------------------------------------------------------
