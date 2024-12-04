@@ -10,7 +10,7 @@ oc apply -k .
 
 ````bash
 oc project pacman-ci
-oc get is/rhel9-nodejs-16 -o jsonpath='{.status.publicDockerImageRepository}''{"\n"}'
+oc get is/rhel9-nodejs-16 -o jsonpath='{.status.publicDockerImageRepository}''{":latest"}''{"\n"}'
 ````
 
 Update the dockerfile at pacman/src/dockerfile to the local path to the rhel9-nodejs-16 image.
@@ -30,14 +30,6 @@ oc apply -f ~/Downloads/marrober-secret.yml
 ````
 
 ## ArgoCD Sync config
-
-Get the admin password and url for the argocd instance 
-
-````bash
-oc get secret/argocd-cluster  -n openshift-gitops -o jsonpath='{.data.admin\.password}' | base64 -d
-echo ""
-oc get route/argocd-server -n openshift-gitops -o jsonpath='{"https://"}{.spec.host}{"\n"}'
-````
 
 Login to the ArgoCD instance and create the role and policy
 
@@ -99,6 +91,15 @@ Fill in the details as :
 	Password : <token from prior command>
 	Check the option : Disable TLS certificate validation (insecure)
 Test the integration and save if successful.
+
+## For signing commits to GitHub
+
+Run the script content at : Note : Copy and paste the content into a command window. Do not run as a shell script.
+
+````bash
+image-git-signing-setup/local-git-signing-setup.txt
+````
+
 
 ## Test the pipeline execution
 
