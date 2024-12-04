@@ -35,4 +35,4 @@ git config --global gitsign.issuer $SIGSTORE_OIDC_ISSUER
 git config --global gitsign.rekor $SIGSTORE_REKOR_URL
 git config --global gitsign.clientid trusted-artifact-signer
 
-echo "all set"
+echo "all set."
