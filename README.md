@@ -100,7 +100,6 @@ Run the script content at : Note : Copy and paste the content into a command win
 image-git-signing-setup/local-git-signing-setup.txt
 ````
 
-
 ## Test the pipeline execution
 
 ````bash

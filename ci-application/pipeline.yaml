@@ -101,24 +101,24 @@ spec:
 ##------------------------------------------------------------------
 # Verify commit of code to the repository
 ##------------------------------------------------------------------
-  - name: verify-commit
-    params:
-    - name: certificate-identity
-      value: $(params.certificate-identity)
-    - name: oidc-issuer
-      value: $(params.oidc-issuer)
-    - name: rekor-url
-      value: $(params.rekor-url)
-    - name: tuf-mirror
-      value: $(params.tuf-mirror)
-    runAfter:
-      - fetch-repository
-    taskRef:
-      kind: Task
-      name: verify-commit
-    workspaces:
-      - name: repository
-        workspace: workspace
+  #- name: verify-commit
+  #  params:
+  #  - name: certificate-identity
+  #    value: $(params.certificate-identity)
+  #  - name: oidc-issuer
+  #    value: $(params.oidc-issuer)
+  #  - name: rekor-url
+  #    value: $(params.rekor-url)
+  #  - name: tuf-mirror
+  #    value: $(params.tuf-mirror)
+  #  runAfter:
+  #    - fetch-repository
+  #  taskRef:
+  #    kind: Task
+  #    name: verify-commit
+  #  workspaces:
+  #    - name: repository
+  #      workspace: workspace
 ##------------------------------------------------------------------
 # Build Node.JS application
 ##------------------------------------------------------------------
@@ -131,7 +131,8 @@ spec:
     - name: app-dir
       value: $(params.PATH_CONTEXT)
     runAfter:
-    - verify-commit
+    # - verify-commit
+    - fetch-repository
     taskRef:
       kind: Task
       name: build
