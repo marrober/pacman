@@ -214,7 +214,7 @@ spec:
 # Clone the cd repository and update the argocd application file 
 # to refer to the new tagged image.
 ##------------------------------------------------------------------
-  - name: update-and-commit-argocd-project-file
+  - name: update-dev-deployment
     params:
     - name: GIT_URL
       value: $(params.repo_type)/$(params.cd-git-url)
@@ -238,12 +238,7 @@ spec:
       kind: Task
       name: update-and-commit-argocd-app-file
     runAfter:
-    - image-build-check
-    when:
-    - input: "$(tasks.image-build-check.results.scan-result)"
-      operator: in
-      values:
-      - "pass"
+    - push-image-to-imagestream
     workspaces:
     - name: files
       workspace: files
