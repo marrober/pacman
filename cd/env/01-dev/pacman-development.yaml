@@ -34,12 +34,6 @@ spec:
     path: cd/env/01-dev
     targetRevision: main
     repoURL: https://github.com/marrober/pacman.git
-    helm:
-      parameters:
-        - null
-        - null
-        - null
-        - value: f756r
   syncPolicy:
     automated: # automated sync by default retries failed attempts 5 times with following delays between attempts ( 5s, 10s, 20s, 40s, 80s ); retry controlled using `retry` field.
       prune: true # Specifies if resources should be pruned during auto-syncing ( false by default ).
