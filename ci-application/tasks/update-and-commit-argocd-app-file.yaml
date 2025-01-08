@@ -17,15 +17,13 @@ spec:
   - name: GIT_PATH_TO_CONTENT
     type: string
     default: ""
-  - name: FILENAME
-    type: string
   - name: GIT_USER_NAME
     type: string
   - name: GIT_USER_EMAIL
     type: string
   - name: GIT_COMMIT_COMMENT
     type: string
-  - name: IMAGE_TAG
+  - name: IMAGE
     type: string
   - name: LOCATION
     type: string
@@ -65,8 +63,6 @@ spec:
 
         echo "Image TAG to be patched : " $(params.IMAGE_TAG)
 
-        echo "Filename to be updated : " $(params.FILENAME)
-
         cd /workspace/files
 
         mkdir $(params.LOCATION)
@@ -105,9 +101,9 @@ spec:
 
         echo "-----------------------------------------------------------------"
 
-        cat $(params.FILENAME)
+        cat kustomization.yaml
 
-        yq -i '.spec.source.helm.parameters[3].value = "$(params.IMAGE_TAG)"' $(params.FILENAME)
+        kustomize edit set image $(params.IMAGE)
 
         echo "-----------------------------------------------------------------"
 
@@ -115,7 +111,7 @@ spec:
 
         echo "-----------------------------------------------------------------"
 
-        cat $(params.FILENAME)
+        cat kustomization.yaml
 
         cd /workspace/files/$(params.LOCATION)/$(params.GIT_REPO_NAME)
 

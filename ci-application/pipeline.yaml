@@ -56,8 +56,6 @@ spec:
     type: string
   - name: cd-git-repo-path-to-content-development
     type: string
-  - name: argocd-application-file
-    type: string
   - name: cd-git-user-name
     type: string
   - name: cd-git-user-email
@@ -221,15 +219,13 @@ spec:
       value: "main"
     - name: GIT_PATH_TO_CONTENT
       value: $(params.cd-git-repo-path-to-content-development)
-    - name: FILENAME
-      value: $(params.argocd-application-file)
     - name: GIT_USER_NAME
       value: $(params.cd-git-user-name)
     - name: GIT_USER_EMAIL
       value: $(params.cd-git-user-email)
     - name: GIT_COMMIT_COMMENT
       value: $(params.cd-git-commit-comment-dev)
-    - name: IMAGE_TAG
+    - name: IMAGE
       value: $(tasks.push-image-to-imagestream.results.new-tag)
     - name: LOCATION
       value: "dev"

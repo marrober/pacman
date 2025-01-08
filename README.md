@@ -124,25 +124,42 @@ Ensure a webhook exists here : https://github.com/marrober/pacman/settings/hooks
 
 Make a change to the application source code at : src/public/pacman-canvas.js line 292. Change the colour to either Blue, Green or Red and commit the change to the github repositry and push to the origin.
 
-
 # DevSpaces configuration
 
-## Github personal access token configuration
+Configure a global oauth connection to guthub using the information here : https://eclipse.dev/che/docs/stable/administration-guide/configuring-oauth-2-for-github/
 
+Github app created in marrober Github location on 8th January with the credentials in Notes document.
+
+Create the secret on the OCP cluster as :
+
+````bash
 kind: Secret
 apiVersion: v1
 metadata:
-  name: personal-access-token
+  name: github-oauth-config
+  namespace: openshift-devspaces
   labels:
-    app.kubernetes.io/component: scm-personal-access-token
     app.kubernetes.io/part-of: che.eclipse.org
+    app.kubernetes.io/component: oauth-scm-configuration
   annotations:
-    che.eclipse.org/che-userid: <che_user_id>
-    che.eclipse.org/scm-personal-access-token-name: <git_provider_name>
-    che.eclipse.org/scm-url: <git_provider_endpoint>
-    che.eclipse.org/scm-organization: <git_provider_organization>
-stringData:
-  token: <Content_of_access_token>
+    che.eclipse.org/oauth-scm-server: github
+    che.eclipse.org/scm-server-endpoint: https://github.com
+    che.eclipse.org/scm-github-disable-subdomain-isolation: 'true'
 type: Opaque
+stringData:
+  id: <from notes>
+  secret: <from notes>
+````
 
+Do this before creating any DevSpaces. 
 
+## Configure each devspaces instance
+
+Apply the following in a terminal window for the devspaces instance :
+
+````bash
+git config --global commit.gpgsign false
+git config --global tag.gpgsign false
+git config --global user.email marrober@redhat.com
+git config --global user.name marrober
+````

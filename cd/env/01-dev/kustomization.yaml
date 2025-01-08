@@ -7,3 +7,7 @@ resources:
 - deployment.yaml
 - service.yaml
 - route.yaml
+
+images:
+- name: image-registry.openshift-image-registry.svc:5000/pacman-ci/pacman
+  newTag: 8cff-b6zdx
