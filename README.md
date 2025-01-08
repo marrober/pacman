@@ -70,7 +70,7 @@ Execute the following command :
 
 oc create secret generic acs-secret \
 --from-literal=acs_api_token=<token from above step> \
---from-literal=acs_central_endpoint=<url-for-rhacs-server>:443
+--from-literal=acs_central_endpoint=$(oc get route/central -n stackrox -o jsonpath='{.spec.host}{":443"}')
 
 ## ACS read the Openshift Image Registry
 
@@ -82,6 +82,16 @@ oc patch configs.imageregistry.operator.openshift.io/cluster --patch '{"spec":{"
 
 oc get route default-route -n openshift-image-registry --template='{{ .spec.host }}'
 ````
+
+## Get SA secret for ACS access to registry
+
+oc get secret/image-pusher-dockercfg-sjnjk -o 'go-template={{index .data ".dockercfg"}}' | base64 -d | jq .  
+
+Take the auth section from the item with index : image-registry.openshift-image-registry.svc:5000
+
+echo -n "<auth section>" ¬ base64 -d
+
+Extract the token and use on the password field below.
 
 In ACS go to Platform configurations -> Integrations -> Image integration -> Generic Docker Registry and press the ‘Create integration’ button.
 Fill in the details as :
