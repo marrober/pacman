@@ -125,6 +125,24 @@ Ensure a webhook exists here : https://github.com/marrober/pacman/settings/hooks
 Make a change to the application source code at : src/public/pacman-canvas.js line 292. Change the colour to either Blue, Green or Red and commit the change to the github repositry and push to the origin.
 
 
+# DevSpaces configuration
 
+## Github personal access token configuration
+
+kind: Secret
+apiVersion: v1
+metadata:
+  name: personal-access-token
+  labels:
+    app.kubernetes.io/component: scm-personal-access-token
+    app.kubernetes.io/part-of: che.eclipse.org
+  annotations:
+    che.eclipse.org/che-userid: <che_user_id>
+    che.eclipse.org/scm-personal-access-token-name: <git_provider_name>
+    che.eclipse.org/scm-url: <git_provider_endpoint>
+    che.eclipse.org/scm-organization: <git_provider_organization>
+stringData:
+  token: <Content_of_access_token>
+type: Opaque
 
 
