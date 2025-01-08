@@ -17,12 +17,22 @@ spec:
       pipelineRef:
         name: pacman
       params:
-        - name: git-url
+        - name: GIT_REPO
           value: $(tt.params.gitrepository.url)
-        - name: git-revision
+        - name: GIT_REVISION
           value: $(tt.params.gitrevision)
         - name: branch
           value: $(tt.params.branch)
+          ## Verify git commit parameters
+        - name: certificate-identity
+          value: user1@demo.redhat.com
+          # value: $(tt.params.git-committer)
+        - name: oidc-issuer
+          value:  https://keycloak-rhsso.apps.cluster-vfrqd.vfrqd.sandbox1099.opentlc.com/auth/realms/openshift
+        - name: rekor-url
+          value: http://rekor-server.trusted-artifact-signer.svc
+        - name: tuf-mirror
+          value: http://tuf.trusted-artifact-signer.svc
         - name: IMAGE_NAME
           value: image-registry.openshift-image-registry.svc:5000/$(context.taskRun.namespace)/pacman
         - name: PATH_CONTEXT
@@ -39,10 +49,6 @@ spec:
         - name: roxctl-output-format
           value: "table"
           ## Update Argocd application and commit to GitHub
-        - name: GIT_REPO
-          value: $(tt.params.gitrepository.url)
-        - name: GIT_REVISION
-          value: $(tt.params.gitrevision)
         - name: repo_type
           value: github.com
         - name: cd-git-url
@@ -51,8 +57,6 @@ spec:
           value: pacman
         - name: cd-git-repo-path-to-content-development
           value: cd/env/01-dev
-        - name: argocd-application-file
-          value: pacman-development.yaml
         - name: cd-git-commit-comment-dev
           value: "Update from triggered ci process - dev"
         - name: cd-git-user-name
@@ -65,6 +69,12 @@ spec:
           value: "0.1.2"
         - name: argocd-version
           value: "v2.4.14"
+        - name: quay-instance-url
+          value: "quay.io"
+        - name: quay-account
+          value: "marrober"
+        - name: quay-repository
+          value: "pacman"   
       workspaces:
       - name: files
         volumeClaimTemplate:
