@@ -56,8 +56,6 @@ spec:
     type: string
   - name: cd-git-repo-path-to-content-development
     type: string
-  - name: argocd-application-file
-    type: string
   - name: cd-git-user-name
     type: string
   - name: cd-git-user-email
@@ -163,6 +161,24 @@ spec:
     - name: files
       workspace: files
 ##------------------------------------------------------------------
+# Perform image build check
+##------------------------------------------------------------------
+  - name: image-build-check
+    params:
+    - name: acs_central_endpoint
+      value: $(params.acs_central_endpoint)
+    - name: acs_api_token
+      value: $(params.acs_api_token)
+    - name: public-url
+      value: $(params.IMAGE_NAME):$(tasks.push-image-to-imagestream.results.new-tag)
+    - name: roxctl-output-format
+      value: $(params.roxctl-output-format)
+    taskRef:
+      kind: Task
+      name: acs-image-build-check
+    runAfter:
+    - push-image-to-imagestream
+##------------------------------------------------------------------
 # Push the new runtime image to quay.io
 ##------------------------------------------------------------------
   - name: push-image-to-quay
@@ -183,30 +199,17 @@ spec:
       kind: Task
       name: push-image-to-quay
     runAfter:
-      - build
+      - image-build-check
+    when:
+    - input: "$(tasks.image-build-check.results.scan-result)"
+      operator: in
+      values:
+      - "pass"
     workspaces:
     - name: resources
       workspace: workspace
     - name: files
       workspace: files
-##------------------------------------------------------------------
-# Perform image build check
-##------------------------------------------------------------------
-  - name: image-build-check
-    params:
-    - name: acs_central_endpoint
-      value: $(params.acs_central_endpoint)
-    - name: acs_api_token
-      value: $(params.acs_api_token)
-    - name: public-url
-      value: $(params.IMAGE_NAME):$(tasks.push-image-to-imagestream.results.new-tag)
-    - name: roxctl-output-format
-      value: $(params.roxctl-output-format)
-    taskRef:
-      kind: Task
-      name: acs-image-build-check
-    runAfter:
-    - push-image-to-imagestream
 ##------------------------------------------------------------------
 # Clone the cd repository and update the argocd application file 
 # to refer to the new tagged image.
@@ -221,29 +224,26 @@ spec:
       value: "main"
     - name: GIT_PATH_TO_CONTENT
       value: $(params.cd-git-repo-path-to-content-development)
-    - name: FILENAME
-      value: $(params.argocd-application-file)
     - name: GIT_USER_NAME
       value: $(params.cd-git-user-name)
     - name: GIT_USER_EMAIL
       value: $(params.cd-git-user-email)
     - name: GIT_COMMIT_COMMENT
       value: $(params.cd-git-commit-comment-dev)
-    - name: IMAGE_TAG
-      value: $(tasks.push-image-to-imagestream.results.new-tag)
+    - name: IMAGE
+      value: $(params.IMAGE_NAME):$(tasks.push-image-to-imagestream.results.new-tag)
     - name: LOCATION
       value: "dev"
     taskRef:
       kind: Task
       name: update-and-commit-argocd-app-file
     runAfter:
-    - push-image-to-imagestream
-##    - image-build-check
-#    when:
-#    - input: "$(tasks.image-build-check.results.scan-result)"
-#      operator: in
-#      values:
-#      - "pass"
+    - image-build-check
+    when:
+    - input: "$(tasks.image-build-check.results.scan-result)"
+      operator: in
+      values:
+      - "pass"
     workspaces:
     - name: files
       workspace: files

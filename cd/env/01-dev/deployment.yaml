@@ -24,7 +24,7 @@ spec:
     spec:
       containers:
         - name: pacman
-          image: 'image-registry.openshift-image-registry.svc:5000/pacman-ci/pacman:hw46m'
+          image: image-registry.openshift-image-registry.svc:5000/pacman-ci/pacman
           ports:
             - containerPort: 8080
               protocol: TCP

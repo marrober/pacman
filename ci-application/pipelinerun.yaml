@@ -53,8 +53,6 @@ spec:
     value: pacman
   - name: cd-git-repo-path-to-content-development
     value: cd/env/01-dev
-  - name: argocd-application-file
-    value: pacman-development.yaml
   - name: cd-git-commit-comment-dev
     value: "Update from ci process - dev"
   - name: cd-git-user-name
