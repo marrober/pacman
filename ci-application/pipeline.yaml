@@ -211,42 +211,42 @@ spec:
 # Clone the cd repository and update the argocd application file 
 # to refer to the new tagged image.
 ##------------------------------------------------------------------
-#  - name: update-and-commit-argocd-project-file
-#    params:
-#    - name: GIT_URL
-#      value: $(params.repo_type)/$(params.cd-git-url)
-#    - name: GIT_REPO_NAME
-#      value: $(params.cd-git-repo-name)
-#    - name: GIT_BRANCH
-#      value: "main"
-#    - name: GIT_PATH_TO_CONTENT
-#      value: $(params.cd-git-repo-path-to-content-development)
-#    - name: FILENAME
-#      value: $(params.argocd-application-file)
-#    - name: GIT_USER_NAME
-#      value: $(params.cd-git-user-name)
-#    - name: GIT_USER_EMAIL
-#      value: $(params.cd-git-user-email)
-#    - name: GIT_COMMIT_COMMENT
-#      value: $(params.cd-git-commit-comment-dev)
-#    - name: IMAGE_TAG
-#      value: $(tasks.push-image-to-imagestream.results.new-tag)
-#    - name: LOCATION
- #     value: "dev"
- #   taskRef:
- #     kind: Task
- #     name: update-and-commit-argocd-app-file
- #   runAfter:
- #   - push-image-to-imagestream
+  - name: update-and-commit-argocd-project-file
+    params:
+    - name: GIT_URL
+      value: $(params.repo_type)/$(params.cd-git-url)
+    - name: GIT_REPO_NAME
+      value: $(params.cd-git-repo-name)
+    - name: GIT_BRANCH
+      value: "main"
+    - name: GIT_PATH_TO_CONTENT
+      value: $(params.cd-git-repo-path-to-content-development)
+    - name: FILENAME
+      value: $(params.argocd-application-file)
+    - name: GIT_USER_NAME
+      value: $(params.cd-git-user-name)
+    - name: GIT_USER_EMAIL
+      value: $(params.cd-git-user-email)
+    - name: GIT_COMMIT_COMMENT
+      value: $(params.cd-git-commit-comment-dev)
+    - name: IMAGE_TAG
+      value: $(tasks.push-image-to-imagestream.results.new-tag)
+    - name: LOCATION
+     value: "dev"
+    taskRef:
+      kind: Task
+      name: update-and-commit-argocd-app-file
+    runAfter:
+    - push-image-to-imagestream
 ##    - image-build-check
 #    when:
 #    - input: "$(tasks.image-build-check.results.scan-result)"
 #      operator: in
 #      values:
 #      - "pass"
-#    workspaces:
-#    - name: files
-#      workspace: files
+    workspaces:
+    - name: files
+      workspace: files
 ##------------------------------------------------------------------
 # Force ArgoCD sync
 ##------------------------------------------------------------------
