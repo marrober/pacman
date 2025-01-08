@@ -232,7 +232,7 @@ spec:
     - name: IMAGE_TAG
       value: $(tasks.push-image-to-imagestream.results.new-tag)
     - name: LOCATION
-     value: "dev"
+      value: "dev"
     taskRef:
       kind: Task
       name: update-and-commit-argocd-app-file
@@ -245,8 +245,8 @@ spec:
 #      values:
 #      - "pass"
     workspaces:
-    - name: files
-      workspace: files
+#    - name: files
+#      workspace: files
 ##------------------------------------------------------------------
 # Force ArgoCD sync
 ##------------------------------------------------------------------
