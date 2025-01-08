@@ -61,7 +61,7 @@ spec:
 
         echo "Git commit comment : " $(params.GIT_COMMIT_COMMENT)
 
-        echo "Image TAG to be patched : " $(params.IMAGE_TAG)
+        echo "Image to be patched : " $(params.IMAGE)
 
         cd /workspace/files
 
