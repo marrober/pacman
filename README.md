@@ -85,7 +85,7 @@ oc get route default-route -n openshift-image-registry --template='{{ .spec.host
 
 ## Get SA secret for ACS access to registry
 
-oc get secret/image-pusher-dockercfg-sjnjk -o 'go-template={{index .data ".dockercfg"}}' | base64 -d | jq .  
+oc get secret/image-pusher-dockercfg-sjnjk -n pacman-ci -o 'go-template={{index .data ".dockercfg"}}' | base64 -d | jq .  
 
 Take the auth section from the item with index : image-registry.openshift-image-registry.svc:5000
 
@@ -118,7 +118,7 @@ oc create -f ci-application/pipelinerun.yaml
 
 ## Create a webhook in Github
 
-Ensure a webhook exists here : https://github.com/marrober/pacman/settings/hooks pointing to the SMEE url tha is in teh smee deployment yaml file. Ensure that the content type is set to application/json.
+Ensure a webhook exists here : https://github.com/marrober/pacman/settings/hooks pointing to the trigger listener route in the pacman-ci namespace.
 
 ## Test the triggered execution of the pipeline
 

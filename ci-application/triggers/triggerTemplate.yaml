@@ -13,7 +13,6 @@ spec:
     metadata:
       generateName: pacman-ci-pipeline-1-run-tr-
     spec:
-      serviceAccountName: pipeline
       pipelineRef:
         name: pacman
       params:
