@@ -18,7 +18,7 @@ components:
           protocol: https
           targetPort: 3000
       memoryLimit: 1Gi
-      memoryRequest: 512Mi
+      memoryRequest: 600Mi
       cpuLimit: '0.5'
       cpuRequest: '0.25'
       mountSources: true
