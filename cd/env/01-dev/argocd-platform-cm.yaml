@@ -4,4 +4,4 @@ metadata:
   name: argocd-env-configmap
   namespace: pacman-ci
 data:
-  ARGOCD_SERVER: argocd-server-openshift-gitops.apps.cluster-nbg98.nbg98.sandbox1343.opentlc.com
+  ARGOCD_SERVER: argocd-server-openshift-gitops.apps.cluster-2md94.2md94.sandbox2326.opentlc.com
