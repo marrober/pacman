@@ -13,6 +13,7 @@ spec:
     metadata:
       generateName: pacman-ci-pipeline-1-run-tr-
     spec:
+      serviceAccountName: image-pusher
       pipelineRef:
         name: pacman
       params:
