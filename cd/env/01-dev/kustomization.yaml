@@ -10,4 +10,4 @@ resources:
 
 images:
 - name: image-registry.openshift-image-registry.svc:5000/pacman-ci/pacman
-  newTag: gz868
+  newTag: 8vlwp
