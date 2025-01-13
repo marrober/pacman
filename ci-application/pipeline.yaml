@@ -251,8 +251,8 @@ spec:
       value: $(params.argocd-project-name-development)
     - name: revision
       value: $(params.argocd-revision)
-    - name: argocd-version
-      value: $(params.argocd-version)
+#    - name: argocd-version
+#      value: $(params.argocd-version)
     taskRef:
       kind: Task
       name: argocd-sync-and-wait
