@@ -59,7 +59,7 @@ oc create secret generic -n pacman-ci argocd-env-secret --from-literal=ARGOCD_PA
 oc get route/argocd-server -n openshift-gitops -o jsonpath='{.spec.host}{"\n"}'
 ````
 
-Copy the Argocd URL (Without  https://) and paste it into the file cd/env/01-dev/argocd-platform-cm.yaml
+Copy the Argocd URL (Without  https://) and paste it into the file cd/env/config/argocd-platform-cm.yaml
 
 ## Create a secret for access to the ACS CI/CD process
 
@@ -89,7 +89,7 @@ oc get secret/image-pusher-dockercfg-sjnjk -n pacman-ci -o 'go-template={{index 
 
 Take the auth section from the item with index : image-registry.openshift-image-registry.svc:5000
 
-echo -n "<auth section>" ¬ base64 -d
+echo -n "<auth section>" | base64 -d
 
 Extract the token and use on the password field below.
 
