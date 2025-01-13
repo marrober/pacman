@@ -11,7 +11,7 @@ spec:
   - apiVersion: tekton.dev/v1beta1
     kind: PipelineRun
     metadata:
-      generateName: pacman-ci-pipeline-1-run-tr-
+      generateName: pacman-ci-tr-
     spec:
       serviceAccountName: image-pusher
       pipelineRef:
