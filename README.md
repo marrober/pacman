@@ -13,6 +13,15 @@ Apply the following in a terminal window for the devspaces instance :
 ````bash
 git config --global commit.gpgsign false
 git config --global tag.gpgsign false
+git config --global user.email <email address>
+git config --global user.name <username>
+````
+
+for example: 
+
+````bash
+git config --global commit.gpgsign false
+git config --global tag.gpgsign false
 git config --global user.email marrober@redhat.com
 git config --global user.name marrober
 ````
