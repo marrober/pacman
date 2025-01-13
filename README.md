@@ -2,6 +2,8 @@
 
 To use DevSpaces to work on this project click on the link below.
 
+BEFORE you click the workspace button, copy the configuration lines below !
+
 [<img src=DevSpaces.png width=50>](https://devspaces.apps.cluster-ktrst.ktrst.sandbox1131.opentlc.com/dashboard/#/load-factory?url=https%3A%2F%2Fraw.githubusercontent.com%2Fmarrober%2Fpacman%2Frefs%2Fheads%2Fmain%2Fdevfile.yaml)
 
 ## Configure each devspaces instance
