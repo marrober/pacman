@@ -10,4 +10,4 @@ resources:
 
 images:
 - name: image-registry.openshift-image-registry.svc:5000/pacman-ci/pacman
-  newTag: 928f0
+  newTag: 11ny3
