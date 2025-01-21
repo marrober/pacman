@@ -1,5 +1,13 @@
 # Creation of the assets
 
+## Patch registry routes
+Patch the cluster to enable image streams for external access.
+Get the route and a user token for access to the image streams. 
+
+````bash
+oc patch configs.imageregistry.operator.openshift.io/cluster --patch '{"spec":{"defaultRoute":true}}' --type=merge
+````
+
 ## Create argocd projects and applications
 
 cd < clone-location >/pacman
@@ -59,7 +67,7 @@ oc create secret generic -n pacman-ci argocd-env-secret --from-literal=ARGOCD_PA
 oc get route/argocd-server -n openshift-gitops -o jsonpath='{.spec.host}{"\n"}'
 ````
 
-Copy the Argocd URL (Without  https://) and paste it into the file cd/env/01-dev/argocd-platform-cm.yaml
+Copy the Argocd URL (Without  https://) and paste it into the file cd/env/config/argocd-platform-cm.yaml
 
 ## Create a secret for access to the ACS CI/CD process
 
@@ -72,20 +80,11 @@ oc create secret generic acs-secret \
 --from-literal=acs_api_token=<token from above step> \
 --from-literal=acs_central_endpoint=$(oc get route/central -n stackrox -o jsonpath='{.spec.host}{":443"}')
 
-## ACS read the Openshift Image Registry
-
-Patch the cluster to enable image streams for external access.
-Get the route and a user token for access to the image streams. 
-
-````bash
-oc patch configs.imageregistry.operator.openshift.io/cluster --patch '{"spec":{"defaultRoute":true}}' --type=merge
-
-oc get route default-route -n openshift-image-registry --template='{{ .spec.host }}'
-````
+# ACS read the Openshift Image Registry
 
 ## Get SA secret for ACS access to registry
 
-oc get secret/image-pusher-dockercfg-sjnjk -n pacman-ci -o 'go-template={{index .data ".dockercfg"}}' | base64 -d | jq .  
+oc get secret/image-pusher-dockercfg-<whatever> -n pacman-ci -o 'go-template={{index .data ".dockercfg"}}' | base64 -d | jq .  
 
 Take the auth section from the item with index : image-registry.openshift-image-registry.svc:5000
 
