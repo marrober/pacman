@@ -10,6 +10,7 @@ resources:
 - pipeline.yaml
 - tasks/acs-image-build-check.yaml
 - tasks/build.yaml
+- tasks/git-clone.yaml
 - tasks/push-image-to-imagestream.yaml
 - tasks/update-and-commit-argocd-app-file.yaml
 - tasks/argocd-sync-and-wait.yaml
