@@ -1,4 +1,32 @@
-# Creation of the assets
+# DevSpaces development process
+
+To use DevSpaces to work on this project click on the link below.
+
+BEFORE you click the workspace button, copy the configuration lines below !
+
+[<img src=DevSpaces.png width=50>](https://devspaces.apps.cluster-ktrst.ktrst.sandbox1131.opentlc.com/dashboard/#/load-factory?url=https%3A%2F%2Fraw.githubusercontent.com%2Fmarrober%2Fpacman%2Frefs%2Fheads%2Fmain%2Fdevfile.yaml)
+
+## Configure each devspaces instance
+
+Apply the following in a terminal window for the devspaces instance :
+
+````bash
+git config --global commit.gpgsign false
+git config --global tag.gpgsign false
+git config --global user.email <email address>
+git config --global user.name <username>
+````
+
+for example: 
+
+````bash
+git config --global commit.gpgsign false
+git config --global tag.gpgsign false
+git config --global user.email marrober@redhat.com
+git config --global user.name marrober
+````
+
+# Creation of demonstration assets
 
 ## Patch registry routes
 Patch the cluster to enable image streams for external access.
@@ -88,7 +116,7 @@ oc get secret/image-pusher-dockercfg-<whatever> -n pacman-ci -o 'go-template={{i
 
 Take the auth section from the item with index : image-registry.openshift-image-registry.svc:5000
 
-echo -n "<auth section>" ¬ base64 -d
+echo -n "<auth section>" | base64 -d
 
 Extract the token and use on the password field below.
 
@@ -162,3 +190,5 @@ git config --global tag.gpgsign false
 git config --global user.email marrober@redhat.com
 git config --global user.name marrober
 ````
+
+

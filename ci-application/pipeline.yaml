@@ -245,19 +245,19 @@ spec:
 ##------------------------------------------------------------------
 # Force ArgoCD sync
 ##------------------------------------------------------------------
-#  - name: sync-argocd
-#    params:
-#    - name: application-name
-#      value: $(params.argocd-project-name-development)
-#    - name: revision
-#      value: $(params.argocd-revision)
-#    - name: argocd-version
-#      value: $(params.argocd-version)
-#    taskRef:
-#      kind: Task
-#      name: argocd-sync-and-wait
-#    runAfter:
-#    - update-and-commit-argocd-project-file
+  - name: sync-argocd
+    params:
+    - name: application-name
+      value: $(params.argocd-project-name-development)
+    - name: revision
+      value: $(params.argocd-revision)
+    - name: argocd-version
+      value: $(params.argocd-version)
+    taskRef:
+      kind: Task
+      name: argocd-sync-and-wait
+    runAfter:
+    - update-dev-deployment
 ##------------------------------------------------------------------
 # Workspaces
 ##------------------------------------------------------------------

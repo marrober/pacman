@@ -11,7 +11,7 @@ spec:
   - apiVersion: tekton.dev/v1beta1
     kind: PipelineRun
     metadata:
-      generateName: pacman-ci-pipeline-1-run-tr-
+      generateName: pacman-ci-tr-
     spec:
       serviceAccountName: image-pusher
       pipelineRef:
@@ -64,9 +64,9 @@ spec:
         - name: cd-git-user-email
           value: "mroberts@redhat.com"
         - name: argocd-project-name-development
-          value: "pacman-development"
+          value: "pacman-dev-01"
         - name: argocd-revision
-          value: "0.1.2"
+          value: "main"
         - name: argocd-version
           value: "v2.4.14"
         - name: quay-instance-url
