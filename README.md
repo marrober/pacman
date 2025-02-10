@@ -71,7 +71,7 @@ oc apply -f ~/Downloads/marrober-secret.yml
 Login to the ArgoCD instance and create the role and policy
 
 ````bash
-argocd login --username admin --password $(oc get secret/argocd-cluster  -n openshift-gitops -o jsonpath='{.data.admin\.password}' | base64 -d) --insecure --grpc-web $(oc get route/argocd-server -n openshift-gitops -o jsonpath='{.spec.host}')
+argocd login --username admin --password $(oc get secret/openshift-gitops-cluster  -n openshift-gitops -o jsonpath='{.data.admin\.password}' | base64 -d) --insecure --grpc-web $(oc get route/openshift-gitops-server -n openshift-gitops -o jsonpath='{.spec.host}')
 
 argocd proj role create pacman pacman-sync --grpc-web
 argocd proj role add-policy pacman pacman-sync --action 'sync' --permission allow --object pacman-development --grpc-web
@@ -100,19 +100,29 @@ Generate a new CI/CD Scoped token.
 
 Execute the following command :
 
+````bash
 oc create secret generic acs-secret \
 --from-literal=acs_api_token=<token from above step> \
 --from-literal=acs_central_endpoint=$(oc get route/central -n stackrox -o jsonpath='{.spec.host}{":443"}')
+````
 
 # ACS read the Openshift Image Registry
 
+````bash
+oc get sa/image-pusher -o yaml
+````
+
 ## Get SA secret for ACS access to registry
 
+````bash
 oc get secret/image-pusher-dockercfg-<whatever> -n pacman-ci -o 'go-template={{index .data ".dockercfg"}}' | base64 -d | jq .  
+````
 
 Take the auth section from the item with index : image-registry.openshift-image-registry.svc:5000
 
+````bash
 echo -n "<auth section>" | base64 -d
+````
 
 Extract the token and use on the password field below.
 
