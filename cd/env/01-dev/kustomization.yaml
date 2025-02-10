@@ -10,6 +10,6 @@ resources:
 
 images:
 - name: default-route-openshift-image-registry.apps.cluster-sl5m4-1.sl5m4-1.sandbox3223.opentlc.com/pacman-ci/pacman
-  newTag: s77n4
+  newTag: l274k
 - name: image-registry.openshift-image-registry.svc:5000/pacman-ci/pacman
   newTag: kmzht
