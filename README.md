@@ -38,9 +38,10 @@ oc patch configs.imageregistry.operator.openshift.io/cluster --patch '{"spec":{"
 
 ## Create argocd projects and applications
 
+````bash
 cd < clone-location >/pacman
-
 oc apply -k .
+````
 
 ## Get image information for dockerfile
 
