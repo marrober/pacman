@@ -77,11 +77,6 @@ argocd proj role create pacman pacman-sync --grpc-web
 argocd proj role add-policy pacman pacman-sync --action 'sync' --permission allow --object pacman-development --grpc-web
 ````
 
-### instructions for using a token
-
-// argocd proj role create-token pacman pacman-sync (not required)
-// Copy token to the file cd/env/01-dev/argocd-auth-token.yaml
-
 ### instructions for using a secret created from the ArgoCD username and password
 Create a secret using the following config :
 
