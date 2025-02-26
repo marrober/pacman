@@ -9,5 +9,5 @@ resources:
 - route.yaml
 
 images:
-- name: default-route-openshift-image-registry.apps.cluster-pcltb.pcltb.sandbox2822.opentlc.com/pacman-ci/pacman
+- name: image-registry.openshift-image-registry.svc:5000/pacman-ci/pacman
   newTag: rfzbb
