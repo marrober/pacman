@@ -53,7 +53,7 @@ spec:
 
         echo $NODE_IMAGE_URL
 
-        sed -e 's|source-image|$NODE_IMAGE_URL:$NODE_IMAGE_TAG|g' dockerfile > new-dockerfile
+        sed -e "s|source-image|$NODE_IMAGE_URL:$NODE_IMAGE_TAG|g" dockerfile > new-dockerfile
 
         cat new-dockerfile
 
