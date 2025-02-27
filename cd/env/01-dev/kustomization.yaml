@@ -10,4 +10,4 @@ resources:
 
 images:
 - name: default-route-openshift-image-registry.apps.cluster-pcltb.pcltb.sandbox2822.opentlc.com/pacman-ci/pacman
-  newTag: 858x2
+  newTag: 2eevc
