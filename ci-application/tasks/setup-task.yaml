@@ -1,8 +1,9 @@
 apiVersion: tekton.dev/v1beta1
 kind: Task
 metadata:
-  name: update-and-commit-argocd-app-file
+  name: build
 spec:
+  params:
   params:
   - name: GIT_URL
     type: string
@@ -29,19 +30,19 @@ spec:
     type: string
   results:
     - name: commit-id
+  stepTemplate:
+    env:
+      - name: "HOME"
+        value: "/tekton/home"
   steps:
-    - name: update-ops-repo-with-imagetag
-      env:
-        - name: GITHOSTACCESSTOKEN
-          valueFrom:
-            secretKeyRef:
-              key: "token"
-              name: "github-access-token"
+    - name: setup-argo-cd
       image: quay.io/marrober/devex-terminal-4:full-terminal-1.5 
       securityContext:
         capabilities:
           add: ["SETFCAP"]
       script: >
+        ## UPDATE WITH CHANGES FOR THE FILE cd/env/config/argocd-platform-cm.yaml
+
         #!/bin/sh
 
         echo "Git URL : " $(params.GIT_URL)".git"
@@ -152,3 +153,4 @@ spec:
 
   workspaces:
     - name: files
+
