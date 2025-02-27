@@ -34,9 +34,10 @@ spec:
       workingDir: /resources/$(params.app-dir)
     - name: get-image-stream
       command:
-      - get
+      - oc
       args:
-      - |- 
+      - |-
+        get 
         is/$(params.node_js_image_name) 
         -o 
         json
