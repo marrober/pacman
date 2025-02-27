@@ -37,10 +37,7 @@ spec:
       - oc
       args:
       - |-
-        get 
-        is/$(params.node_js_image_name) 
-        -o 
-        json
+        get is/$(params.node_js_image_name) -o json
       image: registry.redhat.io/openshift4/ose-cli:latest
       resources: {}
     - name: build
