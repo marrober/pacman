@@ -17,6 +17,7 @@ spec:
       type: string
   results:
     - name: NODE_IMAGE_URL
+    - name: NODE_IMAGE_TAG
   stepTemplate:
     env:
       - name: "HOME"
