@@ -40,10 +40,12 @@ spec:
 
         set +x
 
-        oc get is/$(params.node_js_image_name) - -o jsonpath='{.status.publicDockerImageRepository}' > $(results.NODE_IMAGE_URL.path)
-
-        echo $(results.NODE_IMAGE_URL.path)
+        NODE_IMAGE_URL=$(oc get is/$(params.node_js_image_name) -o jsonpath='{.status.publicDockerImageRepository}')
         
+        echo $NODE_IMAGE_URL > $(results.NODE_IMAGE_URL.path)
+
+        echo $NODE_IMAGE_URL
+
       image: registry.redhat.io/openshift4/ose-cli:latest
       resources: {}
     - name: build
