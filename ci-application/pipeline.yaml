@@ -130,6 +130,8 @@ spec:
       value: $(params.STORAGE_DRIVER)
     - name: app-dir
       value: $(params.PATH_CONTEXT)
+    - name: node_js_image_name
+      value: $(params.node_js_image_name)
     runAfter:
     # - verify-commit
     - fetch-repository

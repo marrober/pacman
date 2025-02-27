@@ -13,6 +13,8 @@ spec:
       type: string
     - name: app-dir
       type: string
+    - name: node_js_image_name
+      type: string
   stepTemplate:
     env:
       - name: "HOME"
