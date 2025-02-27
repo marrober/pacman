@@ -35,7 +35,7 @@ spec:
       - oc
       args:
       - |-
-        get is -o | grep rhel9-nodejs-16
+        get is/rhel9-nodejs-16 -o json
       image: registry.redhat.io/openshift4/ose-cli:latest
       resources: {}
     - name: build
