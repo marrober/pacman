@@ -35,7 +35,7 @@ spec:
       image: registry.redhat.io/rhel9/nodejs-16:latest
       resources: {}
       workingDir: /resources/$(params.app-dir)
-    - name: get-image-stream
+    - name: update-dockerfile
       script: >-
         #!/usr/bin/env bash
 
@@ -53,8 +53,13 @@ spec:
 
         echo $NODE_IMAGE_URL
 
+        sed -e 's|source-image|$NODE_IMAGE_URL:$NODE_IMAGE_TAG|g' dockerfile > new-dockerfile
+
+        cat new-dockerfile
+
       image: registry.redhat.io/openshift4/ose-cli:latest
       resources: {}
+      workingDir: /resources/$(params.app-dir)
     - name: build
       command:
       - buildah
@@ -65,7 +70,7 @@ spec:
       - /files/buildah-containers
       - --layers
       - -f
-      - ./dockerfile
+      - ./new-dockerfile
       - -t
       - my-container-image
       - .
