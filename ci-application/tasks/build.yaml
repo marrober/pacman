@@ -30,6 +30,14 @@ spec:
       image: registry.redhat.io/rhel9/nodejs-16:latest
       resources: {}
       workingDir: /resources/$(params.app-dir)
+    - name: get-image-stream
+      command:
+      - oc
+      args:
+      - |-
+        get is -o | grep rhel9-nodejs-16
+      image: registry.redhat.io/openshift4/ose-cli:latest
+      resources: {}
     - name: build
       command:
       - buildah
