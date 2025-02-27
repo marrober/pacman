@@ -41,6 +41,8 @@ spec:
           value: vfs   
         - name: TLSVERIFY
           value: false
+        - name: node_js_image_name
+          value: rhel9-nodejs-16
           ## Image validation parameters
         - name: acs_central_endpoint
           value: acs-secret

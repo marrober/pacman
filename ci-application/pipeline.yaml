@@ -33,6 +33,8 @@ spec:
     type: string
   - name: TLSVERIFY
     type: string
+  - name: node_js_image_name
+    type: string
  # - name: VERSION
  #   default: 16-ubi8
  #   type: string

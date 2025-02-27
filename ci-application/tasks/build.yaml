@@ -32,10 +32,12 @@ spec:
       workingDir: /resources/$(params.app-dir)
     - name: get-image-stream
       command:
-      - oc
+      - get
       args:
-      - |-
-        get is/rhel9-nodejs-16 -o json
+      - |- 
+        is/$(params.node_js_image_name) 
+        -o 
+        json
       image: registry.redhat.io/openshift4/ose-cli:latest
       resources: {}
     - name: build
