@@ -40,9 +40,15 @@ spec:
 
         set +x
 
+        NODE_IMAGE_TAG=$(oc get is/$(params.node_js_image_name) -o jsonpath='{.status.tags[0].tag}')
+
+        echo $NODE_IMAGE_TAG > $(results.NODE_IMAGE_TAG.path)
+
+        echo $NODE_IMAGE_TAG
+
         NODE_IMAGE_URL=$(oc get is/$(params.node_js_image_name) -o jsonpath='{.status.publicDockerImageRepository}')
         
-        echo $NODE_IMAGE_URL > $(results.NODE_IMAGE_URL.path)
+        echo $NODE_IMAGE_URL:$NODE_IMAGE_TAG > $(results.NODE_IMAGE_URL.path)
 
         echo $NODE_IMAGE_URL
 
