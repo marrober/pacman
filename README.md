@@ -50,8 +50,6 @@ oc project pacman-ci
 oc get is/rhel9-nodejs-16 -o jsonpath='{.status.publicDockerImageRepository}''{":latest"}''{"\n"}'
 ````
 
-Update the dockerfile at pacman/src/dockerfile to the local path to the rhel9-nodejs-16 image.
-
 ## Create github access token
 
 Use the command shown below, with an appropriate token :
