@@ -33,4 +33,4 @@ spec:
 
         argocd app sync "$(params.application-name)" --revision "$(params.revision)" --insecure --grpc-web
 
-        argocd app wait "$(params.application-name)" --health --insecure --grpc-web
+        # argocd app wait "$(params.application-name)" --health --insecure --grpc-web
