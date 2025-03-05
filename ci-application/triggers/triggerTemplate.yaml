@@ -34,7 +34,7 @@ spec:
         - name: tuf-mirror
           value: http://tuf.trusted-artifact-signer.svc
         - name: IMAGE_NAME
-          value: image-registry.openshift-image-registry.svc:5000/$(context.taskRun.namespace)/pacman
+          value: default-route-openshift-image-registry.apps.cluster-h5sp7.h5sp7.sandbox381.opentlc.com/$(context.taskRun.namespace)/pacman
         - name: PATH_CONTEXT
           value: src
         - name: STORAGE_DRIVER
