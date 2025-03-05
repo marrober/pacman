@@ -11,3 +11,5 @@ resources:
 images:
 - name: default-route-openshift-image-registry.apps.cluster-h5sp7.h5sp7.sandbox381.opentlc.com/pacman-ci/pacman
   newTag: 84ffr
+- name: image-registry.openshift-image-registry.svc:5000/pacman-ci/pacman
+  newTag: 4ltz6
