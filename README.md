@@ -134,6 +134,19 @@ Run the script content at : Note : Copy and paste the content into a command win
 ````bash
 image-git-signing-setup/local-git-signing-setup.txt
 ````
+## Update image paths in various files
+
+Get the path to the image in the image stream using the command :
+
+````bash
+oc get is/rhel9-nodejs-16 -o jsonpath='{.status.publicDockerImageRepository}' | cut -d "/" -f 1
+````
+
+Update this value in :
+
+cd/env/010dev/deployment.yaml
+cd/env/01-dev/kustomization.yaml
+ci-application/pipelinerun.yaml - IMAGE_NAME property
 
 ## Test the pipeline execution
 
@@ -143,7 +156,13 @@ oc create -f ci-application/pipelinerun.yaml
 
 ## Create a webhook in Github
 
-Ensure a webhook exists here : https://github.com/marrober/pacman/settings/hooks pointing to the trigger listener route in the pacman-ci namespace.
+Get the path for the pipeline trigger from the command :
+
+````bash
+oc get route/pacman-ci-listener-el -o jsonpath='{"http://"}{.spec.host}'
+````
+
+Ensure a webhook exists here : https://github.com/marrober/pacman/settings/hooks pointing to the trigger listener route in the pacman-ci namespace. 
 
 ## Test the triggered execution of the pipeline
 
