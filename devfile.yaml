@@ -22,12 +22,12 @@ components:
       cpuLimit: '0.5'
       cpuRequest: '0.25'
       mountSources: true
-      volumeMounts:
-        - name: npm
-          path: /home/user/.npm
-  - name: npm
-    volume:
-      size: 1G
+#      volumeMounts:
+#        - name: npm
+#          path: /home/user/.npm
+#  - name: npm
+#    volume:
+#      size: 1G
 commands:
   - id: 1-dependencies
     exec:
