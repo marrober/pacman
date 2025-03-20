@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: smee-proxy-service
+  labels:
+    app.kubernetes.io/part-of: smee
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: gosmee
+  template:
+    metadata:
+      labels:
+        app: gosmee
+    spec:
+      containers:
+        - image: image-registry.openshift-image-registry.svc:5000/${{ values.application_name }}-ci/gosmee:latest
+          imagePullPolicy: IfNotPresent
+          name: gosmee
+          args:
+            [
+              "client",
+              "--saveDir",
+              "/tmp/save",
+              "https://smee.io/${{ values.smee_io_identifier }} ",
+              "http://${{ values.application_name }}-ci-listener-el-${{ values.application_name }}-ci.apps.{{ values.cluster-name }}-ci.demolab.local"
+            ]

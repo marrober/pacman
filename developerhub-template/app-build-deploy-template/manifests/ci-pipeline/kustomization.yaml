@@ -1,0 +1,19 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+- namespace.yaml
+- role-bindings/argo-cd-admin.yaml
+- role-bindings/pipeline-service-role.yaml
+- role-bindings/pipeline-service-account.yaml
+- role-bindings/pipeline-service-rolebinding.yaml
+- pipeline.yaml
+- tasks/acs-image-build-check.yaml
+- tasks/build.yaml
+- tasks/push-image-to-imagestream.yaml
+- tasks/update-and-commit-argocd-app-file.yaml
+- triggers/eventListener.yaml
+- triggers/eventListenerRoute.yaml
+- triggers/triggerBinding.yaml
+- triggers/triggerTemplate.yaml
+#- smee/deployment.yaml

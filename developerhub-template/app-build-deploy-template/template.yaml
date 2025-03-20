@@ -1,0 +1,329 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: application-build-deploy-template
+  title: Application with build process (Tekton) and deployment process (ArgoCD) - 0.61
+  description: Create a simple microservice to be built with Tekton Pipeline and deployed with ArgoCD. This includes a security check with ACS.
+  tags:
+    - java
+    - tekton
+    - argocd
+spec:
+  owner: marrober
+  type: service
+  parameters:
+    - title: Provide information for the application
+      required:
+        - application_name
+      properties:
+        application_name:
+          title: Application name
+          type: string
+          description: Unique name of the application
+          pattern: '^[a-z0-9-]*$'
+          maxLength: 20
+          default: pacman1
+        description:
+          title: Description
+          type: string
+          description: Help others understand what this application does.
+          default: A really useful application.
+    - title: Source code repository Information
+      required:
+        - source_code_repo
+      properties:
+        source_code_repo:
+          title: Repository Location
+          type: object
+          properties:
+            host:
+              title: Repo Host
+              type: string
+              description: The SCM host
+              enum:
+                  - github.com
+                  - gitlab.com
+              default: github.com
+            owner:
+              title: Repo Owner
+              type: string
+              description: Your SCM host organization/group
+              default: marrober
+            git_username:
+              title: Username for source code repo
+              type: string
+              description: The username for the source code repository
+              default: marrober
+            git_email_address:
+              title: Email address for source code repo
+              type: string
+              description: Email address of the user named above
+              default: marrober@redhat.com
+            token: 
+              title: Github authentication token
+              type: string
+              description: A Github authentication token to be used to create repositories.
+    - title: Provide information for the development cluster
+      required:
+        - cluster_name
+        - smee_io_identifier
+      properties:
+        cluster_name:
+          title: Cluster name
+          type: string
+          description: The demolab environment to which the ci process will be deployed.
+          enum:
+            - 'bakerville'
+            - 'bloomfield'
+            - 'brick'
+            - 'cedar'
+            - 'celeron'
+            - 'coffee'
+            - 'clarksdale'
+            - 'comet'
+            - 'conroe'
+            - 'pentium'
+            - 'sandy'
+            - 'skylake'
+            - 'whiskylake'
+          default: conroe
+        smee_io_identifier:
+          title: SMEE.IO Identifier
+          type: string
+          description: The identifier for the SMEE.IO proxy service used to enable webhooks to reach into demolab.
+          ui:field: EntityNamePicker
+          default: vSantlzgFXh7ddOf
+    - title: Provide Image Registry Information
+      required:
+        - image_registry
+      properties:
+        image_registry:
+          title: Image Registry
+          type: string
+          enum:
+            - Openshift
+            - Quay
+          default: OpenShift
+      dependencies:
+        image_registry:
+          oneOf:
+            - properties:
+                image_registry:
+                  enum:
+                    - Openshift
+                image_host:
+                  title: Image Host
+                  type: string
+                  description: Host for storing image
+                  default: image-registry.openshift-image-registry.svc:5000
+                image_tag:
+                  title: Image Tag
+                  default: latest
+                  type: string
+                  description: Build Image tag
+            - properties:
+                image_registry:
+                  enum:
+                    - Quay
+                image_host:
+                  title: Image Host
+                  type: string
+                  description: Host for storing image
+                  default: quay.io
+                image_organization:
+                  title: Organization
+                  type: string
+                  description: Name of the Quay Organization
+                  default: quayadmin
+                image_tag:
+                  title: Image Tag
+                  default: latest
+                  type: string
+                  description: Build Image tag
+    - title: Gitops repository Information
+      required:
+        - gitops_repo
+      properties:
+        gitops_project_name:
+          title: GitOps project name
+          type: string
+          description: Unique name of the gitops project
+          pattern: '^[a-z0-9-]*$'
+          maxLength: 20
+          default: pacman-1
+        gitops_repo:
+          title: Repository Location
+          type: object
+          properties:
+            host:
+              title: Repo Host
+              type: string
+              description: The SCM host
+              enum:
+                  - github.com
+                  - gitlab.com
+              default: github.com
+            owner:
+              title: Repo Owner
+              type: string
+              description: Your SCM host organization/group
+              default: marrober
+            git_username:
+              title: Username for CD repo
+              type: string
+              description: The username for the CD repository
+              default: marrober
+            git_email_address:
+              title: Email address for CD repo
+              type: string
+              description: Email address of the user named above
+              default: marrober@redhat.com
+#    - title: Application ownership and responsibilities
+#      required:
+#        - application_owner
+#      properties:
+#        application_owner:
+#          title: Application owner
+#          type: string
+#          description: The responsible owner of the application
+#          pattern: '^[A-Z][A-Za-z ]*$'
+#          maxLength: 20
+#          default: Mark Roberts
+  steps:
+    - id: log-message-1
+      name: Application and repo details
+      action: debug:log
+      input: 
+        message: 'Parameters -> Application name : ${{ parameters.application_name }}, source_repo_host : ${{ parameters.source_code_repo.host }}, owner : ${{ user.entity.metadata.name }}'
+        listWorkspace: false
+
+    - id: log-message-2
+      name: SCM Repo URL
+      action: debug:log
+      input: 
+        message: 'SCM repo URL (input) ${{ parameters.source_code_repo.host }}?owner=${{ parameters.source_code_repo.owner }}&repo=${{ parameters.application_name}}-scm'
+        listWorkspace: false
+
+    - id: log-message-3
+      name: Token
+      action: debug:log
+      input: 
+        message: 'Token : ${{ parameters.source_code_repo.token }}'
+        listWorkspace: false
+
+    - id: log-message-4
+      name: Gitops project name
+      action: debug:log
+      input: 
+        message: 'gitops project name : ${{ parameters.gitops_project_name }}'
+        listWorkspace: false
+
+    - id: log-message-5
+      name: GitOps repo URL
+      action: debug:log
+      input: 
+        message: 'Gitops repo URL (input) ${{ parameters.gitops_repo.host }}?owner=${{ parameters.gitops_repo.owner }}&repo=${{ parameters.application_name }}-gitops'
+        listWorkspace: false
+
+    - id: template
+      name: Fetch skeleton & template
+      action: fetch:template
+      input:
+        url: ./skeleton
+        copyWithoutTemplating:
+          - .github/workflows/*
+        values:
+          application_name: ${{ parameters.application_name }}
+          description: ${{ parameters.description }}
+          owner: ${{ parameters.source_code_repo.owner }}
+          host: ${{ parameters.source_code_repo.host }}
+          destination: ${{ parameters.source_code_repo.host }}/${{ parameters.source_code_repo.owner }}/${{ parameters.application_name }}
+          quay_destination: ${{ parameters.image_organization}}/${{ parameters.application_name }}
+
+    - id: publish_scm
+      name: Publish source code resources
+      action: publish:github
+      input:
+        repoUrl: '${{ parameters.source_code_repo.host }}?owner=${{ parameters.source_code_repo.owner }}&repo=${{ parameters.application_name}}-scm'
+        repoVisibility: public
+        defaultBranch: main
+        token: ${{ parameters.source_code_repo.token }}
+
+    - id: log-message-6
+      name: SCM repo URL
+      action: debug:log
+      input: 
+        message: 'SCM repo URL ${{ steps.publish_scm.output.repoContentsUrl }}'
+        listWorkspace: false
+
+    - id: register
+      name: Register SCM content
+      action: catalog:register
+      input:
+        repoContentsUrl: "${{ steps.publish_scm.output.repoContentsUrl }}"
+        catalogInfoPath: "/catalog-info.yaml"
+
+    - id: template-gitops-deployment
+      name: Generating deployment resources
+      action: fetch:template
+      input:
+        url: ./manifests
+        copyWithoutTemplating: 
+          - ci-pipeline/tasks/*
+        values:
+          application_name: ${{ parameters.application_name }}
+          cd_git_username: ${{ parameters.cd_git_username }}
+          cd_git_email_address: ${{ parameters.cd_git_email_address }}
+          smee_io_identifier: ${{ parameters.smee_io_identifier }}
+          destination: https://${{ parameters.gitops_repo.host }}/${{ parameters.gitops_repo.owner }}/${{ parameters.application_name }}-gitops.git
+          source_repository: https://${{ parameters.source_repo }}/${{ parameters.source_code_repo.owner }}/${{ parameters.application_name}}-scm.git
+          repository_name: ${{ parameters.application_name }}
+          git_owner: ${{ parameters.gitops_repo.owner }}
+          cluster: ${{ values.cluster_name }}
+          namespace: ${{ parameters.application_name }}-dev
+          image_registry: ${{ parameters.image_registry }}
+          image_host: ${{ parameters.image_host }}
+          image_organization: ${{ parameters.image_organization }}
+          image_name: ${{ parameters.component_id }}
+          image_tag: ${{ parameters.image_tag }}
+          port: 8080
+          repository_host: ${{ parameters.gitops_repo.host }}
+          deployment_name: ${{ parameters.application_name }}
+          user: ${{ user.entity.metadata.name }}
+        targetPath: ./tenant-gitops
+
+    - id: publish_gitops
+      name: Publishing GitOps resources
+      action: publish:github
+      input:
+        repoUrl: '${{ parameters.gitops_repo.host }}?owner=${{ parameters.gitops_repo.owner }}&repo=${{ parameters.application_name }}-gitops'
+        title: gitops resources for ${{ parameters.application_name }}
+        description: gitops resources for ${{ parameters.application_name }}
+        sourcePath: ./tenant-gitops
+        repoVisibility: public
+        defaultBranch: main
+        token: ${{ parameters.source_code_repo.token }}
+
+    - id: create-argocd-resources
+      name: Create ArgoCD Resources
+      action: argocd:create-resources
+      input:
+        appName: ${{ parameters.application_name }}-ci
+        projectName: ${{ parameters.application_name }}
+        argoInstance: argocd
+        namespace: openshift-gitops
+        repoUrl: https://${{ parameters.gitops_repo.host }}/${{ parameters.gitops_repo.owner }}/${{ parameters.application_name }}-gitops.git
+        path: 'argocd/'
+
+  output:
+    links:
+      - title: Source code SCM
+        url: ${{ steps.publish_scm.output.remoteUrl }}
+      - title: GitOps content SCM
+        url: ${{ steps.publish_gitops.output.remoteUrl }}
+      - title: Open Component in catalog
+        icon: catalog
+        entityRef: ${{ steps.register.output.entityRef }}
+    message-0 : 'parameters -> Application name : ${{ parameters.application_name }}\n'
+    message-1 : 'parameters -> Description      : ${{ parameters.description }}\n'
+

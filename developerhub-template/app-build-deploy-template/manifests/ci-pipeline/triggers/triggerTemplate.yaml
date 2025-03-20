@@ -1,0 +1,78 @@
+apiVersion: triggers.tekton.dev/v1alpha1
+kind: TriggerTemplate
+metadata:
+  name: ${{ values.application_name }}-ci-template
+spec:
+  params:
+  - name: gitrepository.url
+  - name: gitrevision
+  - name: branch
+  resourcetemplates:
+  - apiVersion: tekton.dev/v1beta1
+    kind: PipelineRun
+    metadata:
+      generateName: ${{ values.application_name }}-ci-pipeline-tr-
+    spec:
+      serviceAccountName: pipeline
+      pipelineRef:
+        name: ${{ values.application_name }}-pipeline
+      params:
+        - name: git-url
+          value: $(tt.params.gitrepository.url)
+        - name: git-revision
+          value: $(tt.params.gitrevision)
+        - name: branch
+          value: $(tt.params.branch)
+        - name: IMAGE_NAME
+          value: image-registry.openshift-image-registry.svc:5000/$(context.taskRun.namespace)/${{ values.application_name }}
+        - name: PATH_CONTEXT
+          value: src
+        - name: STORAGE_DRIVER
+          value: vfs   
+        - name: TLSVERIFY
+          value: false
+          ## Image validation parameters
+        - name: acs_central_endpoint
+          value: acs-secret
+        - name: acs_api_token
+          value: acs-secret
+        - name: roxctl-output-format
+          value: "table"
+          ## Update Argocd application and commit to GitHub
+        - name: GIT_REPO
+          value: $(tt.params.gitrepository.url)
+        - name: GIT_REVISION
+          value: $(tt.params.gitrevision)
+        - name: repo_type
+          value: github.com
+        - name: cd-git-url
+          value: marrober/${{ values.application_name }}
+        - name: cd-git-repo-name
+          value: ${{ values.application_name }}
+        - name: cd-git-repo-path-to-content-development
+          value: cd/env/01-dev
+        - name: argocd-application-file
+          value: ${{ values.application_name }}-development.yaml
+        - name: cd-git-commit-comment-dev
+          value: "Update from triggered ci process - dev"
+        - name: cd-git-user-name
+          value: "${{ values.cd-git-username }}"
+        - name: cd-git-user-email
+          value: "${{ values.cd-git-email-address }}"
+      workspaces:
+      - name: files
+        volumeClaimTemplate:
+          spec:
+            accessModes:
+            - ReadWriteOnce
+            resources:
+              requests:
+                storage: 20Gi
+      - name: workspace
+        volumeClaimTemplate:
+          spec:
+            accessModes:
+            - ReadWriteOnce
+            resources:
+              requests:
+                storage: 1Gi

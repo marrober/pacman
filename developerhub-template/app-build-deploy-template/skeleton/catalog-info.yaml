@@ -1,0 +1,50 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: ${{values.application_name | dump}}
+  {%- if values.description %}
+  description: ${{values.description | dump}}
+  {%- endif %}
+  annotations:
+    gitlab.com/project: ${{ values.destination }}
+    argocd/app-selector: rht-gitops.com/openshift-gitops=${{values.application_name}}-root
+    backstage.io/kubernetes-id: ${{values.application_name}}
+    backstage.io/kubernetes-namespace: ${{values.application_name}}-ci
+    argocd/app-name: ${{ values.destination }}-root
+    janus-idp.io/tekton: ${{values.application_name}}
+    backstage.io/source-location: url:https://${{values.destination}}-scm
+    backstage.io/techdocs-ref: url:${{values.destination}}-scm
+    gitlab.com/project-slug: ${{values.destination}}
+    quay.io/repository-slug: ${{values.quay_destination | dump}}
+    janus-idp.io/tekton-enabled : 'true'
+  labels:
+    backstage.io/kubernetes-id: ${{values.application_name}}
+  tags:
+    - mr-test
+  links:
+    - url: https://devspaces${{values.cluster}}/#https://${{values.host}}/${{values.destination}}
+      title: OpenShift Dev Spaces (VS Code)
+      icon: web
+    - url: https://devspaces${{values.cluster}}/#https://${{values.host}}/${{values.destination}}?che-editor=che-incubator/che-idea/latest
+      title: OpenShift Dev Spaces (JetBrains IntelliJ)
+      icon: web
+spec:
+  type: service
+  lifecycle: production
+  owner: ${{values.owner | dump}} 
+  providesApis:
+    - ${{values.application_name | dump}}
+---
+apiVersion: backstage.io/v1alpha1
+kind: API
+metadata:
+  name: ${{values.application_name | dump}}
+  {%- if values.description %}
+  description: ${{values.description | dump}}
+  {%- endif %}
+spec:
+  type: openapi
+  lifecycle: production
+  owner: ${{values.owner | dump}}
+  definition:
+    $text: ./openapi.yaml

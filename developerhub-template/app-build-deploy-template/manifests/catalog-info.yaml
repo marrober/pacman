@@ -1,0 +1,14 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: ${{values.application_name | dump}}
+  {%- if values.description %}
+  description: ${{values.description | dump}}
+  {%- endif %}
+  annotations:
+    gitlab.com/project: ${{values.destination}}
+  tags:
+    - rhone
+spec:
+  type: service
+  lifecycle: production
