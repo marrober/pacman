@@ -144,7 +144,7 @@ oc get is/rhel9-nodejs-16 -o jsonpath='{.status.publicDockerImageRepository}' | 
 
 Update this value in :
 
-cd/env/010dev/deployment.yaml
+cd/env/01-dev/deployment.yaml
 cd/env/01-dev/kustomization.yaml
 ci-application/pipelinerun.yaml - IMAGE_NAME property
 ci-application/triggers/triggerTemplate.yaml - IMAGE_NAME property
