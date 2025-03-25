@@ -10,4 +10,4 @@ resources:
 
 images:
 - name: default-route-openshift-image-registry.apps.cluster-h6d9s.h6d9s.sandbox1766.opentlc.com/pacman-ci/pacman
-  newTag: bcbwg
+  newTag: gtl4h
