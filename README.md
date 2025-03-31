@@ -69,7 +69,7 @@ oc apply -f ~/Downloads/marrober-secret.yml
 Login to the ArgoCD instance and create the role and policy
 
 ````bash
-argocd login --username admin --password $(oc get secret/argocd-cluster  -n openshift-gitops -o jsonpath='{.data.admin\.password}' | base64 -d) --insecure --grpc-web $(oc get route/argocd-server -n openshift-gitops -o jsonpath='{.spec.host}')
+argocd login --username admin --password $(oc get secret/openshift-gitops-cluster  -n openshift-gitops -o jsonpath='{.data.admin\.password}' | base64 -d) --insecure --grpc-web $(oc get route/openshift-gitops-server -n openshift-gitops -o jsonpath='{.spec.host}')
 
 argocd proj role create pacman pacman-sync --grpc-web
 argocd proj role add-policy pacman pacman-sync --action 'sync' --permission allow --object pacman-development --grpc-web
@@ -79,14 +79,14 @@ argocd proj role add-policy pacman pacman-sync --action 'sync' --permission allo
 Create a secret using the following config :
 
 ````bash
-oc create secret generic -n pacman-ci argocd-env-secret --from-literal=ARGOCD_PASSWORD=$(oc get secret/argocd-cluster  -n openshift-gitops -o jsonpath='{.data.admin\.password}' | base64 -d) --from-literal=ARGOCD_USERNAME=admin
+oc create secret generic -n pacman-ci argocd-env-secret --from-literal=ARGOCD_PASSWORD=$(oc get secret/openshift-gitops-cluster  -n openshift-gitops -o jsonpath='{.data.admin\.password}' | base64 -d) --from-literal=ARGOCD_USERNAME=admin
 ````
 
 ### get the ArgoCD URL
 
 
 ````bash
-oc get route/argocd-server -n openshift-gitops -o jsonpath='{.spec.host}{"\n"}'
+oc get route/openshift-gitops-server -n openshift-gitops -o jsonpath='{.spec.host}{"\n"}'
 ````
 
 Copy the Argocd URL (Without  https://) and paste it into the file cd/env/config/argocd-platform-cm.yaml

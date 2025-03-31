@@ -9,5 +9,5 @@ resources:
 - route.yaml
 
 images:
-- name: default-route-openshift-image-registry.apps.cluster-h6d9s.h6d9s.sandbox1766.opentlc.com/pacman-ci/pacman
+- name: default-route-openshift-image-registry.apps.cluster-4gq2n.4gq2n.sandbox640.opentlc.com/pacman-ci/pacman
   newTag: gtl4h
