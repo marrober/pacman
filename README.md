@@ -50,6 +50,8 @@ oc project pacman-ci
 oc get is/rhel9-nodejs-16 -o jsonpath='{.status.publicDockerImageRepository}''{":latest"}''{"\n"}'
 ````
 
+Update the dockerfile in src/dockerfile
+
 ## Create github access token
 
 Use the command shown below, with an appropriate token :
@@ -69,7 +71,7 @@ oc apply -f ~/Downloads/marrober-secret.yml
 Login to the ArgoCD instance and create the role and policy
 
 ````bash
-argocd login --username admin --password $(oc get secret/openshift-gitops-cluster  -n openshift-gitops -o jsonpath='{.data.admin\.password}' | base64 -d) --insecure --grpc-web $(oc get route/openshift-gitops-server -n openshift-gitops -o jsonpath='{.spec.host}')
+argocd login --username admin --password $(oc get secret/argocd-cluster  -n openshift-gitops -o jsonpath='{.data.admin\.password}' | base64 -d) --insecure --grpc-web $(oc get route/argocd-server -n openshift-gitops -o jsonpath='{.spec.host}')
 
 argocd proj role create pacman pacman-sync --grpc-web
 argocd proj role add-policy pacman pacman-sync --action 'sync' --permission allow --object pacman-development --grpc-web
@@ -79,14 +81,14 @@ argocd proj role add-policy pacman pacman-sync --action 'sync' --permission allo
 Create a secret using the following config :
 
 ````bash
-oc create secret generic -n pacman-ci argocd-env-secret --from-literal=ARGOCD_PASSWORD=$(oc get secret/openshift-gitops-cluster  -n openshift-gitops -o jsonpath='{.data.admin\.password}' | base64 -d) --from-literal=ARGOCD_USERNAME=admin
+oc create secret generic -n pacman-ci argocd-env-secret --from-literal=ARGOCD_PASSWORD=$(oc get secret/argocd-cluster  -n openshift-gitops -o jsonpath='{.data.admin\.password}' | base64 -d) --from-literal=ARGOCD_USERNAME=admin
 ````
 
 ### get the ArgoCD URL
 
 
 ````bash
-oc get route/openshift-gitops-server -n openshift-gitops -o jsonpath='{.spec.host}{"\n"}'
+oc get route/argocd-server -n openshift-gitops -o jsonpath='{.spec.host}{"\n"}'
 ````
 
 Copy the Argocd URL (Without  https://) and paste it into the file cd/env/config/argocd-platform-cm.yaml
@@ -116,14 +118,16 @@ oc get sa/image-pusher -o yaml
 oc get secret/image-pusher-dockercfg-<whatever> -n pacman-ci -o 'go-template={{index .data ".dockercfg"}}' | base64 -d | jq .  
 ````
 
-Take the password section from the item with index : image-registry.openshift-image-registry.svc:5000
+Take the password section from the item with index : default-route-openshift-image-registry.apps.cluster-.....
+
+Base64 decode the password section.
 
 In ACS go to Platform configurations -> Integrations -> Image integration -> Generic Docker Registry and press the ‘Create integration’ button.
 Fill in the details as :
 	Integration name : OCP Registry
-	Endpoint : https://image-registry.openshift-image-registry.svc:5000
+	Endpoint : https://default-route-openshift-image-registry.apps.cluster-.....
 	Username : admin
-	Password : <token from prior command>
+	Password : base64 decoded token
 	Check the option : Disable TLS certificate validation (insecure)
 Test the integration and save if successful.
 
