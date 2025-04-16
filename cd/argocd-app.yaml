@@ -8,7 +8,7 @@ spec:
   project: pacman
   destination:
     namespace: openshift-gitops
-    server: https://kubernetes.default.svc
+    server: https://api.cluster-1.sandbox1142.opentlc.com:6443
   ignoreDifferences:
   - group: argoproj.io
     jsonPointers:
