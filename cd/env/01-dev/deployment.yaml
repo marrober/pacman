@@ -24,7 +24,7 @@ spec:
     spec:
       containers:
         - name: pacman
-          image: default-route-openshift-image-registry.apps.cluster-4jhcf.4jhcf.sandbox797.opentlc.com/pacman-ci/pacman
+          image: default-route-openshift-image-registry.apps.cluster-jdnfw.jdnfw.sandbox1112.opentlc.com/pacman-ci/pacman
           ports:
             - containerPort: 8080
               protocol: TCP

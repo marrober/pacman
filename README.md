@@ -71,7 +71,7 @@ oc apply -f ~/Downloads/marrober-secret.yml
 Login to the ArgoCD instance and create the role and policy
 
 ````bash
-argocd login --username admin --password $(oc get secret/argocd-cluster  -n openshift-gitops -o jsonpath='{.data.admin\.password}' | base64 -d) --insecure --grpc-web $(oc get route/argocd-server -n openshift-gitops -o jsonpath='{.spec.host}')
+argocd login --username admin --password $(oc get secret/openshift-gitops-cluster  -n openshift-gitops -o jsonpath='{.data.admin\.password}' | base64 -d) --insecure --grpc-web $(oc get route/openshift-gitops-server -n openshift-gitops -o jsonpath='{.spec.host}')
 
 argocd proj role create pacman pacman-sync --grpc-web
 argocd proj role add-policy pacman pacman-sync --action 'sync' --permission allow --object pacman-development --grpc-web
@@ -81,7 +81,7 @@ argocd proj role add-policy pacman pacman-sync --action 'sync' --permission allo
 Create a secret using the following config :
 
 ````bash
-oc create secret generic -n pacman-ci argocd-env-secret --from-literal=ARGOCD_PASSWORD=$(oc get secret/argocd-cluster  -n openshift-gitops -o jsonpath='{.data.admin\.password}' | base64 -d) --from-literal=ARGOCD_USERNAME=admin
+oc create secret generic -n pacman-ci argocd-env-secret --from-literal=ARGOCD_PASSWORD=$(oc get secret/openshift-gitops-cluster  -n openshift-gitops -o jsonpath='{.data.admin\.password}' | base64 -d) --from-literal=ARGOCD_USERNAME=admin
 ````
 
 ### get the ArgoCD URL
@@ -120,14 +120,12 @@ oc get secret/image-pusher-dockercfg-<whatever> -n pacman-ci -o 'go-template={{i
 
 Take the password section from the item with index : default-route-openshift-image-registry.apps.cluster-.....
 
-Base64 decode the password section.
-
 In ACS go to Platform configurations -> Integrations -> Image integration -> Generic Docker Registry and press the ‘Create integration’ button.
 Fill in the details as :
 	Integration name : OCP Registry
 	Endpoint : https://default-route-openshift-image-registry.apps.cluster-.....
 	Username : admin
-	Password : base64 decoded token
+	Password : token from above
 	Check the option : Disable TLS certificate validation (insecure)
 Test the integration and save if successful.
 
@@ -152,6 +150,8 @@ cd/env/01-dev/deployment.yaml
 cd/env/01-dev/kustomization.yaml
 ci-application/pipelinerun.yaml - IMAGE_NAME property
 ci-application/triggers/triggerTemplate.yaml - IMAGE_NAME property
+
+Checkin the changes to the Git repo.
 
 ## Test the pipeline execution
 
