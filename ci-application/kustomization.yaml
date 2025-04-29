@@ -3,9 +3,9 @@ kind: Kustomization
 
 resources:
 - role-bindings/argo-cd-admin.yaml
-- role-bindings/pipeline-service-role.yaml
-- role-bindings/pipeline-service-account.yaml
-- role-bindings/pipeline-service-rolebinding.yaml
+#- role-bindings/pipeline-service-role.yaml
+#- role-bindings/pipeline-service-account.yaml
+#- role-bindings/pipeline-service-rolebinding.yaml
 - role-bindings/image-pusher-service-account.yaml
 - pipeline.yaml
 - tasks/acs-image-build-check.yaml
