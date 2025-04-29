@@ -175,7 +175,7 @@ Make a change to the application source code at : src/public/pacman-canvas.js li
 
 # DevSpaces configuration
 
-Configure a global oauth connection to guthub using the information here : https://eclipse.dev/che/docs/stable/administration-guide/configuring-oauth-2-for-github/
+Configure a global oauth connection to github using the information here : https://eclipse.dev/che/docs/stable/administration-guide/configuring-oauth-2-for-github/
 
 Github app created in marrober Github location on 8th January with the credentials in Notes document.
 
