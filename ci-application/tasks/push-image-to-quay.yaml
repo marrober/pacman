@@ -45,13 +45,6 @@ spec:
       securityContext:
         capabilities:
           add: ["SETFCAP"]
-      resources:
-        requests:
-          memory: 2Gi
-          cpu: '1'
-        limits:
-          memory: 4Gi
-          cpu: '2'
     - name: buildah-tag-image
       command:
         - buildah
@@ -65,14 +58,6 @@ spec:
       securityContext:
         capabilities:
           add: ["SETFCAP"]
-      resources:
-        requests:
-          memory: 2Gi
-          cpu: '1'
-        limits:
-          memory: 4Gi
-          cpu: '2'
-
     - name: push-image-to-quay-prior
       script: |
 
@@ -103,13 +88,6 @@ spec:
       securityContext:
         capabilities:
           add: ["SETFCAP"]
-      resources:
-        requests:
-          memory: 2Gi
-          cpu: '1'
-        limits:
-          memory: 4Gi
-          cpu: '2'
       volumeMounts:
         - name: quay-auth-secret
           mountPath: /etc/secret-volume
@@ -170,13 +148,6 @@ spec:
       securityContext:
         capabilities:
           add: ["SETFCAP"]
-      resources:
-        requests:
-          memory: 2Gi
-          cpu: '1'
-        limits:
-          memory: 4Gi
-          cpu: '2'
       volumeMounts:
         - name: quay-auth-secret
           mountPath: /etc/secret-volume
