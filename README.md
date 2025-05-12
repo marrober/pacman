@@ -88,7 +88,7 @@ oc create secret generic -n pacman-ci argocd-env-secret --from-literal=ARGOCD_PA
 
 
 ````bash
-oc get route/argocd-server -n openshift-gitops -o jsonpath='{.spec.host}{"\n"}'
+oc get route/openshift-gitops-server -n openshift-gitops -o jsonpath='{.spec.host}{"\n"}'
 ````
 
 Copy the Argocd URL (Without  https://) and paste it into the file cd/env/config/argocd-platform-cm.yaml
