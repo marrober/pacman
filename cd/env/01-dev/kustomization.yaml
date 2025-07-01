@@ -10,4 +10,4 @@ resources:
 
 images:
 - name: default-route-openshift-image-registry.apps.cluster-xljdn.xljdn.sandbox223.opentlc.com/pacman-ci/pacman
-  newTag: gszdz
+  newTag: idrwf
