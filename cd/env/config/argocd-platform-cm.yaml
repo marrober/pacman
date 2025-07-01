@@ -4,5 +4,4 @@ metadata:
   name: argocd-env-configmap
   namespace: pacman-ci
 data:
-  ARGOCD_SERVER: oc get route/openshift-gitops-server -n openshift-gitops -o jsonpath='{.spec.host}{"\n"}'
-
+  ARGOCD_SERVER: argocd-server-openshift-gitops.apps.cluster-xljdn.xljdn.sandbox223.opentlc.com

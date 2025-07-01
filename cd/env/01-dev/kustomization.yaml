@@ -9,5 +9,5 @@ resources:
 - route.yaml
 
 images:
-- name: default-route-openshift-image-registry.apps.cluster-v8vmm.v8vmm.sandbox1487.opentlc.com/pacman-ci/pacman
+- name: default-route-openshift-image-registry.apps.cluster-xljdn.xljdn.sandbox223.opentlc.com/pacman-ci/pacman
   newTag: 7j7nw

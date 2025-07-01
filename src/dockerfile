@@ -1,6 +1,6 @@
-FROM default-route-openshift-image-registry.apps.cluster-r67x5.r67x5.sandbox1577.opentlc.com/pacman-ci/rhel9-nodejs-16:latest
+FROM default-route-openshift-image-registry.apps.cluster-xljdn.xljdn.sandbox223.opentlc.com/pacman-ci/rhel9-nodejs-16:latest
 USER 0
 COPY . /opt/app-root/src/
 RUN chmod a+w /var/log
 USER 1001
-CMD ["npm", "start"]
+CMD [npm, start]

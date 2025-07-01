@@ -50,7 +50,9 @@ oc project pacman-ci
 oc get is/rhel9-nodejs-16 -o jsonpath='{.status.publicDockerImageRepository}''{":latest"}''{"\n"}'
 ````
 
-Update the dockerfile in src/dockerfile
+Update the dockerfile in src/dockerfile with the command : 
+
+echo "FROM $(oc get is/rhel9-nodejs-16 -o jsonpath='{.status.publicDockerImageRepository}''{":latest"}''{"\n"}')\nUSER 0\nCOPY . /opt/app-root/src/\nRUN chmod a+w /var/log\nUSER 1001\nCMD ["npm", "start"]" > src/dockerfile
 
 ## Create github access token
 
@@ -73,6 +75,12 @@ Login to the ArgoCD instance and create the role and policy
 ````bash
 argocd login --username admin --password $(oc get secret/openshift-gitops-cluster  -n openshift-gitops -o jsonpath='{.data.admin\.password}' | base64 -d) --insecure --grpc-web $(oc get route/openshift-gitops-server -n openshift-gitops -o jsonpath='{.spec.host}')
 
+OR
+
+argocd login --username admin --password $(oc get secret/argocd-cluster  -n openshift-gitops -o jsonpath='{.data.admin\.password}' | base64 -d) --insecure --grpc-web $(oc get route/argocd-server -n openshift-gitops -o jsonpath='{.spec.host}')
+
+THEN
+
 argocd proj role create pacman pacman-sync --grpc-web
 argocd proj role add-policy pacman pacman-sync --action 'sync' --permission allow --object pacman-development --grpc-web
 ````
@@ -84,6 +92,12 @@ Create a secret using the following config :
 oc create secret generic -n pacman-ci argocd-env-secret --from-literal=ARGOCD_PASSWORD=$(oc get secret/openshift-gitops-cluster  -n openshift-gitops -o jsonpath='{.data.admin\.password}' | base64 -d) --from-literal=ARGOCD_USERNAME=admin
 ````
 
+OR
+
+````bash
+ oc create secret generic -n pacman-ci argocd-env-secret --from-literal=ARGOCD_PASSWORD=$(oc get secret/argocd-cluster  -n openshift-gitops -o jsonpath='{.data.admin\.password}' | base64 -d) --from-literal=ARGOCD_USERNAME=admin
+ ````
+
 ### get the ArgoCD URL
 
 
@@ -91,7 +105,18 @@ oc create secret generic -n pacman-ci argocd-env-secret --from-literal=ARGOCD_PA
 oc get route/openshift-gitops-server -n openshift-gitops -o jsonpath='{.spec.host}{"\n"}'
 ````
 
-Copy the Argocd URL (Without  https://) and paste it into the file cd/env/config/argocd-platform-cm.yaml
+OR
+
+````bash
+oc get route/argocd-server -n openshift-gitops -o jsonpath='{.spec.host}{"\n"}'
+````
+
+
+Copy the Argocd URL (Without  https://) and paste it into the file cd/env/config/argocd-platform-cm.yaml using the command : 
+
+````bash
+echo "apiVersion: v1\nkind: ConfigMap\nmetadata:\n  name: argocd-env-configmap\n  namespace: pacman-ci\ndata:\n  ARGOCD_SERVER: $(oc get route/argocd-server -n openshift-gitops -o jsonpath='{.spec.host}{"\n"}')" > cd/env/config/argocd-platform-cm.yaml
+````
 
 ## Create a secret for access to the ACS CI/CD process
 
@@ -120,6 +145,20 @@ oc get secret/image-pusher-dockercfg-<whatever> -n pacman-ci -o 'go-template={{i
 
 Take the password section from the item with index : default-route-openshift-image-registry.apps.cluster-.....
 
+Get the default route : 
+
+````bash
+ oc get is/rhel9-nodejs-16 -o jsonpath='{.status.publicDockerImageRepository}' | cut -d "/" -f 1
+ ````
+
+The command below will get what is needed in one step.
+
+````bash
+oc get secret/$(oc get sa/image-pusher -o jsonpath='{.secrets}' | jq . | grep image-pusher | cut -d ":" -f 2 | tr -d "\"" |tr -d " ") -n pacman-ci -o 'go-template={{index .data ".dockercfg"}}' | base64 -d | jq '."<default-route>"' | jq '.auth' | tr -d "\""
+````
+
+base64 decode the output and use the token below.
+
 In ACS go to Platform configurations -> Integrations -> Image integration -> Generic Docker Registry and press the ‘Create integration’ button.
 Fill in the details as :
 	Integration name : OCP Registry
@@ -144,12 +183,28 @@ Get the path to the image in the image stream using the command :
 oc get is/rhel9-nodejs-16 -o jsonpath='{.status.publicDockerImageRepository}' | cut -d "/" -f 1
 ````
 
+Get the old default route from the file cd/env/01-dev/deployment.yaml
+
 Update this value in :
 
 cd/env/01-dev/deployment.yaml
 cd/env/01-dev/kustomization.yaml
 ci-application/pipelinerun.yaml - IMAGE_NAME property
 ci-application/triggers/triggerTemplate.yaml - IMAGE_NAME property
+
+````bash
+echo "cd cd/env/01-dev\n sed -i deployment.yaml 's/$(cat cd/env/01-dev/deployment.yaml | grep "image: default" | cut -d ":" -f 2 | tr -d " " | cut -d "/" -f 1)/$(oc get is/rhel9-nodejs-16 -o jsonpath='{.status.publicDockerImageRepository}' | cut -d "/" -f 1)/' deployment.yaml\nrm deployment.yamldeployment.yaml\ncd ../../.."    
+````
+````bash
+ echo "cd cd/env/01-dev\n sed -i kustomization.yaml 's/$(cat cd/env/01-dev/kustomization.yaml | grep "name: default" | cut -d ":" -f 2 | tr -d " " | cut -d "/" -f 1)/$(oc get is/rhel9-nodejs-16 -o jsonpath='{.status.publicDockerImageRepository}' | cut -d "/" -f 1)/' kustomization.yaml\nrm kustomization.yamlkustomization.yaml\ncd ../../.."
+````
+````bash
+ echo "cd ci-application\n sed -i pipelinerun.yaml 's/$(cat ci-application/pipelinerun.yaml | grep "value: default" | cut -d ":" -f 2 | tr -d " " | cut -d "/" -f 1)/$(oc get is/rhel9-nodejs-16 -o jsonpath='{.status.publicDockerImageRepository}' | cut -d "/" -f 1)/' pipelinerun.yaml\nrm pipelinerun.yamlpipelinerun.yaml\ncd .."
+ ````
+
+ ````bash
+ echo "cd ci-application/triggers\n sed -i triggerTemplate.yaml 's/$(cat ci-application/triggers/triggerTemplate.yaml | grep "value: default" | cut -d ":" -f 2 | tr -d " " | cut -d "/" -f 1)/$(oc get is/rhel9-nodejs-16 -o jsonpath='{.status.publicDockerImageRepository}' | cut -d "/" -f 1)/' triggerTemplate.yaml\nrm triggerTemplate.yamltriggerTemplate.yaml\ncd ../.."
+ ````
 
 Checkin the changes to the Git repo.
 
