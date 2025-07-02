@@ -151,12 +151,6 @@ Get the default route :
  oc get is/rhel9-nodejs-16 -o jsonpath='{.status.publicDockerImageRepository}' | cut -d "/" -f 1
  ````
 
-The command below will get what is needed in one step.
-
-````bash
-oc get secret/$(oc get sa/image-pusher -o jsonpath='{.secrets}' | jq . | grep image-pusher | cut -d ":" -f 2 | tr -d "\"" |tr -d " ") -n pacman-ci -o 'go-template={{index .data ".dockercfg"}}' | base64 -d | jq '."<default-route>"' | jq '.auth' | tr -d "\""
-````
-
 base64 decode the output and use the token below.
 
 In ACS go to Platform configurations -> Integrations -> Image integration -> Generic Docker Registry and press the ‘Create integration’ button.
