@@ -52,7 +52,7 @@ oc get is/rhel9-nodejs-16 -o jsonpath='{.status.publicDockerImageRepository}''{"
 
 Update the dockerfile in src/dockerfile with the command : 
 
-echo "FROM $(oc get is/rhel9-nodejs-16 -o jsonpath='{.status.publicDockerImageRepository}''{":latest"}''{"\n"}')\nUSER 0\nCOPY . /opt/app-root/src/\nRUN chmod a+w /var/log\nUSER 1001\nCMD ["npm", "start"]" > src/dockerfile
+echo "FROM $(oc get is/rhel9-nodejs-16 -o jsonpath='{.status.publicDockerImageRepository}''{":latest"}''{"\n"}')\nUSER 0\nCOPY . /opt/app-root/src/\nRUN chmod a+w /var/log\nUSER 1001\nCMD [\"npm\", \"start\"]" > src/dockerfile
 
 ## Create github access token
 
