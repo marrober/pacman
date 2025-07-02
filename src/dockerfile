@@ -3,4 +3,4 @@ USER 0
 COPY . /opt/app-root/src/
 RUN chmod a+w /var/log
 USER 1001
-CMD [npm, start]
+CMD ["npm", "start"]
