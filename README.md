@@ -205,6 +205,15 @@ echo "cd cd/env/01-dev\n sed -i deployment.yaml 's/$(cat cd/env/01-dev/deploymen
 
 Checkin the changes to the Git repo.
 
+## Get the ArgoCD credentials and address :
+
+````bash
+oc get secret/argocd-cluster  -n openshift-gitops -o jsonpath='{.data.admin\.password}' | base64 -d 
+echo -n "\n"
+oc get route/argocd-server  -n openshift-gitops -o jsonpath='{"https://"}''{.spec.host}'
+echo -n "\n"
+````
+
 ## Test the pipeline execution
 
 ````bash
@@ -217,6 +226,7 @@ Get the path for the pipeline trigger from the command :
 
 ````bash
 oc get route/pacman-ci-listener-el -o jsonpath='{"http://"}{.spec.host}'
+echo -n "\n"
 ````
 
 Ensure a webhook exists here : https://github.com/marrober/pacman/settings/hooks pointing to the trigger listener route in the pacman-ci namespace. 
