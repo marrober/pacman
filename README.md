@@ -151,7 +151,7 @@ Take the password section from the item with index : default-route-openshift-ima
 Get the default route : 
 
 ````bash
- oc get is/rhel9-nodejs-16 -o jsonpath='{.status.publicDockerImageRepository}' | cut -d "/" -f 1
+ oc get is/rhel9-nodejs-16 -o jsonpath='{"https://"}''{.status.publicDockerImageRepository}' | cut -d "/" -f 1-3
  ````
 
 base64 decode the output and use the token below.
