@@ -24,7 +24,7 @@ spec:
   - name: quay-repository                
     value: "pacman"
   - name: image-tag
-    value: "bd3mi"
+    value: "hvnvf"
   - name: component_id
     value: "pacman"
   - name: rekor_host

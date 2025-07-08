@@ -215,6 +215,24 @@ spec:
     - name: files
       workspace: files
 ##------------------------------------------------------------------
+# Perform image build check after push to quay.io
+##------------------------------------------------------------------
+  - name: image-build-check in quay.io
+    params:
+    - name: acs_central_endpoint
+      value: $(params.acs_central_endpoint)
+    - name: acs_api_token
+      value: $(params.acs_api_token)
+    - name: public-url
+      value: $(params.quay-instance-url)/$(params.quay-account)/$(params.quay-repository):$(tasks.push-image-to-imagestream.results.new-tag)
+    - name: roxctl-output-format
+      value: $(params.roxctl-output-format)
+    taskRef:
+      kind: Task
+      name: acs-image-build-check
+    runAfter:
+    - push-image-to-quay
+##------------------------------------------------------------------
 # Clone the cd repository and update the argocd application file 
 # to refer to the new tagged image.
 ##------------------------------------------------------------------
