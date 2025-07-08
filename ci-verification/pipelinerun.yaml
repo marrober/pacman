@@ -15,7 +15,7 @@ spec:
   - name: git-repo-url
     value: https://github.com/marrober/pacman.git
   - name: git-revision
-    value: 4164c348676c112f83f255c26a0360eb965991c1
+    value: e325de895fb38a5dad9592ca530c4cb5d7433b8d
     ## Verify enterprise contract
   - name: quay-instance-url
     value: "quay.io"

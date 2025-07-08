@@ -23,7 +23,7 @@ spec:
     value: user1@demo.redhat.com
     # value: $(tt.params.git-committer)
   - name: oidc-issuer
-    value:  https://https://keycloak-keycloak-system.apps.cluster-4v8ng.dynamic.redhatworkshops.io/auth/realms/trusted-artifact-signer
+    value:  https://keycloak-keycloak-system.apps.cluster-94gbh.94gbh.sandbox142.opentlc.com/auth/realms/trusted-artifact-signer
   - name: rekor-url
     value: http://rekor-server.trusted-artifact-signer.svc
   - name: tuf-mirror

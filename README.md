@@ -195,6 +195,7 @@ echo "cd cd/env/01-dev\n sed -i deployment.yaml 's/$(cat cd/env/01-dev/deploymen
 ````bash
  echo "cd cd/env/01-dev\n sed -i kustomization.yaml 's/$(cat cd/env/01-dev/kustomization.yaml | grep "name: default" | cut -d ":" -f 2 | tr -d " " | cut -d "/" -f 1)/$(oc get is/rhel9-nodejs-16 -o jsonpath='{.status.publicDockerImageRepository}' | cut -d "/" -f 1)/' kustomization.yaml\nrm kustomization.yamlkustomization.yaml\ncd ../../.."
 ````
+
 ````bash
  echo "cd ci-application\n sed -i pipelinerun.yaml 's/$(cat ci-application/pipelinerun.yaml | grep "value: default" | cut -d ":" -f 2 | tr -d " " | cut -d "/" -f 1)/$(oc get is/rhel9-nodejs-16 -o jsonpath='{.status.publicDockerImageRepository}' | cut -d "/" -f 1)/' pipelinerun.yaml\nrm pipelinerun.yamlpipelinerun.yaml\ncd .."
  ````
@@ -202,6 +203,14 @@ echo "cd cd/env/01-dev\n sed -i deployment.yaml 's/$(cat cd/env/01-dev/deploymen
  ````bash
  echo "cd ci-application/triggers\n sed -i triggerTemplate.yaml 's/$(cat ci-application/triggers/triggerTemplate.yaml | grep "value: default" | cut -d ":" -f 2 | tr -d " " | cut -d "/" -f 1)/$(oc get is/rhel9-nodejs-16 -o jsonpath='{.status.publicDockerImageRepository}' | cut -d "/" -f 1)/' triggerTemplate.yaml\nrm triggerTemplate.yamltriggerTemplate.yaml\ncd ../.."
  ````
+
+````bash
+ echo "cd ci-application\n sed -i pipelinerun.yaml 's/$(cat ci-application/pipelinerun.yaml | grep "keycloak" | cut -d ":" -f 3 | cut -d "/" -f 3 | cut -d "." -f 2-6)/$(oc get is/rhel9-nodejs-16 -o jsonpath='{.status.publicDockerImageRepository}' | cut -d "/" -f 1 | cut -d "." -f 2-7)/' pipelinerun.yaml\nrm pipelinerun.yamlpipelinerun.yaml\ncd .."
+ ````
+
+
+
+
 
 Checkin the changes to the Git repo.
 
