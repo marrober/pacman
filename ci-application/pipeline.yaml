@@ -217,7 +217,7 @@ spec:
 ##------------------------------------------------------------------
 # Perform image build check after push to quay.io
 ##------------------------------------------------------------------
-  - name: image-build-check in quay.io
+  - name: image-build-check in quay-io
     params:
     - name: acs_central_endpoint
       value: $(params.acs_central_endpoint)
