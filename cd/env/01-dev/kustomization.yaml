@@ -10,4 +10,4 @@ resources:
 
 images:
 - name: default-route-openshift-image-registry.apps.cluster-w9tn8.w9tn8.sandbox1665.opentlc.com/pacman-ci/pacman
-  newTag: imdps
+  newTag: c7nt9
