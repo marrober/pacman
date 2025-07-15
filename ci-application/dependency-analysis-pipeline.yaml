@@ -20,6 +20,7 @@ spec:
     # git-clone-project task
     - name: git-clone-project
       taskRef:
+        kind: ClusterTask
         name: git-clone
       workspaces:
         - name: output
