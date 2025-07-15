@@ -52,7 +52,7 @@ oc get is/rhel9-nodejs-16 -o jsonpath='{.status.publicDockerImageRepository}''{"
 
 Update the dockerfile in src/dockerfile with the command : 
 
-echo "FROM $(oc get is/rhel9-nodejs-16 -o jsonpath='{.status.publicDockerImageRepository}''{":latest"}''{"\n"}')\nUSER 0\nCOPY . /opt/app-root/src/\nRUN chmod a+w /var/log\nUSER 1001\nCMD [\"npm\", \"start\"]" > src/dockerfile
+echo -e "FROM $(oc get is/rhel9-nodejs-16 -o jsonpath='{.status.publicDockerImageRepository}''{":latest"}''{"\n"}')\nUSER 0\nCOPY . /opt/app-root/src/\nRUN chmod a+w /var/log\nUSER 1001\nCMD [\"npm\", \"start\"]" > src/dockerfile
 
 ## Create github access token
 
@@ -118,7 +118,7 @@ oc get route/argocd-server -n openshift-gitops -o jsonpath='{.spec.host}{"\n"}'
 Copy the Argocd URL (Without  https://) and paste it into the file cd/env/config/argocd-platform-cm.yaml using the command : 
 
 ````bash
-echo "apiVersion: v1\nkind: ConfigMap\nmetadata:\n  name: argocd-env-configmap\n  namespace: pacman-ci\ndata:\n  ARGOCD_SERVER: $(oc get route/argocd-server -n openshift-gitops -o jsonpath='{.spec.host}{"\n"}')" > cd/env/config/argocd-platform-cm.yaml
+echo -e "apiVersion: v1\nkind: ConfigMap\nmetadata:\n  name: argocd-env-configmap\n  namespace: pacman-ci\ndata:\n  ARGOCD_SERVER: $(oc get route/argocd-server -n openshift-gitops -o jsonpath='{.spec.host}{"\n"}')" > cd/env/config/argocd-platform-cm.yaml
 ````
 
 ## Create a secret for access to the ACS CI/CD process
@@ -190,26 +190,24 @@ ci-application/pipelinerun.yaml - IMAGE_NAME property
 ci-application/triggers/triggerTemplate.yaml - IMAGE_NAME property
 
 ````bash
-echo "cd cd/env/01-dev\n sed -i deployment.yaml 's/$(cat cd/env/01-dev/deployment.yaml | grep "image: default" | cut -d ":" -f 2 | tr -d " " | cut -d "/" -f 1)/$(oc get is/rhel9-nodejs-16 -o jsonpath='{.status.publicDockerImageRepository}' | cut -d "/" -f 1)/' deployment.yaml\nrm deployment.yamldeployment.yaml\ncd ../../.."    
-````
-````bash
- echo "cd cd/env/01-dev\n sed -i kustomization.yaml 's/$(cat cd/env/01-dev/kustomization.yaml | grep "name: default" | cut -d ":" -f 2 | tr -d " " | cut -d "/" -f 1)/$(oc get is/rhel9-nodejs-16 -o jsonpath='{.status.publicDockerImageRepository}' | cut -d "/" -f 1)/' kustomization.yaml\nrm kustomization.yamlkustomization.yaml\ncd ../../.."
+echo -e "cd cd/env/01-dev\nsed -i 's/$(cat cd/env/01-dev/deployment.yaml | grep "image: default" | cut -d ":" -f 2 | tr -d " " | cut -d "/" -f 1)/$(oc get is/rhel9-nodejs-16 -o jsonpath='{.status.publicDockerImageRepository}' | cut -d "/" -f 1)/' deployment.yaml\ncd ../../.."    
 ````
 
 ````bash
- echo "cd ci-application\n sed -i pipelinerun.yaml 's/$(cat ci-application/pipelinerun.yaml | grep "value: default" | cut -d ":" -f 2 | tr -d " " | cut -d "/" -f 1)/$(oc get is/rhel9-nodejs-16 -o jsonpath='{.status.publicDockerImageRepository}' | cut -d "/" -f 1)/' pipelinerun.yaml\nrm pipelinerun.yamlpipelinerun.yaml\ncd .."
+echo -e "cd cd/env/01-dev\nsed -i 's/$(cat cd/env/01-dev/kustomization.yaml | grep "name: default" | cut -d ":" -f 2 | tr -d " " | cut -d "/" -f 1)/$(oc get is/rhel9-nodejs-16 -o jsonpath='{.status.publicDockerImageRepository}' | cut -d "/" -f 1)/' kustomization.yaml\ncd ../../.."
+````
+
+````bash
+echo -e "cd ci-application\nsed -i 's/$(cat ci-application/pipelinerun.yaml | grep "value: default" | cut -d ":" -f 2 | tr -d " " | cut -d "/" -f 1)/$(oc get is/rhel9-nodejs-16 -o jsonpath='{.status.publicDockerImageRepository}' | cut -d "/" -f 1)/' pipelinerun.yaml\ncd .."
  ````
 
  ````bash
- echo "cd ci-application/triggers\n sed -i triggerTemplate.yaml 's/$(cat ci-application/triggers/triggerTemplate.yaml | grep "value: default" | cut -d ":" -f 2 | tr -d " " | cut -d "/" -f 1)/$(oc get is/rhel9-nodejs-16 -o jsonpath='{.status.publicDockerImageRepository}' | cut -d "/" -f 1)/' triggerTemplate.yaml\nrm triggerTemplate.yamltriggerTemplate.yaml\ncd ../.."
+ echo -e "cd ci-application/triggers\nsed -i 's/$(cat ci-application/triggers/triggerTemplate.yaml | grep "value: default" | cut -d ":" -f 2 | tr -d " " | cut -d "/" -f 1)/$(oc get is/rhel9-nodejs-16 -o jsonpath='{.status.publicDockerImageRepository}' | cut -d "/" -f 1)/' triggerTemplate.yaml\ncd ../.."
  ````
 
 ````bash
- echo "cd ci-application\n sed -i pipelinerun.yaml 's/$(cat ci-application/pipelinerun.yaml | grep "keycloak" | cut -d ":" -f 3 | cut -d "/" -f 3 | cut -d "." -f 2-6)/$(oc get is/rhel9-nodejs-16 -o jsonpath='{.status.publicDockerImageRepository}' | cut -d "/" -f 1 | cut -d "." -f 2-7)/' pipelinerun.yaml\nrm pipelinerun.yamlpipelinerun.yaml\ncd .."
+ echo -e "cd ci-application\nsed -i 's/$(cat ci-application/pipelinerun.yaml | grep "keycloak" | cut -d ":" -f 3 | cut -d "/" -f 3 | cut -d "." -f 2-6)/$(oc get is/rhel9-nodejs-16 -o jsonpath='{.status.publicDockerImageRepository}' | cut -d "/" -f 1 | cut -d "." -f 2-7)/' pipelinerun.yaml\ncd .."
  ````
-
-
-
 
 
 Checkin the changes to the Git repo.
@@ -219,8 +217,10 @@ Checkin the changes to the Git repo.
 ````bash
 oc get secret/argocd-cluster  -n openshift-gitops -o jsonpath='{.data.admin\.password}' | base64 -d 
 echo -n "\n"
+echo ""
 oc get route/argocd-server  -n openshift-gitops -o jsonpath='{"https://"}''{.spec.host}'
 echo -n "\n"
+echo ""
 ````
 
 ## Test the pipeline execution
