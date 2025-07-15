@@ -216,10 +216,8 @@ Checkin the changes to the Git repo.
 
 ````bash
 oc get secret/argocd-cluster  -n openshift-gitops -o jsonpath='{.data.admin\.password}' | base64 -d 
-echo -n "\n"
 echo ""
 oc get route/argocd-server  -n openshift-gitops -o jsonpath='{"https://"}''{.spec.host}'
-echo -n "\n"
 echo ""
 ````
 
