@@ -21,19 +21,24 @@ spec:
       description: Volume backing this workspace is used for input/output of the task.
   params:
     - name: manifest-file-path
+      type: string
       description: Path to target manifest file within workspace.
     - name: output-file-path
+      type: string
       description: Path to file within workspace, where the analysis report is saved.
       default: redhat-dependency-analytics-report.json
     - name: rhda-image
+      type: string
       description: Image where Exhort Javascript API and required dependencies are installed.
       default: quay.io/ecosystem-appeng/exhort-javascript-api:0.1.1-ea.26
     - name: python-image
+      type: string
       description: Image with installed Python interpreter and associated tools (such as pip, pip3, etc.).
       default: python:3.11
     - name: use-go-mvs-logic
+      type: string
       description: Uses the Minimal version selection (MVS) algorithm to select a set of module versions to use when building Go packages.
-      default: false
+      default: 'false'
   sidecars:
     - name: python
       image: $(params.python-image)
