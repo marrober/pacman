@@ -137,7 +137,7 @@ oc create secret generic acs-secret \
 # ACS read the Openshift Image Registry
 
 ````bash
-oc get sa/image-pusher -o yaml
+oc get sa/image-pusher -o yaml | grep image-pusher-dockercfg
 ````
 
 ## Get SA secret for ACS access to registry
