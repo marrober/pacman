@@ -21,5 +21,3 @@ resources:
 - triggers/triggerBinding.yaml
 - triggers/triggerTemplate.yaml
 - image-streams/
-- dependency-analysis-pipeline.yaml
-- tasks/redhat-dependency-analytics.yaml
