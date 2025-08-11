@@ -37,8 +37,8 @@ spec:
 
   roles:
   - name: developer
-    users: 
-    - mark
+    groups:
+    - developers
     policies:
-    - p, proj:pacman:developer, applications, get, pacman-01/*, allow
-    - p, proj:pacman:developer, applications, sync, pacman-01/*, allow  
+    - p, proj:pacman:developer, applications, get, *, allow
+    - p, proj:pacman:developer, applications, sync, *, allow  
