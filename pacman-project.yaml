@@ -36,5 +36,9 @@ spec:
 
 
   roles:
-    - p, proj:pacman:mark, applications, get, pacman-01/*, allow
-    - p, proj:pacman:mark, applications, sync, pacman-01/*, allow  
+  - name: developer
+    users: 
+    - mark
+    policies:
+    - p, proj:pacman:developer, applications, get, pacman-01/*, allow
+    - p, proj:pacman:developer, applications, sync, pacman-01/*, allow  
