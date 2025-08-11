@@ -30,7 +30,6 @@ git config --global user.name marrober
 
 ## Patch registry routes
 Patch the cluster to enable image streams for external access.
-Get the route and a user token for access to the image streams. 
 
 ````bash
 oc patch configs.imageregistry.operator.openshift.io/cluster --patch '{"spec":{"defaultRoute":true}}' --type=merge
@@ -52,7 +51,9 @@ oc get is/rhel9-nodejs-16 -o jsonpath='{.status.publicDockerImageRepository}''{"
 
 Update the dockerfile in src/dockerfile with the command : 
 
+````bash
 echo -e "FROM $(oc get is/rhel9-nodejs-16 -o jsonpath='{.status.publicDockerImageRepository}''{":latest"}''{"\n"}')\nUSER 0\nCOPY . /opt/app-root/src/\nRUN chmod a+w /var/log\nUSER 1001\nCMD [\"npm\", \"start\"]" > src/dockerfile
+````
 
 ## Create github access token
 

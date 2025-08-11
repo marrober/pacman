@@ -93,7 +93,7 @@ spec:
     - name: deleteExisting
       value: "true"
     taskRef:
-      kind: ClusterTask
+      kind: Task
       name: git-clone
     workspaces:
     - name: output
