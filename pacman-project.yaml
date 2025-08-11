@@ -23,7 +23,6 @@ spec:
 #  - server: https://api.celeron.demolab.local:6443
 #    namespace: '*'
 
-  # Deny all cluster-scoped resources from being created, except for named items
   clusterResourceWhitelist:
   - group: ''
     kind: Namespace
@@ -32,18 +31,10 @@ spec:
   - group: 'rbac.authorization.k8s.io'
     kind: ClusterRoleBinding
 
-  # Allow all namespaced-scoped resources to be created except named items
   namespaceResourceBlacklist:
-
-  # Deny all namespaced-scoped resources from being created, except for named items
   namespaceResourceWhitelist:
 
-  # Enables namespace orphaned resource monitoring.
-  orphanedResources:
-    warn: false
 
   roles:
-  # A role which provides read-only access to all applications in the project
-
-  # A role which provides sync privileges to only the guestbook-dev application, e.g. to provide
-  # sync privileges to a CI system
+    - p, proj:pacman:mark, applications, get, pacman-01/*, allow
+    - p, proj:pacman:mark, applications, sync, pacman-01/*, allow  
