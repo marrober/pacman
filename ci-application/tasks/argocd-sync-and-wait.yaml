@@ -23,7 +23,7 @@ spec:
     name: ''
     resources: {}
   steps:
-    - image: 'quay.io/argoproj/argocd:$(params.argocd-version)'
+    - image: 'image-registry.openshift-image-registry.svc:5000/pacman-ci/argocd:$(params.argocd-version)'
       name: login
       resources: {}
       script: >

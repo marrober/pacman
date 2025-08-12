@@ -50,7 +50,7 @@ spec:
 
         cat new-dockerfile
 
-      image: registry.redhat.io/openshift4/ose-cli:latest
+      image: registry.redhat.io/openshift4/ose-cli:latest:latest
       resources: {}
       workingDir: /resources/$(params.app-dir)
     - name: build
@@ -67,7 +67,7 @@ spec:
       - -t
       - my-container-image
       - .
-      image: registry.redhat.io/rhel8/buildah:latest
+      image: image-registry.openshift-image-registry.svc:5000/pacman-ci/buildah:latest
       resources: {}
       securityContext:
         capabilities:
@@ -81,7 +81,7 @@ spec:
       - --storage-driver=$(params.STORAGE_DRIVER)
       - --root
       - /files/buildah-containers
-      image: registry.redhat.io/rhel8/buildah:latest
+      image: image-registry.openshift-image-registry.svc:5000/pacman-ci/buildah:latest
       resources: {}
       securityContext:
         capabilities:
@@ -90,7 +90,7 @@ spec:
       workingDir: /
 
     - name: mount-container
-      image: registry.redhat.io/rhel8/buildah:latest
+      image: image-registry.openshift-image-registry.svc:5000/pacman-ci/buildah:latest
       script: |
         container=$(buildah --storage-driver=$(params.STORAGE_DRIVER) --root files/buildah-containers from --pull-never localhost/my-container-image:latest)
         buildah mount --storage-driver=$(params.STORAGE_DRIVER) --root files/buildah-containers $container | tee /workspace/container_path

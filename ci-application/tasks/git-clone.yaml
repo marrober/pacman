@@ -102,7 +102,7 @@ spec:
     - name: gitInitImage
       description: The image providing the git-init binary that this Task runs.
       type: string
-      default: "registry.redhat.io/openshift-pipelines/pipelines-git-init-rhel8@sha256:c4b2183f7c7997bd401d86b33eefb637b3ef2fa90618e875106292cd69a15c14"
+      default: "image-registry.openshift-image-registry.svc:5000/pacman-ci/pipelines-git-init-rhel9:v1.19.2"
     - name: userHome
       description: |
         Absolute path to the user's home directory.

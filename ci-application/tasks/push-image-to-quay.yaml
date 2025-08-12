@@ -197,7 +197,7 @@ spec:
       image: image-registry.openshift-image-registry.svc:5000/openshift/cli:latest
       resources: {}
     - name: upload-sbom
-      image: quay.io/redhat-appstudio/cosign:v2.1.1
+      image: image-registry.openshift-image-registry.svc:5000/pacman-ci/cosign:v2.1.1
       args:
         - attach
         - sbom

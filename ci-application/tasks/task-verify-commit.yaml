@@ -26,7 +26,7 @@ spec:
       - name: GITSIGN_REKOR_URL
         value: $(params.rekor-url)
   steps:
-  - image: alpine/git:latest
+  - image: image-registry.openshift-image-registry.svc:5000/pacman-ci/git:latest
     name: git-verify
     script: |
       apk add rpm cosign
