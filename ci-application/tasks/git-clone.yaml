@@ -1,249 +1,242 @@
-apiVersion: tekton.dev/v1
+apiVersion: tekton.dev/v1beta1
 kind: Task
 metadata:
-  annotations:
-    kubectl.kubernetes.io/last-applied-configuration: |
-      {"apiVersion":"tekton.dev/v1beta1","kind":"Task","metadata":{"annotations":{"tekton.dev/categories":"Git","tekton.dev/displayName":"git","tekton.dev/pipelines.minVersion":"0.41.0","tekton.dev/platforms":"linux/amd64,linux/s390x,linux/ppc64le,linux/arm64","tekton.dev/source":"https://github.com/openshift-pipelines/task-git","tekton.dev/tags":"git"},"labels":{"app.kubernetes.io/version":"0.2.0"},"name":"git","namespace":"pacman-ci"},"spec":{"description":"This Task represents Git and is able to initialize and clone a remote repository on the informed Workspace. It's likely to become the first `step` on a Pipeline. \n","params":[{"description":"Git repository URL.\n","name":"URL","type":"string"},{"default":"main","description":"Revision to checkout, an branch, tag, sha, ref, etc...\n","name":"REVISION","type":"string"},{"default":"","description":"Repository `refspec` to fetch before checking out the revision.\n","name":"REFSPEC"},{"default":"true","description":"Initialize and fetch Git submodules.\n","name":"SUBMODULES","type":"string"},{"default":"1","description":"Number of commits to fetch, a \"shallow clone\" is a single commit.\n","name":"DEPTH","type":"string"},{"default":"true","description":"Sets the global `http.sslVerify` value, `false` is not advised unless\nyou trust the remote repository.\n","name":"SSL_VERIFY","type":"string"},{"default":"ca-bundle.crt","description":"Certificate Authority (CA) bundle filename on the `ssl-ca-directory`\nWorkspace.\n","name":"CRT_FILENAME","type":"string"},{"default":"","description":"Relative path to the `output` Workspace where the repository will be\ncloned.\n","name":"SUBDIRECTORY","type":"string"},{"default":"","description":"List of directory patterns split by comma to perform \"sparse checkout\".\n","name":"SPARSE_CHECKOUT_DIRECTORIES","type":"string"},{"default":"true","description":"Clean out the contents of the `output` Workspace before cloning the\nrepository, if data exists.\n","name":"DELETE_EXISTING","type":"string"},{"default":"","description":"HTTP proxy server (non-TLS requests).\n","name":"HTTP_PROXY","type":"string"},{"default":"","description":"HTTPS proxy server (TLS requests).\n","name":"HTTPS_PROXY","type":"string"},{"default":"","description":"Opt out of proxying HTTP/HTTPS requests.\n","name":"NO_PROXY","type":"string"},{"default":"false","description":"Log the commands executed.\n","name":"VERBOSE","type":"string"},{"default":"/home/git","description":"Absolute path to the Git user home directory.\n","name":"USER_HOME","type":"string"}],"results":[{"description":"The precise commit SHA digest cloned.\n","name":"COMMIT"},{"description":"The precise repository URL.\n","name":"URL"},{"description":"The epoch timestamp of the commit cloned.\n","name":"COMMITTER_DATE"}],"stepTemplate":{"env":[{"name":"PARAMS_URL","value":"$(params.URL)"},{"name":"PARAMS_REVISION","value":"$(params.REVISION)"},{"name":"PARAMS_REFSPEC","value":"$(params.REFSPEC)"},{"name":"PARAMS_SUBMODULES","value":"$(params.SUBMODULES)"},{"name":"PARAMS_DEPTH","value":"$(params.DEPTH)"},{"name":"PARAMS_SSL_VERIFY","value":"$(params.SSL_VERIFY)"},{"name":"PARAMS_CRT_FILENAME","value":"$(params.CRT_FILENAME)"},{"name":"PARAMS_SUBDIRECTORY","value":"$(params.SUBDIRECTORY)"},{"name":"PARAMS_SPARSE_CHECKOUT_DIRECTORIES","value":"$(params.SPARSE_CHECKOUT_DIRECTORIES)"},{"name":"PARAMS_DELETE_EXISTING","value":"$(params.DELETE_EXISTING)"},{"name":"PARAMS_HTTP_PROXY","value":"$(params.HTTP_PROXY)"},{"name":"PARAMS_HTTPS_PROXY","value":"$(params.HTTPS_PROXY)"},{"name":"PARAMS_NO_PROXY","value":"$(params.NO_PROXY)"},{"name":"PARAMS_VERBOSE","value":"$(params.VERBOSE)"},{"name":"PARAMS_USER_HOME","value":"$(params.USER_HOME)"},{"name":"WORKSPACES_OUTPUT_PATH","value":"$(workspaces.output.path)"},{"name":"WORKSPACES_SSH_DIRECTORY_BOUND","value":"$(workspaces.ssh-directory.bound)"},{"name":"WORKSPACES_SSH_DIRECTORY_PATH","value":"$(workspaces.ssh-directory.path)"},{"name":"WORKSPACES_BASIC_AUTH_BOUND","value":"$(workspaces.basic-auth.bound)"},{"name":"WORKSPACES_BASIC_AUTH_PATH","value":"$(workspaces.basic-auth.path)"},{"name":"WORKSPACES_SSL_CA_DIRECTORY_BOUND","value":"$(workspaces.ssl-ca-directory.bound)"},{"name":"WORKSPACES_SSL_CA_DIRECTORY_PATH","value":"$(workspaces.ssl-ca-directory.path)"},{"name":"RESULTS_COMMITTER_DATE_PATH","value":"$(results.COMMITTER_DATE.path)"},{"name":"RESULTS_COMMIT_PATH","value":"$(results.COMMIT.path)"},{"name":"RESULTS_URL_PATH","value":"$(results.URL.path)"}],"resources":{"limits":{"cpu":"100m","memory":"256Mi"},"requests":{"cpu":"100m","memory":"256Mi"}},"securityContext":{"runAsNonRoot":true,"runAsUser":65532}},"steps":[{"image":"registry.redhat.io/openshift-pipelines/pipelines-git-init-rhel8@sha256:c4b2183f7c7997bd401d86b33eefb637b3ef2fa90618e875106292cd69a15c14","name":"load-scripts","script":"printf '%s' \"IyEvdXNyL2Jpbi9lbnYgc2gKCmV4cG9ydCBQQVJBTVNfVVJMPSIke1BBUkFNU19VUkw6LX0iCmV4cG9ydCBQQVJBTVNfUkVWSVNJT049IiR7UEFSQU1TX1JFVklTSU9OOi19IgpleHBvcnQgUEFSQU1TX1JFRlNQRUM9IiR7UEFSQU1TX1JFRlNQRUM6LX0iCmV4cG9ydCBQQVJBTVNfU1VCTU9EVUxFUz0iJHtQQVJBTVNfU1VCTU9EVUxFUzotfSIKZXhwb3J0IFBBUkFNU19ERVBUSD0iJHtQQVJBTVNfREVQVEg6LX0iCmV4cG9ydCBQQVJBTVNfU1NMX1ZFUklGWT0iJHtQQVJBTVNfU1NMX1ZFUklGWTotfSIKZXhwb3J0IFBBUkFNU19DUlRfRklMRU5BTUU9IiR7UEFSQU1TX0NSVF9GSUxFTkFNRTotfSIKZXhwb3J0IFBBUkFNU19TVUJESVJFQ1RPUlk9IiR7UEFSQU1TX1NVQkRJUkVDVE9SWTotfSIKZXhwb3J0IFBBUkFNU19TUEFSU0VfQ0hFQ0tPVVRfRElSRUNUT1JJRVM9IiR7UEFSQU1TX1NQQVJTRV9DSEVDS09VVF9ESVJFQ1RPUklFUzotfSIKZXhwb3J0IFBBUkFNU19ERUxFVEVfRVhJU1RJTkc9IiR7UEFSQU1TX0RFTEVURV9FWElTVElORzotfSIKZXhwb3J0IFBBUkFNU19IVFRQX1BST1hZPSIke1BBUkFNU19IVFRQX1BST1hZOi19IgpleHBvcnQgUEFSQU1TX0hUVFBTX1BST1hZPSIke1BBUkFNU19IVFRQU19QUk9YWTotfSIKZXhwb3J0IFBBUkFNU19OT19QUk9YWT0iJHtQQVJBTVNfTk9fUFJPWFk6LX0iCmV4cG9ydCBQQVJBTVNfVkVSQk9TRT0iJHtQQVJBTVNfVkVSQk9TRTotfSIKZXhwb3J0IFBBUkFNU19VU0VSX0hPTUU9IiR7UEFSQU1TX1VTRVJfSE9NRTotfSIKCmV4cG9ydCBXT1JLU1BBQ0VTX09VVFBVVF9QQVRIPSIke1dPUktTUEFDRVNfT1VUUFVUX1BBVEg6LX0iCmV4cG9ydCBXT1JLU1BBQ0VTX1NTSF9ESVJFQ1RPUllfQk9VTkQ9IiR7V09SS1NQQUNFU19TU0hfRElSRUNUT1JZX0JPVU5EOi19IgpleHBvcnQgV09SS1NQQUNFU19TU0hfRElSRUNUT1JZX1BBVEg9IiR7V09SS1NQQUNFU19TU0hfRElSRUNUT1JZX1BBVEg6LX0iCmV4cG9ydCBXT1JLU1BBQ0VTX0JBU0lDX0FVVEhfQk9VTkQ9IiR7V09SS1NQQUNFU19CQVNJQ19BVVRIX0JPVU5EOi19IgpleHBvcnQgV09SS1NQQUNFU19CQVNJQ19BVVRIX1BBVEg9IiR7V09SS1NQQUNFU19CQVNJQ19BVVRIX1BBVEg6LX0iCmV4cG9ydCBXT1JLU1BBQ0VTX1NTTF9DQV9ESVJFQ1RPUllfQk9VTkQ9IiR7V09SS1NQQUNFU19TU0xfQ0FfRElSRUNUT1JZX0JPVU5EOi19IgpleHBvcnQgV09SS1NQQUNFU19TU0xfQ0FfRElSRUNUT1JZX1BBVEg9IiR7V09SS1NQQUNFU19TU0xfQ0FfRElSRUNUT1JZX1BBVEg6LX0iCgpleHBvcnQgUkVTVUxUU19DT01NSVRURVJfREFURV9QQVRIPSIke1JFU1VMVFNfQ09NTUlUVEVSX0RBVEVfUEFUSDotfSIKZXhwb3J0IFJFU1VMVFNfQ09NTUlUX1BBVEg9IiR7UkVTVUxUU19DT01NSVRfUEFUSDotfSIKZXhwb3J0IFJFU1VMVFNfVVJMX1BBVEg9IiR7UkVTVUxUU19VUkxfUEFUSDotfSIKCiMgZnVsbCBwYXRoIHRvIHRoZSBjaGVja291dCBkaXJlY3RvcnksIHVzaW5nIHRoZSBvdXRwdXQgd29ya3NwYWNlIGFuZCBzdWJkaXJlY3RvciBwYXJhbWV0ZXIKZXhwb3J0IGNoZWNrb3V0X2Rpcj0iJHtXT1JLU1BBQ0VTX09VVFBVVF9QQVRIfS8ke1BBUkFNU19TVUJESVJFQ1RPUll9IgoKIwojIEZ1bmN0aW9ucwojCgpmYWlsKCkgewogICAgZWNobyAiRVJST1I6ICR7QH0iIDE+JjIKICAgIGV4aXQgMQp9CgpwaGFzZSgpIHsKICAgIGVjaG8gIi0tLT4gUGhhc2U6ICR7QH0uLi4iCn0KCiMgSW5zcGVjdCB0aGUgZW52aXJvbm1lbnQgdmFyaWFibGVzIHRvIGFzc2VydCB0aGUgbWluaW11bSBjb25maWd1cmF0aW9uIGlzIGluZm9ybWVkLgphc3NlcnRfcmVxdWlyZWRfY29uZmlndXJhdGlvbl9vcl9mYWlsKCkgewogICAgW1sgLXogIiR7UEFSQU1TX1VSTH0iIF1dICYmCiAgICAgICAgZmFpbCAiUGFyYW1ldGVyIFVSTCBpcyBub3Qgc2V0ISIKCiAgICBbWyAteiAiJHtXT1JLU1BBQ0VTX09VVFBVVF9QQVRIfSIgXV0gJiYKICAgICAgICBmYWlsICJPdXRwdXQgV29ya3NwYWNlIGlzIG5vdCBzZXQhIgoKICAgIFtbICEgLWQgIiR7V09SS1NQQUNFU19PVVRQVVRfUEFUSH0iIF1dICYmCiAgICAgICAgZmFpbCAiT3V0cHV0IFdvcmtzcGFjZSBkaXJlY3RvcnkgJyR7V09SS1NQQUNFU19PVVRQVVRfUEFUSH0nIG5vdCBmb3VuZCEiCgogICAgcmV0dXJuIDAKfQoKIyBDb3B5IHRoZSBmaWxlIGludG8gdGhlIGRlc3RpbmF0aW9uLCBjaGVja2luZyBpZiB0aGUgc291cmNlIGV4aXN0cy4KY29weV9vcl9mYWlsKCkgewogICAgbG9jYWwgX21vZGU9IiR7MX0iCiAgICBsb2NhbCBfc3JjPSIkezJ9IgogICAgbG9jYWwgX2RzdD0iJHszfSIKCiAgICBpZiBbWyAhIC1mICIke19zcmN9IiAmJiAhIC1kICIke19zcmN9IiBdXTsgdGhlbgogICAgICAgIGZhaWwgIlNvdXJjZSBmaWxlL2RpcmVjdG9yeSBpcyBub3QgZm91bmQgYXQgJyR7X3NyY30nIgogICAgZmkKCiAgICBpZiBbWyAtZCAiJHtfc3JjfSIgXV07IHRoZW4KICAgICAgICBjcCAtUnYgJHtfc3JjfSAke19kc3R9CiAgICAgICAgY2htb2QgLXYgJHtfbW9kZX0gJHtfZHN0fQogICAgZWxzZQogICAgICAgIGluc3RhbGwgLS12ZXJib3NlIC0tbW9kZT0ke19tb2RlfSAke19zcmN9ICR7X2RzdH0KICAgIGZpCn0KCiMgRGVsZXRlIGFueSBleGlzdGluZyBjb250ZW50cyBvZiB0aGUgcmVwbyBkaXJlY3RvcnkgaWYgaXQgZXhpc3RzLiBXZSBkb24ndCBqdXN0ICJybSAtcmYgPGRpcj4iCiMgYmVjYXVzZSBtaWdodCBiZSAiLyIgb3IgdGhlIHJvb3Qgb2YgYSBtb3VudGVkIHZvbHVtZS4KY2xlYW5fZGlyKCkgewogICAgbG9jYWwgX2Rpcj0iJHsxfSIKCiAgICBbWyAhIC1kICIke19kaXJ9IiBdXSAmJgogICAgICAgIHJldHVybiAwCgogICAgIyBEZWxldGUgbm9uLWhpZGRlbiBmaWxlcyBhbmQgZGlyZWN0b3JpZXMKICAgIHJtIC1yZnYgJHtfZGlyOj99LyoKICAgICMgRGVsZXRlIGZpbGVzIGFuZCBkaXJlY3RvcmllcyBzdGFydGluZyB3aXRoIC4gYnV0IGV4Y2x1ZGluZyAuLgogICAgcm0gLXJmdiAke19kaXJ9Ly5bIS5dKgogICAgIyBEZWxldGUgZmlsZXMgYW5kIGRpcmVjdG9yaWVzIHN0YXJ0aW5nIHdpdGggLi4gcGx1cyBhbnkgb3RoZXIgY2hhcmFjdGVyCiAgICBybSAtcmZ2ICR7X2Rpcn0vLi4/Kgp9CgojCiMgU2V0dGluZ3MKIwoKIyB3aGVuIHRoZSBrby1hcHAgZGlyZWN0b3J5IGlzIHByZXNlbnQsIG1ha2luZyBzdXJlIGl0J3MgcGFydCBvZiB0aGUgUEFUSApbWyAtZCAiL2tvLWFwcCIgXV0gJiYgZXhwb3J0IFBBVEg9IiR7UEFUSH06L2tvLWFwcCIKCiMgbWFraW5nIHRoZSBzaGVsbCB2ZXJib3NlIHdoZW4gdGhlIHBhcmFtdGVyIGlzIHNldApbWyAiJHtQQVJBTVNfVkVSQk9TRX0iID09ICJ0cnVlIiBdXSAmJiBzZXQgLXgKCnJldHVybiAw\" |base64 -d \u003ecommon.sh\nchmod +x \"common.sh\"\nprintf '%s' \"IyEvdXNyL2Jpbi9lbnYgc2gKIwojIEV4cG9ydHMgcHJveHkgYW5kIGN1c3RvbSBTU0wgQ0EgY2VydGlmaWNhdHMgaW4gdGhlIGVudmlyb21lbnQgYW5kIHJ1bnMgdGhlIGdpdC1pbml0IHdpdGggZmxhZ3MKIyBiYXNlZCBvbiB0aGUgdGFzayBwYXJhbWV0ZXJzLgojCgpzZXQgLWV1Cgpzb3VyY2UgJChDRFBBVEg9IGNkIC0tICIkKGRpcm5hbWUgLS0gJHswfSkiICYmIHB3ZCkvY29tbW9uLnNoCgphc3NlcnRfcmVxdWlyZWRfY29uZmlndXJhdGlvbl9vcl9mYWlsCgojCiMgQ0EgKGBzc2wtY2EtZGlyZWN0b3J5YCBXb3Jrc3BhY2UpCiMKCmlmIFtbICIke1dPUktTUEFDRVNfU1NMX0NBX0RJUkVDVE9SWV9CT1VORH0iID09ICJ0cnVlIiAmJiAtbiAiJHtQQVJBTVNfQ1JUX0ZJTEVOQU1FfSIgXV07IHRoZW4KCXBoYXNlICJJbnNwZWN0aW5nICdzc2wtY2EtZGlyZWN0b3J5JyB3b3Jrc3BhY2UgbG9va2luZyBmb3IgJyR7UEFSQU1TX0NSVF9GSUxFTkFNRX0nIGZpbGUiCgljcnQ9IiR7V09SS1NQQUNFU19TU0xfQ0FfRElSRUNUT1JZX1BBVEh9LyR7UEFSQU1TX0NSVF9GSUxFTkFNRX0iCglbWyAhIC1mICIke2NydH0iIF1dICYmCgkJZmFpbCAiQ1JUIGZpbGUgKFBBUkFNU19DUlRfRklMRU5BTUUpIG5vdCBmb3VuZCBhdCAnJHtjcnR9JyIKCglwaGFzZSAiRXhwb3J0aW5nIGN1c3RvbSBDQSBjZXJ0aWZpY2F0ZSAnR0lUX1NTTF9DQUlORk89JHtjcnR9JyIKCWV4cG9ydCBHSVRfU1NMX0NBSU5GTz0ke2NydH0KZmkKCiMKIyBQcm94eSBTZXR0aW5ncwojCgpwaGFzZSAiU2V0dGluZyB1cCBIVFRQX1BST1hZPScke1BBUkFNU19IVFRQX1BST1hZfSciCltbIC1uICIke1BBUkFNU19IVFRQX1BST1hZfSIgXV0gJiYgZXhwb3J0IEhUVFBfUFJPWFk9IiR7UEFSQU1TX0hUVFBfUFJPWFl9IgoKcGhhc2UgIlNldHR0aW5nIHVwIEhUVFBTX1BST1hZPScke1BBUkFNU19IVFRQU19QUk9YWX0nIgpbWyAtbiAiJHtQQVJBTVNfSFRUUFNfUFJPWFl9IiBdXSAmJiBleHBvcnQgSFRUUFNfUFJPWFk9IiR7UEFSQU1TX0hUVFBTX1BST1hZfSIKCnBoYXNlICJTZXR0aW5nIHVwIE5PX1BST1hZPScke1BBUkFNU19OT19QUk9YWX0nIgpbWyAtbiAiJHtQQVJBTVNfTk9fUFJPWFl9IiBdXSAmJiBleHBvcnQgTk9fUFJPWFk9IiR7UEFSQU1TX05PX1BST1hZfSIKCiMKIyBHaXQgQ2xvbmUKIwoKcGhhc2UgIlNldHRpbmcgb3V0cHV0IHdvcmtzcGFjZSBhcyBzYWZlIGRpcmVjdG9yeSAoJyR7V09SS1NQQUNFU19PVVRQVVRfUEFUSH0nKSIKZ2l0IGNvbmZpZyAtLWdsb2JhbCAtLWFkZCBzYWZlLmRpcmVjdG9yeSAiJHtXT1JLU1BBQ0VTX09VVFBVVF9QQVRIfSIKCnBoYXNlICJDbG9uaW5nICcke1BBUkFNU19VUkx9JyBpbnRvICcke2NoZWNrb3V0X2Rpcn0nIgpzZXQgLXgKZXhlYyBnaXQtaW5pdCBcCgktdXJsPSIke1BBUkFNU19VUkx9IiBcCgktcmV2aXNpb249IiR7UEFSQU1TX1JFVklTSU9OfSIgXAoJLXJlZnNwZWM9IiR7UEFSQU1TX1JFRlNQRUN9IiBcCgktcGF0aD0iJHtjaGVja291dF9kaXJ9IiBcCgktc3NsVmVyaWZ5PSIke1BBUkFNU19TU0xfVkVSSUZZfSIgXAoJLXN1Ym1vZHVsZXM9IiR7UEFSQU1TX1NVQk1PRFVMRVN9IiBcCgktZGVwdGg9IiR7UEFSQU1TX0RFUFRIfSIgXAoJLXNwYXJzZUNoZWNrb3V0RGlyZWN0b3JpZXM9IiR7UEFSQU1TX1NQQVJTRV9DSEVDS09VVF9ESVJFQ1RPUklFU30iCg==\" |base64 -d \u003egit-clone.sh\nchmod +x \"git-clone.sh\"\nprintf '%s' \"IyEvdXNyL2Jpbi9lbnYgc2gKIwojIFNldHMgdXAgdGhlIGJhc2ljIGFuZCBTU0ggYXV0aGVudGljYXRpb24gYmFzZWQgb24gaW5mb3JtZWQgd29ya3NwYWNlcywgYXMgd2VsbCBhcyBjbGVhbmluZyB1cCB0aGUKIyBwcmV2aW91cyBnaXQtY2xvbmUgc3RhbGUgZGF0YS4KIwoKc2V0IC1ldQoKc291cmNlICQoQ0RQQVRIPSBjZCAtLSAiJChkaXJuYW1lIC0tICR7MH0pIiAmJiBwd2QpL2NvbW1vbi5zaAoKYXNzZXJ0X3JlcXVpcmVkX2NvbmZpZ3VyYXRpb25fb3JfZmFpbAoKcGhhc2UgIlByZXBhcmluZyB0aGUgZmlsZXN5c3RlbSBiZWZvcmUgY2xvbmluZyB0aGUgcmVwb3NpdG9yeSIKCmlmIFtbICIke1dPUktTUEFDRVNfQkFTSUNfQVVUSF9CT1VORH0iID09ICJ0cnVlIiBdXTsgdGhlbgoJcGhhc2UgIkNvbmZpZ3VyaW5nIEdpdCBhdXRoZW50aWNhdGlvbiB3aXRoICdiYXNpYy1hdXRoJyBXb3Jrc3BhY2UgZmlsZXMiCgoJZm9yIGYgaW4gLmdpdC1jcmVkZW50aWFscyAuZ2l0Y29uZmlnOyBkbwoJCXNyYz0iJHtXT1JLU1BBQ0VTX0JBU0lDX0FVVEhfUEFUSH0vJHtmfSIKCQlwaGFzZSAiQ29weWluZyAnJHtzcmN9JyB0byAnJHtQQVJBTVNfVVNFUl9IT01FfSciCgkJY29weV9vcl9mYWlsIDQwMCAke3NyY30gIiR7UEFSQU1TX1VTRVJfSE9NRX0vIgoJZG9uZQpmaQoKaWYgW1sgIiR7V09SS1NQQUNFU19TU0hfRElSRUNUT1JZX0JPVU5EfSIgPT0gInRydWUiIF1dOyB0aGVuCglwaGFzZSAiQ29weWluZyAnLnNzaCcgZnJvbSBzc2gtZGlyZWN0b3J5IHdvcmtzcGFjZSAoJyR7V09SS1NQQUNFU19TU0hfRElSRUNUT1JZX1BBVEh9JykiCgoJZG90X3NzaD0iJHtQQVJBTVNfVVNFUl9IT01FfS8uc3NoIgoJY29weV9vcl9mYWlsIDcwMCAke1dPUktTUEFDRVNfU1NIX0RJUkVDVE9SWV9QQVRIfSAke2RvdF9zc2h9CgljaG1vZCAtUnYgNDAwICR7ZG90X3NzaH0vKgpmaQoKaWYgW1sgIiR7UEFSQU1TX0RFTEVURV9FWElTVElOR30iID09ICJ0cnVlIiBdXTsgdGhlbgoJcGhhc2UgIkRlbGV0aW5nIGFsbCBjb250ZW50cyBvZiBjaGVja291dC1kaXIgJyR7Y2hlY2tvdXRfZGlyfSciCgljbGVhbl9kaXIgJHtjaGVja291dF9kaXJ9IHx8IHRydWUKZmkKCmV4aXQgMA==\" |base64 -d \u003eprepare.sh\nchmod +x \"prepare.sh\"\nprintf '%s' \"IyEvdXNyL2Jpbi9lbnYgc2gKIwojIFNjYW4gdGhlIGNsb25lZCByZXBvc2l0b3J5IGluIG9yZGVyIHRvIHJlcG9ydCBkZXRhaWxzIHdyaXR0aW5nIHRoZSByZXN1bHQgZmlsZXMuCiMKCnNldCAtZXUKCnNvdXJjZSAkKENEUEFUSD0gY2QgLS0gIiQoZGlybmFtZSAtLSAkezB9KSIgJiYgcHdkKS9jb21tb24uc2gKCmFzc2VydF9yZXF1aXJlZF9jb25maWd1cmF0aW9uX29yX2ZhaWwKCnBoYXNlICJDb2xsZWN0aW5nIGNsb25lZCByZXBvc2l0b3J5IGluZm9ybWF0aW9uICgnJHtjaGVja291dF9kaXJ9JykiCgpjZCAiJHtjaGVja291dF9kaXJ9IiB8fCBmYWlsICJOb3QgYWJsZSB0byBlbnRlciBjaGVja291dC1kaXIgJyR7Y2hlY2tvdXRfZGlyfSciCgpwaGFzZSAiU2V0dGluZyBvdXRwdXQgd29ya3NwYWNlIGFzIHNhZmUgZGlyZWN0b3J5ICgnJHtXT1JLU1BBQ0VTX09VVFBVVF9QQVRIfScpIgpnaXQgY29uZmlnIC0tZ2xvYmFsIC0tYWRkIHNhZmUuZGlyZWN0b3J5ICIke1dPUktTUEFDRVNfT1VUUFVUX1BBVEh9IgoKcmVzdWx0X3NoYT0iJChnaXQgcmV2LXBhcnNlIEhFQUQpIgpyZXN1bHRfY29tbWl0dGVyX2RhdGU9IiQoZ2l0IGxvZyAtMSAtLXByZXR0eT0lY3QpIgoKcGhhc2UgIlJlcG9ydGluZyBsYXN0IGNvbW1pdCBkYXRlICcke3Jlc3VsdF9jb21taXR0ZXJfZGF0ZX0nIgpwcmludGYgIiVzIiAiJHtyZXN1bHRfY29tbWl0dGVyX2RhdGV9IiA+JHtSRVNVTFRTX0NPTU1JVFRFUl9EQVRFX1BBVEh9CgpwaGFzZSAiUmVwb3J0aW5nIHBhcnNlZCByZXZpc2lvbiBTSEEgJyR7cmVzdWx0X3NoYX0nIgpwcmludGYgIiVzIiAiJHtyZXN1bHRfc2hhfSIgPiR7UkVTVUxUU19DT01NSVRfUEFUSH0KCnBoYXNlICJSZXBvcnRpbmcgcmVwb3NpdG9yeSBVUkwgJyR7UEFSQU1TX1VSTH0nIgpwcmludGYgIiVzIiAiJHtQQVJBTVNfVVJMfSIgPiR7UkVTVUxUU19VUkxfUEFUSH0KCmV4aXQgMA==\" |base64 -d \u003ereport.sh\nchmod +x \"report.sh\"\n","volumeMounts":[{"mountPath":"/scripts","name":"scripts-dir"}],"workingDir":"/scripts"},{"command":["/scripts/prepare.sh"],"image":"registry.redhat.io/openshift-pipelines/pipelines-git-init-rhel8@sha256:c4b2183f7c7997bd401d86b33eefb637b3ef2fa90618e875106292cd69a15c14","name":"prepare","volumeMounts":[{"mountPath":"/scripts","name":"scripts-dir"},{"mountPath":"$(params.USER_HOME)","name":"user-home"}]},{"command":["/scripts/git-clone.sh"],"image":"registry.redhat.io/openshift-pipelines/pipelines-git-init-rhel8@sha256:c4b2183f7c7997bd401d86b33eefb637b3ef2fa90618e875106292cd69a15c14","name":"git-clone","volumeMounts":[{"mountPath":"/scripts","name":"scripts-dir"},{"mountPath":"$(params.USER_HOME)","name":"user-home"}]},{"command":["/scripts/report.sh"],"image":"registry.redhat.io/openshift-pipelines/pipelines-git-init-rhel8@sha256:c4b2183f7c7997bd401d86b33eefb637b3ef2fa90618e875106292cd69a15c14","name":"report","volumeMounts":[{"mountPath":"/scripts","name":"scripts-dir"}]}],"volumes":[{"emptyDir":{},"name":"user-home"},{"emptyDir":{},"name":"scripts-dir"}],"workspaces":[{"description":"The Git repository directory, data will be placed on the root of the\nWorkspace, or on the relative path defined by the SUBDIRECTORY\nparameter.\n","name":"output"},{"description":"A `.ssh` directory with private key, `known_hosts`, `config`, etc.\nCopied to the Git user's home before cloning the repository, in order to\nserver as authentication mechanismBinding a Secret to this Workspace is\nstrongly recommended over other volume types.\n","name":"ssh-directory","optional":true},{"description":"A Workspace containing a `.gitconfig` and `.git-credentials` files.\nThese will be copied to the user's home before Git commands run. All\nother files in this Workspace are ignored. It is strongly recommended to\nuse `ssh-directory` over `basic-auth` whenever possible, and to bind a\nSecret to this Workspace over other volume types.\n","name":"basic-auth","optional":true},{"description":"A Workspace containing CA certificates, this will be used by Git to\nverify the peer with when interacting with remote repositories using\nHTTPS.\n","name":"ssl-ca-directory","optional":true}]}}
-    tekton.dev/categories: Git
-    tekton.dev/displayName: git
-    tekton.dev/pipelines.minVersion: 0.41.0
-    tekton.dev/platforms: 'linux/amd64,linux/s390x,linux/ppc64le,linux/arm64'
-    tekton.dev/source: 'https://github.com/openshift-pipelines/task-git'
-    tekton.dev/tags: git
-  name: git
+  name: git-clone
   labels:
-    app.kubernetes.io/version: 0.2.0
+    app.kubernetes.io/version: "0.9"
+  annotations:
+    tekton.dev/pipelines.minVersion: "0.38.0"
+    tekton.dev/categories: Git
+    tekton.dev/tags: git
+    tekton.dev/displayName: "git clone"
+    tekton.dev/platforms: "linux/amd64,linux/s390x,linux/ppc64le,linux/arm64"
 spec:
-  description: |
-    This Task represents Git and is able to initialize and clone a remote repository on the informed Workspace. It's likely to become the first `step` on a Pipeline. 
-  params:
-    - description: |
-        Git repository URL.
-      name: URL
-      type: string
-    - default: main
-      description: |
-        Revision to checkout, an branch, tag, sha, ref, etc...
-      name: REVISION
-      type: string
-    - default: ''
-      description: |
-        Repository `refspec` to fetch before checking out the revision.
-      name: REFSPEC
-      type: string
-    - default: 'true'
-      description: |
-        Initialize and fetch Git submodules.
-      name: SUBMODULES
-      type: string
-    - default: '1'
-      description: |
-        Number of commits to fetch, a "shallow clone" is a single commit.
-      name: DEPTH
-      type: string
-    - default: 'true'
-      description: |
-        Sets the global `http.sslVerify` value, `false` is not advised unless
-        you trust the remote repository.
-      name: SSL_VERIFY
-      type: string
-    - default: ca-bundle.crt
-      description: |
-        Certificate Authority (CA) bundle filename on the `ssl-ca-directory`
-        Workspace.
-      name: CRT_FILENAME
-      type: string
-    - default: ''
-      description: |
-        Relative path to the `output` Workspace where the repository will be
-        cloned.
-      name: SUBDIRECTORY
-      type: string
-    - default: ''
-      description: |
-        List of directory patterns split by comma to perform "sparse checkout".
-      name: SPARSE_CHECKOUT_DIRECTORIES
-      type: string
-    - default: 'true'
-      description: |
-        Clean out the contents of the `output` Workspace before cloning the
-        repository, if data exists.
-      name: DELETE_EXISTING
-      type: string
-    - default: ''
-      description: |
-        HTTP proxy server (non-TLS requests).
-      name: HTTP_PROXY
-      type: string
-    - default: ''
-      description: |
-        HTTPS proxy server (TLS requests).
-      name: HTTPS_PROXY
-      type: string
-    - default: ''
-      description: |
-        Opt out of proxying HTTP/HTTPS requests.
-      name: NO_PROXY
-      type: string
-    - default: 'false'
-      description: |
-        Log the commands executed.
-      name: VERBOSE
-      type: string
-    - default: /home/git
-      description: |
-        Absolute path to the Git user home directory.
-      name: USER_HOME
-      type: string
-  results:
-    - description: |
-        The precise commit SHA digest cloned.
-      name: COMMIT
-      type: string
-    - description: |
-        The precise repository URL.
-      name: URL
-      type: string
-    - description: |
-        The epoch timestamp of the commit cloned.
-      name: COMMITTER_DATE
-      type: string
-  stepTemplate:
-    computeResources:
-      limits:
-        cpu: 100m
-        memory: 256Mi
-      requests:
-        cpu: 100m
-        memory: 256Mi
-    env:
-      - name: PARAMS_URL
-        value: $(params.URL)
-      - name: PARAMS_REVISION
-        value: $(params.REVISION)
-      - name: PARAMS_REFSPEC
-        value: $(params.REFSPEC)
-      - name: PARAMS_SUBMODULES
-        value: $(params.SUBMODULES)
-      - name: PARAMS_DEPTH
-        value: $(params.DEPTH)
-      - name: PARAMS_SSL_VERIFY
-        value: $(params.SSL_VERIFY)
-      - name: PARAMS_CRT_FILENAME
-        value: $(params.CRT_FILENAME)
-      - name: PARAMS_SUBDIRECTORY
-        value: $(params.SUBDIRECTORY)
-      - name: PARAMS_SPARSE_CHECKOUT_DIRECTORIES
-        value: $(params.SPARSE_CHECKOUT_DIRECTORIES)
-      - name: PARAMS_DELETE_EXISTING
-        value: $(params.DELETE_EXISTING)
-      - name: PARAMS_HTTP_PROXY
-        value: $(params.HTTP_PROXY)
-      - name: PARAMS_HTTPS_PROXY
-        value: $(params.HTTPS_PROXY)
-      - name: PARAMS_NO_PROXY
-        value: $(params.NO_PROXY)
-      - name: PARAMS_VERBOSE
-        value: $(params.VERBOSE)
-      - name: PARAMS_USER_HOME
-        value: $(params.USER_HOME)
-      - name: WORKSPACES_OUTPUT_PATH
-        value: $(workspaces.output.path)
-      - name: WORKSPACES_SSH_DIRECTORY_BOUND
-        value: $(workspaces.ssh-directory.bound)
-      - name: WORKSPACES_SSH_DIRECTORY_PATH
-        value: $(workspaces.ssh-directory.path)
-      - name: WORKSPACES_BASIC_AUTH_BOUND
-        value: $(workspaces.basic-auth.bound)
-      - name: WORKSPACES_BASIC_AUTH_PATH
-        value: $(workspaces.basic-auth.path)
-      - name: WORKSPACES_SSL_CA_DIRECTORY_BOUND
-        value: $(workspaces.ssl-ca-directory.bound)
-      - name: WORKSPACES_SSL_CA_DIRECTORY_PATH
-        value: $(workspaces.ssl-ca-directory.path)
-      - name: RESULTS_COMMITTER_DATE_PATH
-        value: $(results.COMMITTER_DATE.path)
-      - name: RESULTS_COMMIT_PATH
-        value: $(results.COMMIT.path)
-      - name: RESULTS_URL_PATH
-        value: $(results.URL.path)
-    securityContext:
-      runAsNonRoot: true
-      runAsUser: 65532
-  steps:
-    - computeResources: {}
-      image: 'registry.redhat.io/openshift-pipelines/pipelines-git-init-rhel8@sha256:c4b2183f7c7997bd401d86b33eefb637b3ef2fa90618e875106292cd69a15c14'
-      name: load-scripts
-      script: |
-        printf '%s' "IyEvdXNyL2Jpbi9lbnYgc2gKCmV4cG9ydCBQQVJBTVNfVVJMPSIke1BBUkFNU19VUkw6LX0iCmV4cG9ydCBQQVJBTVNfUkVWSVNJT049IiR7UEFSQU1TX1JFVklTSU9OOi19IgpleHBvcnQgUEFSQU1TX1JFRlNQRUM9IiR7UEFSQU1TX1JFRlNQRUM6LX0iCmV4cG9ydCBQQVJBTVNfU1VCTU9EVUxFUz0iJHtQQVJBTVNfU1VCTU9EVUxFUzotfSIKZXhwb3J0IFBBUkFNU19ERVBUSD0iJHtQQVJBTVNfREVQVEg6LX0iCmV4cG9ydCBQQVJBTVNfU1NMX1ZFUklGWT0iJHtQQVJBTVNfU1NMX1ZFUklGWTotfSIKZXhwb3J0IFBBUkFNU19DUlRfRklMRU5BTUU9IiR7UEFSQU1TX0NSVF9GSUxFTkFNRTotfSIKZXhwb3J0IFBBUkFNU19TVUJESVJFQ1RPUlk9IiR7UEFSQU1TX1NVQkRJUkVDVE9SWTotfSIKZXhwb3J0IFBBUkFNU19TUEFSU0VfQ0hFQ0tPVVRfRElSRUNUT1JJRVM9IiR7UEFSQU1TX1NQQVJTRV9DSEVDS09VVF9ESVJFQ1RPUklFUzotfSIKZXhwb3J0IFBBUkFNU19ERUxFVEVfRVhJU1RJTkc9IiR7UEFSQU1TX0RFTEVURV9FWElTVElORzotfSIKZXhwb3J0IFBBUkFNU19IVFRQX1BST1hZPSIke1BBUkFNU19IVFRQX1BST1hZOi19IgpleHBvcnQgUEFSQU1TX0hUVFBTX1BST1hZPSIke1BBUkFNU19IVFRQU19QUk9YWTotfSIKZXhwb3J0IFBBUkFNU19OT19QUk9YWT0iJHtQQVJBTVNfTk9fUFJPWFk6LX0iCmV4cG9ydCBQQVJBTVNfVkVSQk9TRT0iJHtQQVJBTVNfVkVSQk9TRTotfSIKZXhwb3J0IFBBUkFNU19VU0VSX0hPTUU9IiR7UEFSQU1TX1VTRVJfSE9NRTotfSIKCmV4cG9ydCBXT1JLU1BBQ0VTX09VVFBVVF9QQVRIPSIke1dPUktTUEFDRVNfT1VUUFVUX1BBVEg6LX0iCmV4cG9ydCBXT1JLU1BBQ0VTX1NTSF9ESVJFQ1RPUllfQk9VTkQ9IiR7V09SS1NQQUNFU19TU0hfRElSRUNUT1JZX0JPVU5EOi19IgpleHBvcnQgV09SS1NQQUNFU19TU0hfRElSRUNUT1JZX1BBVEg9IiR7V09SS1NQQUNFU19TU0hfRElSRUNUT1JZX1BBVEg6LX0iCmV4cG9ydCBXT1JLU1BBQ0VTX0JBU0lDX0FVVEhfQk9VTkQ9IiR7V09SS1NQQUNFU19CQVNJQ19BVVRIX0JPVU5EOi19IgpleHBvcnQgV09SS1NQQUNFU19CQVNJQ19BVVRIX1BBVEg9IiR7V09SS1NQQUNFU19CQVNJQ19BVVRIX1BBVEg6LX0iCmV4cG9ydCBXT1JLU1BBQ0VTX1NTTF9DQV9ESVJFQ1RPUllfQk9VTkQ9IiR7V09SS1NQQUNFU19TU0xfQ0FfRElSRUNUT1JZX0JPVU5EOi19IgpleHBvcnQgV09SS1NQQUNFU19TU0xfQ0FfRElSRUNUT1JZX1BBVEg9IiR7V09SS1NQQUNFU19TU0xfQ0FfRElSRUNUT1JZX1BBVEg6LX0iCgpleHBvcnQgUkVTVUxUU19DT01NSVRURVJfREFURV9QQVRIPSIke1JFU1VMVFNfQ09NTUlUVEVSX0RBVEVfUEFUSDotfSIKZXhwb3J0IFJFU1VMVFNfQ09NTUlUX1BBVEg9IiR7UkVTVUxUU19DT01NSVRfUEFUSDotfSIKZXhwb3J0IFJFU1VMVFNfVVJMX1BBVEg9IiR7UkVTVUxUU19VUkxfUEFUSDotfSIKCiMgZnVsbCBwYXRoIHRvIHRoZSBjaGVja291dCBkaXJlY3RvcnksIHVzaW5nIHRoZSBvdXRwdXQgd29ya3NwYWNlIGFuZCBzdWJkaXJlY3RvciBwYXJhbWV0ZXIKZXhwb3J0IGNoZWNrb3V0X2Rpcj0iJHtXT1JLU1BBQ0VTX09VVFBVVF9QQVRIfS8ke1BBUkFNU19TVUJESVJFQ1RPUll9IgoKIwojIEZ1bmN0aW9ucwojCgpmYWlsKCkgewogICAgZWNobyAiRVJST1I6ICR7QH0iIDE+JjIKICAgIGV4aXQgMQp9CgpwaGFzZSgpIHsKICAgIGVjaG8gIi0tLT4gUGhhc2U6ICR7QH0uLi4iCn0KCiMgSW5zcGVjdCB0aGUgZW52aXJvbm1lbnQgdmFyaWFibGVzIHRvIGFzc2VydCB0aGUgbWluaW11bSBjb25maWd1cmF0aW9uIGlzIGluZm9ybWVkLgphc3NlcnRfcmVxdWlyZWRfY29uZmlndXJhdGlvbl9vcl9mYWlsKCkgewogICAgW1sgLXogIiR7UEFSQU1TX1VSTH0iIF1dICYmCiAgICAgICAgZmFpbCAiUGFyYW1ldGVyIFVSTCBpcyBub3Qgc2V0ISIKCiAgICBbWyAteiAiJHtXT1JLU1BBQ0VTX09VVFBVVF9QQVRIfSIgXV0gJiYKICAgICAgICBmYWlsICJPdXRwdXQgV29ya3NwYWNlIGlzIG5vdCBzZXQhIgoKICAgIFtbICEgLWQgIiR7V09SS1NQQUNFU19PVVRQVVRfUEFUSH0iIF1dICYmCiAgICAgICAgZmFpbCAiT3V0cHV0IFdvcmtzcGFjZSBkaXJlY3RvcnkgJyR7V09SS1NQQUNFU19PVVRQVVRfUEFUSH0nIG5vdCBmb3VuZCEiCgogICAgcmV0dXJuIDAKfQoKIyBDb3B5IHRoZSBmaWxlIGludG8gdGhlIGRlc3RpbmF0aW9uLCBjaGVja2luZyBpZiB0aGUgc291cmNlIGV4aXN0cy4KY29weV9vcl9mYWlsKCkgewogICAgbG9jYWwgX21vZGU9IiR7MX0iCiAgICBsb2NhbCBfc3JjPSIkezJ9IgogICAgbG9jYWwgX2RzdD0iJHszfSIKCiAgICBpZiBbWyAhIC1mICIke19zcmN9IiAmJiAhIC1kICIke19zcmN9IiBdXTsgdGhlbgogICAgICAgIGZhaWwgIlNvdXJjZSBmaWxlL2RpcmVjdG9yeSBpcyBub3QgZm91bmQgYXQgJyR7X3NyY30nIgogICAgZmkKCiAgICBpZiBbWyAtZCAiJHtfc3JjfSIgXV07IHRoZW4KICAgICAgICBjcCAtUnYgJHtfc3JjfSAke19kc3R9CiAgICAgICAgY2htb2QgLXYgJHtfbW9kZX0gJHtfZHN0fQogICAgZWxzZQogICAgICAgIGluc3RhbGwgLS12ZXJib3NlIC0tbW9kZT0ke19tb2RlfSAke19zcmN9ICR7X2RzdH0KICAgIGZpCn0KCiMgRGVsZXRlIGFueSBleGlzdGluZyBjb250ZW50cyBvZiB0aGUgcmVwbyBkaXJlY3RvcnkgaWYgaXQgZXhpc3RzLiBXZSBkb24ndCBqdXN0ICJybSAtcmYgPGRpcj4iCiMgYmVjYXVzZSBtaWdodCBiZSAiLyIgb3IgdGhlIHJvb3Qgb2YgYSBtb3VudGVkIHZvbHVtZS4KY2xlYW5fZGlyKCkgewogICAgbG9jYWwgX2Rpcj0iJHsxfSIKCiAgICBbWyAhIC1kICIke19kaXJ9IiBdXSAmJgogICAgICAgIHJldHVybiAwCgogICAgIyBEZWxldGUgbm9uLWhpZGRlbiBmaWxlcyBhbmQgZGlyZWN0b3JpZXMKICAgIHJtIC1yZnYgJHtfZGlyOj99LyoKICAgICMgRGVsZXRlIGZpbGVzIGFuZCBkaXJlY3RvcmllcyBzdGFydGluZyB3aXRoIC4gYnV0IGV4Y2x1ZGluZyAuLgogICAgcm0gLXJmdiAke19kaXJ9Ly5bIS5dKgogICAgIyBEZWxldGUgZmlsZXMgYW5kIGRpcmVjdG9yaWVzIHN0YXJ0aW5nIHdpdGggLi4gcGx1cyBhbnkgb3RoZXIgY2hhcmFjdGVyCiAgICBybSAtcmZ2ICR7X2Rpcn0vLi4/Kgp9CgojCiMgU2V0dGluZ3MKIwoKIyB3aGVuIHRoZSBrby1hcHAgZGlyZWN0b3J5IGlzIHByZXNlbnQsIG1ha2luZyBzdXJlIGl0J3MgcGFydCBvZiB0aGUgUEFUSApbWyAtZCAiL2tvLWFwcCIgXV0gJiYgZXhwb3J0IFBBVEg9IiR7UEFUSH06L2tvLWFwcCIKCiMgbWFraW5nIHRoZSBzaGVsbCB2ZXJib3NlIHdoZW4gdGhlIHBhcmFtdGVyIGlzIHNldApbWyAiJHtQQVJBTVNfVkVSQk9TRX0iID09ICJ0cnVlIiBdXSAmJiBzZXQgLXgKCnJldHVybiAw" |base64 -d >common.sh
-        chmod +x "common.sh"
-        printf '%s' "IyEvdXNyL2Jpbi9lbnYgc2gKIwojIEV4cG9ydHMgcHJveHkgYW5kIGN1c3RvbSBTU0wgQ0EgY2VydGlmaWNhdHMgaW4gdGhlIGVudmlyb21lbnQgYW5kIHJ1bnMgdGhlIGdpdC1pbml0IHdpdGggZmxhZ3MKIyBiYXNlZCBvbiB0aGUgdGFzayBwYXJhbWV0ZXJzLgojCgpzZXQgLWV1Cgpzb3VyY2UgJChDRFBBVEg9IGNkIC0tICIkKGRpcm5hbWUgLS0gJHswfSkiICYmIHB3ZCkvY29tbW9uLnNoCgphc3NlcnRfcmVxdWlyZWRfY29uZmlndXJhdGlvbl9vcl9mYWlsCgojCiMgQ0EgKGBzc2wtY2EtZGlyZWN0b3J5YCBXb3Jrc3BhY2UpCiMKCmlmIFtbICIke1dPUktTUEFDRVNfU1NMX0NBX0RJUkVDVE9SWV9CT1VORH0iID09ICJ0cnVlIiAmJiAtbiAiJHtQQVJBTVNfQ1JUX0ZJTEVOQU1FfSIgXV07IHRoZW4KCXBoYXNlICJJbnNwZWN0aW5nICdzc2wtY2EtZGlyZWN0b3J5JyB3b3Jrc3BhY2UgbG9va2luZyBmb3IgJyR7UEFSQU1TX0NSVF9GSUxFTkFNRX0nIGZpbGUiCgljcnQ9IiR7V09SS1NQQUNFU19TU0xfQ0FfRElSRUNUT1JZX1BBVEh9LyR7UEFSQU1TX0NSVF9GSUxFTkFNRX0iCglbWyAhIC1mICIke2NydH0iIF1dICYmCgkJZmFpbCAiQ1JUIGZpbGUgKFBBUkFNU19DUlRfRklMRU5BTUUpIG5vdCBmb3VuZCBhdCAnJHtjcnR9JyIKCglwaGFzZSAiRXhwb3J0aW5nIGN1c3RvbSBDQSBjZXJ0aWZpY2F0ZSAnR0lUX1NTTF9DQUlORk89JHtjcnR9JyIKCWV4cG9ydCBHSVRfU1NMX0NBSU5GTz0ke2NydH0KZmkKCiMKIyBQcm94eSBTZXR0aW5ncwojCgpwaGFzZSAiU2V0dGluZyB1cCBIVFRQX1BST1hZPScke1BBUkFNU19IVFRQX1BST1hZfSciCltbIC1uICIke1BBUkFNU19IVFRQX1BST1hZfSIgXV0gJiYgZXhwb3J0IEhUVFBfUFJPWFk9IiR7UEFSQU1TX0hUVFBfUFJPWFl9IgoKcGhhc2UgIlNldHR0aW5nIHVwIEhUVFBTX1BST1hZPScke1BBUkFNU19IVFRQU19QUk9YWX0nIgpbWyAtbiAiJHtQQVJBTVNfSFRUUFNfUFJPWFl9IiBdXSAmJiBleHBvcnQgSFRUUFNfUFJPWFk9IiR7UEFSQU1TX0hUVFBTX1BST1hZfSIKCnBoYXNlICJTZXR0aW5nIHVwIE5PX1BST1hZPScke1BBUkFNU19OT19QUk9YWX0nIgpbWyAtbiAiJHtQQVJBTVNfTk9fUFJPWFl9IiBdXSAmJiBleHBvcnQgTk9fUFJPWFk9IiR7UEFSQU1TX05PX1BST1hZfSIKCiMKIyBHaXQgQ2xvbmUKIwoKcGhhc2UgIlNldHRpbmcgb3V0cHV0IHdvcmtzcGFjZSBhcyBzYWZlIGRpcmVjdG9yeSAoJyR7V09SS1NQQUNFU19PVVRQVVRfUEFUSH0nKSIKZ2l0IGNvbmZpZyAtLWdsb2JhbCAtLWFkZCBzYWZlLmRpcmVjdG9yeSAiJHtXT1JLU1BBQ0VTX09VVFBVVF9QQVRIfSIKCnBoYXNlICJDbG9uaW5nICcke1BBUkFNU19VUkx9JyBpbnRvICcke2NoZWNrb3V0X2Rpcn0nIgpzZXQgLXgKZXhlYyBnaXQtaW5pdCBcCgktdXJsPSIke1BBUkFNU19VUkx9IiBcCgktcmV2aXNpb249IiR7UEFSQU1TX1JFVklTSU9OfSIgXAoJLXJlZnNwZWM9IiR7UEFSQU1TX1JFRlNQRUN9IiBcCgktcGF0aD0iJHtjaGVja291dF9kaXJ9IiBcCgktc3NsVmVyaWZ5PSIke1BBUkFNU19TU0xfVkVSSUZZfSIgXAoJLXN1Ym1vZHVsZXM9IiR7UEFSQU1TX1NVQk1PRFVMRVN9IiBcCgktZGVwdGg9IiR7UEFSQU1TX0RFUFRIfSIgXAoJLXNwYXJzZUNoZWNrb3V0RGlyZWN0b3JpZXM9IiR7UEFSQU1TX1NQQVJTRV9DSEVDS09VVF9ESVJFQ1RPUklFU30iCg==" |base64 -d >git-clone.sh
-        chmod +x "git-clone.sh"
-        printf '%s' "IyEvdXNyL2Jpbi9lbnYgc2gKIwojIFNldHMgdXAgdGhlIGJhc2ljIGFuZCBTU0ggYXV0aGVudGljYXRpb24gYmFzZWQgb24gaW5mb3JtZWQgd29ya3NwYWNlcywgYXMgd2VsbCBhcyBjbGVhbmluZyB1cCB0aGUKIyBwcmV2aW91cyBnaXQtY2xvbmUgc3RhbGUgZGF0YS4KIwoKc2V0IC1ldQoKc291cmNlICQoQ0RQQVRIPSBjZCAtLSAiJChkaXJuYW1lIC0tICR7MH0pIiAmJiBwd2QpL2NvbW1vbi5zaAoKYXNzZXJ0X3JlcXVpcmVkX2NvbmZpZ3VyYXRpb25fb3JfZmFpbAoKcGhhc2UgIlByZXBhcmluZyB0aGUgZmlsZXN5c3RlbSBiZWZvcmUgY2xvbmluZyB0aGUgcmVwb3NpdG9yeSIKCmlmIFtbICIke1dPUktTUEFDRVNfQkFTSUNfQVVUSF9CT1VORH0iID09ICJ0cnVlIiBdXTsgdGhlbgoJcGhhc2UgIkNvbmZpZ3VyaW5nIEdpdCBhdXRoZW50aWNhdGlvbiB3aXRoICdiYXNpYy1hdXRoJyBXb3Jrc3BhY2UgZmlsZXMiCgoJZm9yIGYgaW4gLmdpdC1jcmVkZW50aWFscyAuZ2l0Y29uZmlnOyBkbwoJCXNyYz0iJHtXT1JLU1BBQ0VTX0JBU0lDX0FVVEhfUEFUSH0vJHtmfSIKCQlwaGFzZSAiQ29weWluZyAnJHtzcmN9JyB0byAnJHtQQVJBTVNfVVNFUl9IT01FfSciCgkJY29weV9vcl9mYWlsIDQwMCAke3NyY30gIiR7UEFSQU1TX1VTRVJfSE9NRX0vIgoJZG9uZQpmaQoKaWYgW1sgIiR7V09SS1NQQUNFU19TU0hfRElSRUNUT1JZX0JPVU5EfSIgPT0gInRydWUiIF1dOyB0aGVuCglwaGFzZSAiQ29weWluZyAnLnNzaCcgZnJvbSBzc2gtZGlyZWN0b3J5IHdvcmtzcGFjZSAoJyR7V09SS1NQQUNFU19TU0hfRElSRUNUT1JZX1BBVEh9JykiCgoJZG90X3NzaD0iJHtQQVJBTVNfVVNFUl9IT01FfS8uc3NoIgoJY29weV9vcl9mYWlsIDcwMCAke1dPUktTUEFDRVNfU1NIX0RJUkVDVE9SWV9QQVRIfSAke2RvdF9zc2h9CgljaG1vZCAtUnYgNDAwICR7ZG90X3NzaH0vKgpmaQoKaWYgW1sgIiR7UEFSQU1TX0RFTEVURV9FWElTVElOR30iID09ICJ0cnVlIiBdXTsgdGhlbgoJcGhhc2UgIkRlbGV0aW5nIGFsbCBjb250ZW50cyBvZiBjaGVja291dC1kaXIgJyR7Y2hlY2tvdXRfZGlyfSciCgljbGVhbl9kaXIgJHtjaGVja291dF9kaXJ9IHx8IHRydWUKZmkKCmV4aXQgMA==" |base64 -d >prepare.sh
-        chmod +x "prepare.sh"
-        printf '%s' "IyEvdXNyL2Jpbi9lbnYgc2gKIwojIFNjYW4gdGhlIGNsb25lZCByZXBvc2l0b3J5IGluIG9yZGVyIHRvIHJlcG9ydCBkZXRhaWxzIHdyaXR0aW5nIHRoZSByZXN1bHQgZmlsZXMuCiMKCnNldCAtZXUKCnNvdXJjZSAkKENEUEFUSD0gY2QgLS0gIiQoZGlybmFtZSAtLSAkezB9KSIgJiYgcHdkKS9jb21tb24uc2gKCmFzc2VydF9yZXF1aXJlZF9jb25maWd1cmF0aW9uX29yX2ZhaWwKCnBoYXNlICJDb2xsZWN0aW5nIGNsb25lZCByZXBvc2l0b3J5IGluZm9ybWF0aW9uICgnJHtjaGVja291dF9kaXJ9JykiCgpjZCAiJHtjaGVja291dF9kaXJ9IiB8fCBmYWlsICJOb3QgYWJsZSB0byBlbnRlciBjaGVja291dC1kaXIgJyR7Y2hlY2tvdXRfZGlyfSciCgpwaGFzZSAiU2V0dGluZyBvdXRwdXQgd29ya3NwYWNlIGFzIHNhZmUgZGlyZWN0b3J5ICgnJHtXT1JLU1BBQ0VTX09VVFBVVF9QQVRIfScpIgpnaXQgY29uZmlnIC0tZ2xvYmFsIC0tYWRkIHNhZmUuZGlyZWN0b3J5ICIke1dPUktTUEFDRVNfT1VUUFVUX1BBVEh9IgoKcmVzdWx0X3NoYT0iJChnaXQgcmV2LXBhcnNlIEhFQUQpIgpyZXN1bHRfY29tbWl0dGVyX2RhdGU9IiQoZ2l0IGxvZyAtMSAtLXByZXR0eT0lY3QpIgoKcGhhc2UgIlJlcG9ydGluZyBsYXN0IGNvbW1pdCBkYXRlICcke3Jlc3VsdF9jb21taXR0ZXJfZGF0ZX0nIgpwcmludGYgIiVzIiAiJHtyZXN1bHRfY29tbWl0dGVyX2RhdGV9IiA+JHtSRVNVTFRTX0NPTU1JVFRFUl9EQVRFX1BBVEh9CgpwaGFzZSAiUmVwb3J0aW5nIHBhcnNlZCByZXZpc2lvbiBTSEEgJyR7cmVzdWx0X3NoYX0nIgpwcmludGYgIiVzIiAiJHtyZXN1bHRfc2hhfSIgPiR7UkVTVUxUU19DT01NSVRfUEFUSH0KCnBoYXNlICJSZXBvcnRpbmcgcmVwb3NpdG9yeSBVUkwgJyR7UEFSQU1TX1VSTH0nIgpwcmludGYgIiVzIiAiJHtQQVJBTVNfVVJMfSIgPiR7UkVTVUxUU19VUkxfUEFUSH0KCmV4aXQgMA==" |base64 -d >report.sh
-        chmod +x "report.sh"
-      volumeMounts:
-        - mountPath: /scripts
-          name: scripts-dir
-      workingDir: /scripts
-    - command:
-        - /scripts/prepare.sh
-      computeResources: {}
-      image: 'registry.redhat.io/openshift-pipelines/pipelines-git-init-rhel8@sha256:c4b2183f7c7997bd401d86b33eefb637b3ef2fa90618e875106292cd69a15c14'
-      name: prepare
-      volumeMounts:
-        - mountPath: /scripts
-          name: scripts-dir
-        - mountPath: $(params.USER_HOME)
-          name: user-home
-    - command:
-        - /scripts/git-clone.sh
-      computeResources: {}
-      image: 'registry.redhat.io/openshift-pipelines/pipelines-git-init-rhel8@sha256:c4b2183f7c7997bd401d86b33eefb637b3ef2fa90618e875106292cd69a15c14'
-      name: git-clone
-      volumeMounts:
-        - mountPath: /scripts
-          name: scripts-dir
-        - mountPath: $(params.USER_HOME)
-          name: user-home
-    - command:
-        - /scripts/report.sh
-      computeResources: {}
-      image: 'registry.redhat.io/openshift-pipelines/pipelines-git-init-rhel8@sha256:c4b2183f7c7997bd401d86b33eefb637b3ef2fa90618e875106292cd69a15c14'
-      name: report
-      volumeMounts:
-        - mountPath: /scripts
-          name: scripts-dir
-  volumes:
-    - emptyDir: {}
-      name: user-home
-    - emptyDir: {}
-      name: scripts-dir
+  description: >-
+    These Tasks are Git tasks to work with repositories used by other tasks
+    in your Pipeline.
+
+    The git-clone Task will clone a repo from the provided url into the
+    output Workspace. By default the repo will be cloned into the root of
+    your Workspace. You can clone into a subdirectory by setting this Task's
+    subdirectory param. This Task also supports sparse checkouts. To perform
+    a sparse checkout, pass a list of comma separated directory patterns to
+    this Task's sparseCheckoutDirectories param.
   workspaces:
-    - description: |
-        The Git repository directory, data will be placed on the root of the
-        Workspace, or on the relative path defined by the SUBDIRECTORY
-        parameter.
-      name: output
-    - description: |
-        A `.ssh` directory with private key, `known_hosts`, `config`, etc.
-        Copied to the Git user's home before cloning the repository, in order to
-        server as authentication mechanismBinding a Secret to this Workspace is
-        strongly recommended over other volume types.
-      name: ssh-directory
+    - name: output
+      description: The git repo will be cloned onto the volume backing this Workspace.
+    - name: ssh-directory
       optional: true
-    - description: |
-        A Workspace containing a `.gitconfig` and `.git-credentials` files.
-        These will be copied to the user's home before Git commands run. All
-        other files in this Workspace are ignored. It is strongly recommended to
-        use `ssh-directory` over `basic-auth` whenever possible, and to bind a
+      description: |
+        A .ssh directory with private key, known_hosts, config, etc. Copied to
+        the user's home before git commands are executed. Used to authenticate
+        with the git remote when performing the clone. Binding a Secret to this
+        Workspace is strongly recommended over other volume types.
+    - name: basic-auth
+      optional: true
+      description: |
+        A Workspace containing a .gitconfig and .git-credentials file. These
+        will be copied to the user's home before any git commands are run. Any
+        other files in this Workspace are ignored. It is strongly recommended
+        to use ssh-directory over basic-auth whenever possible and to bind a
         Secret to this Workspace over other volume types.
-      name: basic-auth
+    - name: ssl-ca-directory
       optional: true
-    - description: |
-        A Workspace containing CA certificates, this will be used by Git to
-        verify the peer with when interacting with remote repositories using
-        HTTPS.
-      name: ssl-ca-directory
-      optional: true
+      description: |
+        A workspace containing CA certificates, this will be used by Git to
+        verify the peer with when fetching or pushing over HTTPS.
+  params:
+    - name: url
+      description: Repository URL to clone from.
+      type: string
+    - name: revision
+      description: Revision to checkout. (branch, tag, sha, ref, etc...)
+      type: string
+      default: ""
+    - name: refspec
+      description: Refspec to fetch before checking out revision.
+      default: ""
+    - name: submodules
+      description: Initialize and fetch git submodules.
+      type: string
+      default: "true"
+    - name: depth
+      description: Perform a shallow clone, fetching only the most recent N commits.
+      type: string
+      default: "1"
+    - name: sslVerify
+      description: Set the `http.sslVerify` global git config. Setting this to `false` is not advised unless you are sure that you trust your git remote.
+      type: string
+      default: "true"
+    - name: crtFileName
+      description: file name of mounted crt using ssl-ca-directory workspace. default value is ca-bundle.crt.
+      type: string
+      default: "ca-bundle.crt"
+    - name: subdirectory
+      description: Subdirectory inside the `output` Workspace to clone the repo into.
+      type: string
+      default: ""
+    - name: sparseCheckoutDirectories
+      description: Define the directory patterns to match or exclude when performing a sparse checkout.
+      type: string
+      default: ""
+    - name: deleteExisting
+      description: Clean out the contents of the destination directory if it already exists before cloning.
+      type: string
+      default: "true"
+    - name: httpProxy
+      description: HTTP proxy server for non-SSL requests.
+      type: string
+      default: ""
+    - name: httpsProxy
+      description: HTTPS proxy server for SSL requests.
+      type: string
+      default: ""
+    - name: noProxy
+      description: Opt out of proxying HTTP/HTTPS requests.
+      type: string
+      default: ""
+    - name: verbose
+      description: Log the commands that are executed during `git-clone`'s operation.
+      type: string
+      default: "true"
+    - name: gitInitImage
+      description: The image providing the git-init binary that this Task runs.
+      type: string
+      default: "registry.redhat.io/openshift-pipelines/pipelines-git-init-rhel8@sha256:c4b2183f7c7997bd401d86b33eefb637b3ef2fa90618e875106292cd69a15c14"
+    - name: userHome
+      description: |
+        Absolute path to the user's home directory.
+      type: string
+      default: "/home/git"
+  results:
+    - name: commit
+      description: The precise commit SHA that was fetched by this Task.
+    - name: url
+      description: The precise URL that was fetched by this Task.
+    - name: committer-date
+      description: The epoch timestamp of the commit that was fetched by this Task.
+  steps:
+    - name: clone
+      image: "$(params.gitInitImage)"
+      env:
+      - name: HOME
+        value: "$(params.userHome)"
+      - name: PARAM_URL
+        value: $(params.url)
+      - name: PARAM_REVISION
+        value: $(params.revision)
+      - name: PARAM_REFSPEC
+        value: $(params.refspec)
+      - name: PARAM_SUBMODULES
+        value: $(params.submodules)
+      - name: PARAM_DEPTH
+        value: $(params.depth)
+      - name: PARAM_SSL_VERIFY
+        value: $(params.sslVerify)
+      - name: PARAM_CRT_FILENAME
+        value: $(params.crtFileName)
+      - name: PARAM_SUBDIRECTORY
+        value: $(params.subdirectory)
+      - name: PARAM_DELETE_EXISTING
+        value: $(params.deleteExisting)
+      - name: PARAM_HTTP_PROXY
+        value: $(params.httpProxy)
+      - name: PARAM_HTTPS_PROXY
+        value: $(params.httpsProxy)
+      - name: PARAM_NO_PROXY
+        value: $(params.noProxy)
+      - name: PARAM_VERBOSE
+        value: $(params.verbose)
+      - name: PARAM_SPARSE_CHECKOUT_DIRECTORIES
+        value: $(params.sparseCheckoutDirectories)
+      - name: PARAM_USER_HOME
+        value: $(params.userHome)
+      - name: WORKSPACE_OUTPUT_PATH
+        value: $(workspaces.output.path)
+      - name: WORKSPACE_SSH_DIRECTORY_BOUND
+        value: $(workspaces.ssh-directory.bound)
+      - name: WORKSPACE_SSH_DIRECTORY_PATH
+        value: $(workspaces.ssh-directory.path)
+      - name: WORKSPACE_BASIC_AUTH_DIRECTORY_BOUND
+        value: $(workspaces.basic-auth.bound)
+      - name: WORKSPACE_BASIC_AUTH_DIRECTORY_PATH
+        value: $(workspaces.basic-auth.path)
+      - name: WORKSPACE_SSL_CA_DIRECTORY_BOUND
+        value: $(workspaces.ssl-ca-directory.bound)
+      - name: WORKSPACE_SSL_CA_DIRECTORY_PATH
+        value: $(workspaces.ssl-ca-directory.path)
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 65532
+      script: |
+        #!/usr/bin/env sh
+        set -eu
+
+        if [ "${PARAM_VERBOSE}" = "true" ] ; then
+          set -x
+        fi
+
+        if [ "${WORKSPACE_BASIC_AUTH_DIRECTORY_BOUND}" = "true" ] ; then
+          cp "${WORKSPACE_BASIC_AUTH_DIRECTORY_PATH}/.git-credentials" "${PARAM_USER_HOME}/.git-credentials"
+          cp "${WORKSPACE_BASIC_AUTH_DIRECTORY_PATH}/.gitconfig" "${PARAM_USER_HOME}/.gitconfig"
+          chmod 400 "${PARAM_USER_HOME}/.git-credentials"
+          chmod 400 "${PARAM_USER_HOME}/.gitconfig"
+        fi
+
+        if [ "${WORKSPACE_SSH_DIRECTORY_BOUND}" = "true" ] ; then
+          cp -R "${WORKSPACE_SSH_DIRECTORY_PATH}" "${PARAM_USER_HOME}"/.ssh
+          chmod 700 "${PARAM_USER_HOME}"/.ssh
+          chmod -R 400 "${PARAM_USER_HOME}"/.ssh/*
+        fi
+
+        if [ "${WORKSPACE_SSL_CA_DIRECTORY_BOUND}" = "true" ] ; then
+           export GIT_SSL_CAPATH="${WORKSPACE_SSL_CA_DIRECTORY_PATH}"
+           if [ "${PARAM_CRT_FILENAME}" != "" ] ; then
+              export GIT_SSL_CAINFO="${WORKSPACE_SSL_CA_DIRECTORY_PATH}/${PARAM_CRT_FILENAME}"
+           fi
+        fi
+        CHECKOUT_DIR="${WORKSPACE_OUTPUT_PATH}/${PARAM_SUBDIRECTORY}"
+
+        cleandir() {
+          # Delete any existing contents of the repo directory if it exists.
+          #
+          # We don't just "rm -rf ${CHECKOUT_DIR}" because ${CHECKOUT_DIR} might be "/"
+          # or the root of a mounted volume.
+          if [ -d "${CHECKOUT_DIR}" ] ; then
+            # Delete non-hidden files and directories
+            rm -rf "${CHECKOUT_DIR:?}"/*
+            # Delete files and directories starting with . but excluding ..
+            rm -rf "${CHECKOUT_DIR}"/.[!.]*
+            # Delete files and directories starting with .. plus any other character
+            rm -rf "${CHECKOUT_DIR}"/..?*
+          fi
+        }
+
+        if [ "${PARAM_DELETE_EXISTING}" = "true" ] ; then
+          cleandir || true
+        fi
+
+        test -z "${PARAM_HTTP_PROXY}" || export HTTP_PROXY="${PARAM_HTTP_PROXY}"
+        test -z "${PARAM_HTTPS_PROXY}" || export HTTPS_PROXY="${PARAM_HTTPS_PROXY}"
+        test -z "${PARAM_NO_PROXY}" || export NO_PROXY="${PARAM_NO_PROXY}"
+
+        git config --global --add safe.directory "${WORKSPACE_OUTPUT_PATH}"
+        /ko-app/git-init \
+          -url="${PARAM_URL}" \
+          -revision="${PARAM_REVISION}" \
+          -refspec="${PARAM_REFSPEC}" \
+          -path="${CHECKOUT_DIR}" \
+          -sslVerify="${PARAM_SSL_VERIFY}" \
+          -submodules="${PARAM_SUBMODULES}" \
+          -depth="${PARAM_DEPTH}" \
+          -sparseCheckoutDirectories="${PARAM_SPARSE_CHECKOUT_DIRECTORIES}"
+        cd "${CHECKOUT_DIR}"
+        RESULT_SHA="$(git rev-parse HEAD)"
+        EXIT_CODE="$?"
+        if [ "${EXIT_CODE}" != 0 ] ; then
+          exit "${EXIT_CODE}"
+        fi
+        RESULT_COMMITTER_DATE="$(git log -1 --pretty=%ct)"
+        printf "%s" "${RESULT_COMMITTER_DATE}" > "$(results.committer-date.path)"
+        printf "%s" "${RESULT_SHA}" > "$(results.commit.path)"
+        printf "%s" "${PARAM_URL}" > "$(results.url.path)"
