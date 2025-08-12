@@ -119,7 +119,7 @@ oc get route/argocd-server -n openshift-gitops -o jsonpath='{.spec.host}{"\n"}'
 Copy the Argocd URL (Without  https://) and paste it into the file cd/env/config/argocd-platform-cm.yaml using the command : 
 
 ````bash
-echo -e "apiVersion: v1\nkind: ConfigMap\nmetadata:\n  name: argocd-env-configmap\n  namespace: pacman-ci\ndata:\n  ARGOCD_SERVER: $(oc get route/argocd-server -n openshift-gitops -o jsonpath='{.spec.host}{"\n"}')" > cd/env/config/argocd-platform-cm.yaml
+echo -e "apiVersion: v1\nkind: ConfigMap\nmetadata:\n  name: argocd-env-configmap\n  namespace: pacman-ci\ndata:\n  ARGOCD_SERVER: $(oc get route/openshift-gitops-server -n openshift-gitops -o jsonpath='{.spec.host}{"\n"}')" > cd/env/config/argocd-platform-cm.yaml
 ````
 
 ## Create a secret for access to the ACS CI/CD process
@@ -149,13 +149,13 @@ oc get secret/image-pusher-dockercfg-<whatever> -n pacman-ci -o 'go-template={{i
 
 Take the password section from the item with index : default-route-openshift-image-registry.apps.cluster-.....
 
+base64 decode the output and use the token below.
+
 Get the default route : 
 
 ````bash
  oc get is/rhel9-nodejs-16 -o jsonpath='{"https://"}''{.status.publicDockerImageRepository}' | cut -d "/" -f 1-3
  ````
-
-base64 decode the output and use the token below.
 
 In ACS go to Platform configurations -> Integrations -> Image integration -> Generic Docker Registry and press the ‘Create integration’ button.
 Fill in the details as :
@@ -234,7 +234,7 @@ Get the path for the pipeline trigger from the command :
 
 ````bash
 oc get route/pacman-ci-listener-el -o jsonpath='{"http://"}{.spec.host}'
-echo -n "\n"
+echo ""
 ````
 
 Ensure a webhook exists here : https://github.com/marrober/pacman/settings/hooks pointing to the trigger listener route in the pacman-ci namespace. 
