@@ -9,7 +9,7 @@ spec:
     - name: latest
       from:
         kind: DockerImage
-        name: 'image-registry.openshift-image-registry.svc:5000/pacman-ci/buildah:latest'
+        name: 'registry.redhat.io/rhel8/buildah:latest'
       importPolicy:
         importMode: Legacy
       referencePolicy:
