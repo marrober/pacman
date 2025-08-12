@@ -87,6 +87,7 @@ spec:
         labels:
           tekton.dev/pipeline: pacman
       spec:
+        storageClassName: ocs-storagecluster-ceph-rbd
         accessModes:
         - ReadWriteOnce
         resources:
@@ -99,6 +100,7 @@ spec:
         labels:
           tekton.dev/pipeline: pacman
       spec:
+        storageClassName: ocs-storagecluster-ceph-rbd
         accessModes:
         - ReadWriteOnce
         resources:

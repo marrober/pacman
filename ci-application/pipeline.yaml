@@ -94,7 +94,7 @@ spec:
       value: "true"
     taskRef:
       kind: Task
-      name: git-clone
+      name: git
     workspaces:
     - name: output
       workspace: workspace
