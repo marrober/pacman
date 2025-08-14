@@ -30,7 +30,13 @@ spec:
         npm install
         ls -al
       image: image-registry.openshift-image-registry.svc:5000/pacman-ci/rhel9-nodejs-16:latest
-      resources: {}
+      resources:
+        limits:
+          memory: 1Gi
+          cpu: 750m
+        requests:
+          memory: 512Mi
+          cpu: 250m
       workingDir: /resources/$(params.app-dir)
     - name: update-dockerfile
       script: >-
@@ -51,7 +57,13 @@ spec:
         cat new-dockerfile
 
       image: image-registry.openshift-image-registry.svc:5000/pacman-ci/ose-cli:latest
-      resources: {}
+      resources:
+        limits:
+          memory: 1Gi
+          cpu: 750m
+        requests:
+          memory: 512Mi
+          cpu: 250m
       workingDir: /resources/$(params.app-dir)
     - name: build
       command:
@@ -82,7 +94,13 @@ spec:
       - --root
       - /files/buildah-containers
       image: image-registry.openshift-image-registry.svc:5000/pacman-ci/buildah:latest
-      resources: {}
+      resources:
+        limits:
+          memory: 1Gi
+          cpu: 750m
+        requests:
+          memory: 512Mi
+          cpu: 250m
       securityContext:
         capabilities:
           add:
