@@ -32,7 +32,7 @@ spec:
       image: image-registry.openshift-image-registry.svc:5000/pacman-ci/rhel9-nodejs-16:latest
       resources:
         limits:
-          memory: 500Gi
+          memory: 500Mi
           cpu: 500m
         requests:
           memory: 250Mi
@@ -59,7 +59,7 @@ spec:
       image: image-registry.openshift-image-registry.svc:5000/pacman-ci/ose-cli:latest
       resources:
         limits:
-          memory: 500Gi
+          memory: 500Mi
           cpu: 500m
         requests:
           memory: 250Mi
@@ -96,7 +96,7 @@ spec:
       image: image-registry.openshift-image-registry.svc:5000/pacman-ci/buildah:latest
       resources:
         limits:
-          memory: 500Gi
+          memory: 500Mi
           cpu: 500m
         requests:
           memory: 250Mi
@@ -119,7 +119,7 @@ spec:
             - SETFCAP
       resources:
         limits:
-          memory: 500Gi
+          memory: 500Mi
           cpu: 500m
         requests:
           memory: 250Mi
@@ -136,7 +136,7 @@ spec:
         cat $(workspaces.resources.path)/sbom-image.json
       resources:
         limits:
-          memory: 500Gi
+          memory: 500Mi
           cpu: 500m
         requests:
           memory: 250Mi
