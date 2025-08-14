@@ -101,7 +101,7 @@ spec:
             - SETFCAP
       resources:
         limits:
-          memory: 4Gi
+          memory: 1Gi
           cpu: '2'
         requests:
           memory: 512Mi
