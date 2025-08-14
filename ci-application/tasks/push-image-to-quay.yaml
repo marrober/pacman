@@ -46,12 +46,13 @@ spec:
         capabilities:
           add: ["SETFCAP"]
       resources:
-        requests:
-          memory: 500Mi
-          cpu: 250m
         limits:
-          memory: 1Gi
-          cpu: '500m'
+          memory: 300Mi
+          cpu: 300m
+        requests:
+          memory: 250Mi
+          cpu: 150m
+          
     - name: buildah-tag-image
       command:
         - buildah
@@ -66,53 +67,12 @@ spec:
         capabilities:
           add: ["SETFCAP"]
       resources:
-        requests:
-          memory: 500Mi
-          cpu: 250m
         limits:
-          memory: 1Gi
-          cpu: '500m'
-    - name: push-image-to-quay-prior
-      script: |
-
-        echo "1"
-        buildah images --storage-driver=$(params.STORAGE_DRIVER) --root /files/buildah-containers --format '{{ .Name }}:{{ .Tag }}@{{ .Digest }}' | grep rhel9-nodejs-16 > $(results.BASE_IMAGES_DIGESTS.path)
-
-        echo "2 - base image name"
-        buildah images --storage-driver=$(params.STORAGE_DRIVER) --root /files/buildah-containers --format '{{ .Name }}:{{ .Tag }}@{{ .Digest }}' | grep rhel9-nodejs-16
-
-        echo "3"
-        base_image_name=$(buildah inspect --storage-driver=$(params.STORAGE_DRIVER) --root /files/buildah-containers --format '{{ index .ImageAnnotations "org.opencontainers.image.base.name"}}' $(params.quay-instance-url)/$(params.quay-account)/$(params.quay-repository):$(params.imageTag) | cut -f1 -d'@')
-
-        echo "4 - base image name taken from the built image"
-        echo $base_image_name
-     
-        base_image_digest=$(buildah inspect --storage-driver=$(params.STORAGE_DRIVER) --root /files/buildah-containers --format '{{ index .ImageAnnotations "org.opencontainers.image.base.digest"}}' $(params.quay-instance-url)/$(params.quay-account)/$(params.quay-repository):$(params.imageTag))
-
-        echo "5 - base image digest taken from the built image"
-
-        echo $base_image_digest 
-
-        cat "$(workspaces.source.path)"/image-digest | tee $(results.IMAGE_DIGEST.path)
-
-        echo -n "$(params.quay-instance-url)/$(params.quay-account)/$(params.quay-repository):$(params.imageTag)" | tee $(results.IMAGE_URL.path)
-
-
-      image: image-registry.openshift-image-registry.svc:5000/pacman-ci/buildah:latest
-      securityContext:
-        capabilities:
-          add: ["SETFCAP"]
-      resources:
+          memory: 300Mi
+          cpu: 300m
         requests:
-          memory: 500Mi
-          cpu: 250m
-        limits:
-          memory: 1Gi
-          cpu: '500m'
-      volumeMounts:
-        - name: quay-auth-secret
-          mountPath: /etc/secret-volume
-          readOnly: true
+          memory: 250Mi
+          cpu: 150m
 
     - name: push-image-to-quay
       script: |
@@ -135,6 +95,10 @@ spec:
         echo "5 - base image digest taken from the built image"
 
         echo $base_image_digest 
+
+        cat "$(workspaces.source.path)"/image-digest | tee $(results.IMAGE_DIGEST.path)
+
+        echo -n "$(params.quay-instance-url)/$(params.quay-account)/$(params.quay-repository):$(params.imageTag)" | tee $(results.IMAGE_URL.path)        
 
         echo "Image to update"
 
@@ -163,38 +127,28 @@ spec:
 
         echo -n "$(params.quay-instance-url)/$(params.quay-account)/$(params.quay-repository):$(params.imageTag)" | tee $(results.IMAGE_URL.path)
 
+        echo "$(params.quay-instance-url)/$(params.quay-account)/$(params.quay-repository):$(params.imageTag)" > $(results.quay-image-repo-location.path)
 
+        echo -------------------------------------
+
+        cat $(results.quay-image-repo-location.path)        
 
       image: image-registry.openshift-image-registry.svc:5000/pacman-ci/buildah:latest
       securityContext:
         capabilities:
           add: ["SETFCAP"]
       resources:
-        requests:
-          memory: 500Mi
-          cpu: 250m
         limits:
-          memory: 1Gi
-          cpu: '500m'
+          memory: 300Mi
+          cpu: 300m
+        requests:
+          memory: 250Mi
+          cpu: 150m
       volumeMounts:
         - name: quay-auth-secret
           mountPath: /etc/secret-volume
           readOnly: true
-    - name: get-quay-repository-url
-      command:
-        - /bin/sh
-        - '-c'
-      args:
-        - |-
 
-          echo "$(params.quay-instance-url)/$(params.quay-account)/$(params.quay-repository):$(params.imageTag)" > $(results.quay-image-repo-location.path)
-
-          echo -------------------------------------
-
-          cat $(results.quay-image-repo-location.path)
-
-      image: image-registry.openshift-image-registry.svc:5000/openshift/cli:latest
-      resources: {}
     - name: upload-sbom
       image: image-registry.openshift-image-registry.svc:5000/pacman-ci/cosign:v2.1.1
       args:
