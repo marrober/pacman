@@ -67,12 +67,11 @@ spec:
           add: ["SETFCAP"]
       resources:
         requests:
-          memory: 2Gi
-          cpu: '1'
+          memory: 500Mi
+          cpu: 250m
         limits:
-          memory: 4Gi
-          cpu: '2'
-
+          memory: 1Gi
+          cpu: '500m'
     - name: push-image-to-quay-prior
       script: |
 
@@ -105,11 +104,11 @@ spec:
           add: ["SETFCAP"]
       resources:
         requests:
-          memory: 2Gi
-          cpu: '1'
+          memory: 500Mi
+          cpu: 250m
         limits:
-          memory: 4Gi
-          cpu: '2'
+          memory: 1Gi
+          cpu: '500m'
       volumeMounts:
         - name: quay-auth-secret
           mountPath: /etc/secret-volume
@@ -172,11 +171,11 @@ spec:
           add: ["SETFCAP"]
       resources:
         requests:
-          memory: 2Gi
-          cpu: '1'
+          memory: 500Mi
+          cpu: 250m
         limits:
-          memory: 4Gi
-          cpu: '2'
+          memory: 1Gi
+          cpu: '500m'
       volumeMounts:
         - name: quay-auth-secret
           mountPath: /etc/secret-volume
