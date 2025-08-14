@@ -32,11 +32,11 @@ spec:
       image: image-registry.openshift-image-registry.svc:5000/pacman-ci/rhel9-nodejs-16:latest
       resources:
         limits:
-          memory: 1Gi
-          cpu: 750m
+          memory: 500Gi
+          cpu: 500m
         requests:
-          memory: 512Mi
-          cpu: 250m
+          memory: 250Mi
+          cpu: 150m
       workingDir: /resources/$(params.app-dir)
     - name: update-dockerfile
       script: >-
@@ -59,11 +59,11 @@ spec:
       image: image-registry.openshift-image-registry.svc:5000/pacman-ci/ose-cli:latest
       resources:
         limits:
-          memory: 1Gi
-          cpu: 750m
+          memory: 500Gi
+          cpu: 500m
         requests:
-          memory: 512Mi
-          cpu: 250m
+          memory: 250Mi
+          cpu: 150m
       workingDir: /resources/$(params.app-dir)
     - name: build
       command:
@@ -96,11 +96,11 @@ spec:
       image: image-registry.openshift-image-registry.svc:5000/pacman-ci/buildah:latest
       resources:
         limits:
-          memory: 1Gi
-          cpu: 750m
+          memory: 500Gi
+          cpu: 500m
         requests:
-          memory: 512Mi
-          cpu: 250m
+          memory: 250Mi
+          cpu: 150m
       securityContext:
         capabilities:
           add:
@@ -119,11 +119,11 @@ spec:
             - SETFCAP
       resources:
         limits:
-          memory: 1Gi
-          cpu: 750m
+          memory: 500Gi
+          cpu: 500m
         requests:
-          memory: 512Mi
-          cpu: 250m
+          memory: 250Mi
+          cpu: 150m
 
     - name: sbom-syft-generate
       image: quay.io/redhat-appstudio/syft:v0.94.0
@@ -134,7 +134,13 @@ spec:
         syft dir:$(cat /workspace/container_path) --output cyclonedx-json=$(workspaces.resources.path)/sbom-image.json
 
         cat $(workspaces.resources.path)/sbom-image.json
-
+      resources:
+        limits:
+          memory: 500Gi
+          cpu: 500m
+        requests:
+          memory: 250Mi
+          cpu: 150m
   volumes:
     - emptyDir: {}
       name: envparams
