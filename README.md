@@ -147,6 +147,14 @@ oc get sa/image-pusher -o yaml | grep image-pusher-dockercfg
 oc get secret/image-pusher-dockercfg-<whatever> -n pacman-ci -o 'go-template={{index .data ".dockercfg"}}' | base64 -d | jq .  
 ````
 
+### Create a long lived token
+
+To create a token that will not time out quickly use the command below. This will create a token that will last 625 days.
+
+````bash
+oc create token image-pusher --duration=15000h --bound-object-kind Secret --bound-object-name image-pusher-dockercfg-<whatever>
+````
+
 Take the password section from the item with index : default-route-openshift-image-registry.apps.cluster-.....
 
 base64 decode the output and use the token below.
