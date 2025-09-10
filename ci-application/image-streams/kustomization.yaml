@@ -5,3 +5,4 @@ resources:
 - buildah-image.yaml
 - terminal-image.yaml
 - rhel9-nodejs-16.yaml
+- cosign.yaml

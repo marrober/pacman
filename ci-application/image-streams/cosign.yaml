@@ -1,0 +1,15 @@
+kind: ImageStream
+apiVersion: image.openshift.io/v1
+metadata:
+  name: cosign
+spec:
+  tags:
+    - name: v2.1.1
+      from:
+        kind: DockerImage
+        name: 'quay.io/redhat-appstudio/cosign:v2.1.1'
+      generation: 1
+      importPolicy:
+        importMode: Legacy
+      referencePolicy:
+        type: Source
