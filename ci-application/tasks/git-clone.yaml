@@ -167,6 +167,8 @@ spec:
         value: $(workspaces.ssl-ca-directory.bound)
       - name: WORKSPACE_SSL_CA_DIRECTORY_PATH
         value: $(workspaces.ssl-ca-directory.path)
+      - name: REPO_NAME
+        value: $(params.repoName)
       securityContext:
         runAsNonRoot: true
         runAsUser: 65532
@@ -226,7 +228,7 @@ spec:
 
         git clone ${PARAM_URL} 
 
-        cd $(params.repo-name)
+        cd ${REPO_NAME}
 
         ls -al 
 
