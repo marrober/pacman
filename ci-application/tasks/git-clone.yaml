@@ -216,6 +216,8 @@ spec:
           cleandir || true
         fi
 
+        pwd
+
         git clone ${PARAM_URL}
         cd "${CHECKOUT_DIR}"
 

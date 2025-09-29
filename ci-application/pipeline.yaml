@@ -89,9 +89,9 @@ spec:
     - name: revision
       value: $(params.GIT_REVISION)
     - name: subdirectory
-      value: ""
+      value: "."
     - name: deleteExisting
-      value: "true"
+      value: "false"
     taskRef:
       kind: Task
       name: git-clone
