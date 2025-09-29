@@ -88,6 +88,8 @@ spec:
       value: $(params.GIT_REPO)
     - name: revision
       value: $(params.GIT_REVISION)
+    - name: repo-name
+      value: $(params.GIT_REPO_NAME)
     - name: subdirectory
       value: "."
     - name: deleteExisting

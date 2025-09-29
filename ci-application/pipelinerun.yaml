@@ -18,6 +18,8 @@ spec:
     value: https://github.com/marrober/pacman.git
   - name: GIT_REVISION
     value: ""
+  - name: GIT_REPO_NAME
+    value: pacman
     ## Verify git commit parameters
   - name: certificate-identity
     value: user1@demo.redhat.com

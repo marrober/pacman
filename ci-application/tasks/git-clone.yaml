@@ -52,6 +52,8 @@ spec:
       description: Revision to checkout. (branch, tag, sha, ref, etc...)
       type: string
       default: ""
+    - name: repo-name
+      type: string
     - name: refspec
       description: Refspec to fetch before checking out revision.
       default: ""
@@ -224,6 +226,10 @@ spec:
 
         git clone ${PARAM_URL} 
 
+        cd $(params.repo-name)
+
+        ls -al 
+        
         RESULT_SHA="$(git rev-parse HEAD)"
         EXIT_CODE="$?"
         if [ "${EXIT_CODE}" != 0 ] ; then
