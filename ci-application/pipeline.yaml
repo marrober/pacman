@@ -16,6 +16,8 @@ spec:
   - name: GIT_REVISION
     default: ""
     type: string
+  - name: GIT_REPO_NAME
+    type: string
     ## Git signed verification parameters
   - name: certificate-identity
     type: string
@@ -88,7 +90,7 @@ spec:
       value: $(params.GIT_REPO)
     - name: revision
       value: $(params.GIT_REVISION)
-    - name: repo-name
+    - name: repoName
       value: $(params.GIT_REPO_NAME)
     - name: subdirectory
       value: "."
