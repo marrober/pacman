@@ -216,12 +216,13 @@ spec:
           cleandir || true
         fi
 
+        cd "${CHECKOUT_DIR}"
+
         pwd
 
         ls -al 
 
-        git clone ${PARAM_URL}
-        cd "${CHECKOUT_DIR}"
+        git clone ${PARAM_URL} 
 
         RESULT_SHA="$(git rev-parse HEAD)"
         EXIT_CODE="$?"
