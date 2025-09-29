@@ -21,6 +21,8 @@ spec:
           value: $(tt.params.gitrepository.url)
         - name: GIT_REVISION
           value: $(tt.params.gitrevision)
+        - name: GIT_REPO_NAME
+          value: pacman
         - name: branch
           value: $(tt.params.branch)
           ## Verify git commit parameters
