@@ -9,7 +9,7 @@ spec:
     - name: latest
       from:
         kind: DockerImage
-        name: 'quay.io/marrober/devex-terminal-4:full-terminal-1.5'
+        name: 'quay.io/marrober/devex-terminal-4:full-terminal-1.6'
       importPolicy:
         importMode: Legacy
       referencePolicy:

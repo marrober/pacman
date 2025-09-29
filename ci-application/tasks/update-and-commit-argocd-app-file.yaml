@@ -37,7 +37,7 @@ spec:
             secretKeyRef:
               key: "token"
               name: "github-access-token"
-      image: image-registry.openshift-image-registry.svc:5000/pacman-ci/devex-terminal-4:full-terminal-1.5 
+      image: image-registry.openshift-image-registry.svc:5000/pacman-ci/devex-terminal-4:full-terminal-1.6 
       securityContext:
         capabilities:
           add: ["SETFCAP"]

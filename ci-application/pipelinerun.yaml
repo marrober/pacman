@@ -34,7 +34,7 @@ spec:
   - name: IMAGE_NAME
     value: default-route-openshift-image-registry.apps.ocp4.mr-openshift.co.uk/$(context.taskRun.namespace)/pacman
   - name: PATH_CONTEXT
-    value: src
+    value: $(params.GIT_REPO_NAME)/src
   - name: STORAGE_DRIVER
     value: vfs   
   - name: TLSVERIFY
