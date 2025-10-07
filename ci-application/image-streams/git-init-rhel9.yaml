@@ -1,0 +1,16 @@
+kind: ImageStream
+apiVersion: image.openshift.io/v1
+metadata:
+  name: git-init-rhel9
+spec:
+  lookupPolicy:
+    local: false
+  tags:
+    - name: v1.19.2
+      from:
+        kind: DockerImage
+        name: 'registry.redhat.io/openshift-pipelines/pipelines-git-init-rhel9:v1.19.2'
+      importPolicy:
+        importMode: Legacy
+      referencePolicy:
+        type: Source
