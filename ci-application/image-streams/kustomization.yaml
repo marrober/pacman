@@ -9,3 +9,4 @@ resources:
 - git-init-rhel9.yaml
 - ose.yaml
 - ubi.yaml
+- argocd.yaml
