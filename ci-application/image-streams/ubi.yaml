@@ -12,7 +12,6 @@ spec:
       from:
         kind: DockerImage
         name: 'registry.access.redhat.com/ubi8/ubi:latest'
-      generation: 1
       importPolicy:
         importMode: Legacy
       referencePolicy:
