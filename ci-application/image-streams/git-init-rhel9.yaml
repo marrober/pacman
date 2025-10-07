@@ -1,7 +1,7 @@
 kind: ImageStream
 apiVersion: image.openshift.io/v1
 metadata:
-  name: git-init-rhel9
+  name: pipelines-git-init-rhel9
 spec:
   lookupPolicy:
     local: false
