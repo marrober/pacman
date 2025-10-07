@@ -12,7 +12,6 @@ spec:
       from:
         kind: DockerImage
         name: 'registry.redhat.io/openshift4/ose-cli:latest'
-      generation: 1
       importPolicy:
         importMode: Legacy
       referencePolicy:
