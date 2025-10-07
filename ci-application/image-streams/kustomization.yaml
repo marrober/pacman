@@ -8,3 +8,4 @@ resources:
 - cosign.yaml
 - git-init-rhel9.yaml
 - ose.yaml
+- ubi.yaml
