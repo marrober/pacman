@@ -7,3 +7,4 @@ resources:
 - rhel9-nodejs-16.yaml
 - cosign.yaml
 - git-init-rhel9.yaml
+- ose.yaml
