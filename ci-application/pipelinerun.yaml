@@ -25,14 +25,14 @@ spec:
     value: user1@demo.redhat.com
     # value: $(tt.params.git-committer)
   - name: oidc-issuer
-    value:  https://keycloak-rhsso.apps.ocp4.mr-openshift.co.uk.com.com/auth/realms/trusted-artifact-signer
+    value:  https://default-route-openshift-image-registry.apps.cluster-66vd2.66vd2.sandbox648.opentlc.com/auth/realms/trusted-artifact-signer
   - name: rekor-url
     value: http://rekor-server.trusted-artifact-signer.svc
   - name: tuf-mirror
     value: http://tuf.trusted-artifact-signer.svc
     ## Image build parameters
   - name: IMAGE_NAME
-    value: default-route-openshift-image-registry.apps.ocp4.mr-openshift.co.uk/$(context.taskRun.namespace)/pacman
+    value: default-route-openshift-image-registry.apps.cluster-66vd2.66vd2.sandbox648.opentlc.com/$(context.taskRun.namespace)/pacman
   - name: PATH_CONTEXT
     value: $(params.GIT_REPO_NAME)/src
   - name: STORAGE_DRIVER
@@ -89,7 +89,6 @@ spec:
         labels:
           tekton.dev/pipeline: pacman
       spec:
-        storageClassName: ocs-storagecluster-cephfs
         accessModes:
         - ReadWriteMany
         resources:
@@ -102,7 +101,6 @@ spec:
         labels:
           tekton.dev/pipeline: pacman
       spec:
-        storageClassName: ocs-storagecluster-cephfs
         accessModes:
         - ReadWriteMany
         resources:
