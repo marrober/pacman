@@ -8,11 +8,10 @@ spec:
     local: false
   tags:
     - name: v2.4.14
-      annotations: null
       from:
         kind: DockerImage
         name: 'quay.io/argoproj/argocd:v2.4.14'
       importPolicy:
         importMode: Legacy
-      referencePolicy:
+
 
