@@ -47,7 +47,7 @@ spec:
   - name: acs_api_token
     value: acs-secret
   - name: roxctl-output-format
-    value: "table"
+    value: "json"
     ## Update Argocd application and commit to GitHub
   - name: repo_type
     value: github.com

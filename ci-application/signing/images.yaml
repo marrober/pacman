@@ -1,7 +1,0 @@
----
-components:
-  - containerImage: "quay.io/marrober/pacman@sha256:3d052dc0897c540d5b14dea20d9a6b4f2a60709fe0c4664717bab479c5f8d65a"
-    source:
-      git:
-        url: "https://github.com/marrober/pacman.git"
-        revision: "main"
