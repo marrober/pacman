@@ -1,0 +1,16 @@
+kind: ImageStream
+apiVersion: image.openshift.io/v1
+metadata:
+  name: rhel9-nodejs-16
+spec:
+  lookupPolicy:
+    local: false
+  tags:
+    - name: latest
+      from:
+        kind: DockerImage
+        name: 'registry.redhat.io/rhel9/nodejs-16:latest'
+      importPolicy:
+        importMode: Legacy
+      referencePolicy:
+        type: Source

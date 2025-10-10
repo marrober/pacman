@@ -1,0 +1,152 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: build
+spec:
+  params:
+    - name: TLSVERIFY
+      default: "false"
+      description: Verify the TLS on the registry endpoint
+      type: string
+    - name: STORAGE_DRIVER
+      description: The Buildah storage STORAGE_DRIVER
+      type: string
+    - name: app-dir
+      type: string
+    - name: node_js_image_name
+      type: string
+  stepTemplate:
+    env:
+      - name: "HOME"
+        value: "/tekton/home"
+  steps:
+    - name: package-node-app
+      command:
+      - /bin/sh
+      - -c
+      args:
+      - |-
+        npm install -g npm@9.2.0
+        npm install
+        ls -al
+      image: image-registry.openshift-image-registry.svc:5000/pacman-ci/rhel9-nodejs-16:latest
+      resources:
+        limits:
+          memory: 500Mi
+          cpu: 500m
+        requests:
+          memory: 250Mi
+          cpu: 150m
+      workingDir: /resources/$(params.app-dir)
+    - name: update-dockerfile
+      script: >-
+        #!/usr/bin/env bash
+
+        set +x
+
+        NODE_IMAGE_TAG=$(oc get is/$(params.node_js_image_name) -o jsonpath='{.status.tags[0].tag}')
+
+        echo $NODE_IMAGE_TAG
+
+        NODE_IMAGE_URL=$(oc get is/$(params.node_js_image_name) -o jsonpath='{.status.publicDockerImageRepository}')
+        
+        echo $NODE_IMAGE_URL
+
+        sed -e "s|source-image|$NODE_IMAGE_URL:$NODE_IMAGE_TAG|g" dockerfile > new-dockerfile
+
+        cat new-dockerfile
+
+      image: image-registry.openshift-image-registry.svc:5000/pacman-ci/ose-cli:latest
+      resources:
+        limits:
+          memory: 500Mi
+          cpu: 500m
+        requests:
+          memory: 250Mi
+          cpu: 150m
+      workingDir: /resources/$(params.app-dir)
+    - name: build
+      command:
+      - buildah
+      - bud
+      - --tls-verify=$(params.TLSVERIFY)
+      - --storage-driver=$(params.STORAGE_DRIVER)
+      - --root
+      - /files/buildah-containers
+      - --layers
+      - -f
+      - ./new-dockerfile
+      - -t
+      - my-container-image
+      - .
+      image: image-registry.openshift-image-registry.svc:5000/pacman-ci/buildah:latest
+      resources: {}
+      securityContext:
+        capabilities:
+          add:
+          - SETFCAP
+      workingDir: /resources/$(params.app-dir)
+    - name: list-images
+      command:
+      - buildah
+      - images
+      - --storage-driver=$(params.STORAGE_DRIVER)
+      - --root
+      - /files/buildah-containers
+      image: image-registry.openshift-image-registry.svc:5000/pacman-ci/buildah:latest
+      resources:
+        limits:
+          memory: 500Mi
+          cpu: 500m
+        requests:
+          memory: 250Mi
+          cpu: 150m
+      securityContext:
+        capabilities:
+          add:
+          - SETFCAP
+      workingDir: /
+
+    - name: mount-container
+      image: image-registry.openshift-image-registry.svc:5000/pacman-ci/buildah:latest
+      script: |
+        container=$(buildah --storage-driver=$(params.STORAGE_DRIVER) --root files/buildah-containers from --pull-never localhost/my-container-image:latest)
+        buildah mount --storage-driver=$(params.STORAGE_DRIVER) --root files/buildah-containers $container | tee /workspace/container_path
+        echo $container > /workspace/container_name
+      securityContext:
+        capabilities:
+          add:
+            - SETFCAP
+      resources:
+        limits:
+          memory: 500Mi
+          cpu: 500m
+        requests:
+          memory: 250Mi
+          cpu: 150m
+
+    - name: sbom-syft-generate
+      image: quay.io/redhat-appstudio/syft:v0.94.0
+      script: |
+
+        syft dir:$(workspaces.resources.path)/$(params.app-dir) --output cyclonedx-json=$(workspaces.resources.path)/sbom-source.json
+        find $(cat /workspace/container_path) -xtype l -delete
+        syft dir:$(cat /workspace/container_path) --output cyclonedx-json=$(workspaces.resources.path)/sbom-image.json
+
+        cat $(workspaces.resources.path)/sbom-image.json
+      resources:
+        limits:
+          memory: 500Mi
+          cpu: 500m
+        requests:
+          memory: 250Mi
+          cpu: 150m
+  volumes:
+    - emptyDir: {}
+      name: envparams
+  workspaces:
+    - mountPath: /files
+      name: files
+    - mountPath: /resources
+      name: resources
+

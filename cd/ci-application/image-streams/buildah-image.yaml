@@ -1,0 +1,16 @@
+kind: ImageStream
+apiVersion: image.openshift.io/v1
+metadata:
+  name: buildah
+spec:
+  lookupPolicy:
+    local: false
+  tags:
+    - name: latest
+      from:
+        kind: DockerImage
+        name: 'registry.redhat.io/rhel8/buildah:latest'
+      importPolicy:
+        importMode: Legacy
+      referencePolicy:
+        type: Source

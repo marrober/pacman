@@ -1,0 +1,16 @@
+kind: ImageStream
+apiVersion: image.openshift.io/v1
+metadata:
+  name: terminal
+spec:
+  lookupPolicy:
+    local: false
+  tags:
+    - name: latest
+      from:
+        kind: DockerImage
+        name: 'quay.io/marrober/devex-terminal-4:full-terminal-1.6'
+      importPolicy:
+        importMode: Legacy
+      referencePolicy:
+        type: Source
