@@ -1,0 +1,15 @@
+kind: ImageStream
+apiVersion: image.openshift.io/v1
+metadata:
+  name: argocd
+  namespace: pacman-ci
+spec:
+  lookupPolicy:
+    local: false
+  tags:
+    - name: v2.4.14
+      from:
+        kind: DockerImage
+        name: 'quay.io/argoproj/argocd:v2.4.14'
+      importPolicy:
+        importMode: Legacy
