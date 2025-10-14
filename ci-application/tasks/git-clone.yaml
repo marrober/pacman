@@ -228,6 +228,8 @@ spec:
 
         git clone ${PARAM_URL} 
 
+        git checkout ${PARAM_REVISION}
+
         cd ${REPO_NAME}
 
         ls -al 
