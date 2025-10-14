@@ -13,5 +13,3 @@ spec:
         name: 'quay.io/argoproj/argocd:v2.4.14'
       importPolicy:
         importMode: Legacy
-
-
