@@ -2,6 +2,7 @@ kind: ImageStream
 apiVersion: image.openshift.io/v1
 metadata:
   name: rhel9-nodejs-16
+  namespace: pacman-ci
 spec:
   lookupPolicy:
     local: false
