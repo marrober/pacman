@@ -4,7 +4,7 @@ kind: Kustomization
 resources:
 - argocd-app.yaml
 - ci-automation/tekton-resources-build.yaml
-- ci-automation/tekton-resources-verify.yaml
+# - ci-automation/tekton-resources-verify.yaml
 - env/config/image-pull-role-binding.yaml
 - env/config/argocd-platform-cm.yaml
 - env/01-dev/pacman-development.yaml
