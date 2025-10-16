@@ -10,4 +10,4 @@ resources:
 
 images:
 - name: default-route-openshift-image-registry.apps.ocp4.mr-openshift.co.uk/pacman-ci/pacman
-  newTag: 99qtp
+  newTag: 7mdz8
