@@ -12,4 +12,4 @@ images:
 - name: default-route-openshift-image-registry.apps.cluster-66vd2.66vd2.sandbox648.opentlc.com/pacman-ci/pacman
   newTag: nzq5t
 - name: default-route-openshift-image-registry.apps.ocp4.mr-openshift.co.uk/pacman-ci/pacman
-  newTag: tvgmq
+  newTag: twz5g
