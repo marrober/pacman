@@ -1,0 +1,17 @@
+kind: ImageStream
+apiVersion: image.openshift.io/v1
+metadata:
+  name: hb-node-js
+  namespace: pacman-ci
+spec:
+  lookupPolicy:
+    local: false
+  tags:
+    - name: latest
+      from:
+        kind: DockerImage
+        name: 'quay.io/hummingbird/nodejs:latest-builder-source'
+      importPolicy:
+        importMode: Legacy
+      referencePolicy:
+        type: Source
