@@ -252,7 +252,7 @@ spec:
     - name: GIT_REPO_NAME
       value: $(params.cd-git-repo-name)
     - name: GIT_BRANCH
-      value: "main"
+      value: "rhpds"
     - name: GIT_PATH_TO_CONTENT
       value: $(params.cd-git-repo-path-to-content-development)
     - name: GIT_USER_NAME

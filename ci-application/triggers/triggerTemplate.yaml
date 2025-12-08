@@ -70,7 +70,7 @@ spec:
         - name: argocd-project-name-development
           value: "pacman-dev-01"
         - name: argocd-revision
-          value: "main"
+          value: "argocd"
         - name: argocd-version
           value: "v2.4.14"
         - name: quay-instance-url
