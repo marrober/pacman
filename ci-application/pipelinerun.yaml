@@ -17,7 +17,7 @@ spec:
   - name: GIT_REPO
     value: https://github.com/marrober/pacman.git
   - name: GIT_REVISION
-    value: "main"
+    value: "rhpds"
   - name: GIT_REPO_NAME
     value: pacman
     ## Verify git commit parameters
