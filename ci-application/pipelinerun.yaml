@@ -32,7 +32,7 @@ spec:
     value: http://tuf.trusted-artifact-signer.svc
     ## Image build parameters
   - name: IMAGE_NAME
-    value: default-route-openshift-image-registry.apps.ocp4.mr-openshift.co.uk/$(context.taskRun.namespace)/pacman
+    value: default-route-openshift-image-registry.apps.cluster-669nn.669nn.sandbox862.opentlc.com/$(context.taskRun.namespace)/pacman
   - name: PATH_CONTEXT
     value: $(params.GIT_REPO_NAME)/src
   - name: STORAGE_DRIVER
