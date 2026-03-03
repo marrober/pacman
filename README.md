@@ -2,29 +2,7 @@
 
 To use DevSpaces to work on this project click on the link below.
 
-BEFORE you click the workspace button, copy the configuration lines below !
-
 [<img src=DevSpaces.png width=50>](https://devspaces.apps.ocp4.mr-openshift.co.uk/dashboard/#/load-factory?url=https%3A%2F%2Fraw.githubusercontent.com%2Fmarrober%2Fpacman%2Frefs%2Fheads%2Fmain%2Fdevfile.yaml)
-
-## Configure each devspaces instance
-
-Apply the following in a terminal window for the devspaces instance :
-
-````bash
-git config --global commit.gpgsign false
-git config --global tag.gpgsign false
-git config --global user.email <email address>
-git config --global user.name <username>
-````
-
-for example: 
-
-````bash
-git config --global commit.gpgsign false
-git config --global tag.gpgsign false
-git config --global user.email marrober@redhat.com
-git config --global user.name marrober
-````
 
 # Creation of demonstration assets
 
