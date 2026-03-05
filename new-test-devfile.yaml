@@ -8,6 +8,12 @@ projects:
         origin: 'https://github.com/marrober/pacman.git'
       checkoutFrom: 
         revision: main
+  - name: myapp-cd
+    git:
+      remotes:
+        origin: 'https://github.com/marrober/myApp-cd.git'
+      checkoutFrom: 
+        revision: main
 components:
   - name: tools
     container:
