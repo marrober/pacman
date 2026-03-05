@@ -6,8 +6,6 @@ projects:
     git:
       remotes:
         origin: 'https://github.com/marrober/pacman.git'
-      checkoutFrom:
-        revision: main
 components:
   - name: tools
     container:
