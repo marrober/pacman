@@ -1,4 +1,4 @@
-schemaVersion: 2.2.2
+dschemaVersion: 2.2.2
 metadata:
   name: pacman
 projects:
@@ -16,18 +16,12 @@ components:
         - exposure: public
           name: nodejs
           protocol: https
-          targetPort: 3000
+          targetPort: 8080
       memoryLimit: 1Gi
       memoryRequest: 600Mi
       cpuLimit: '0.5'
       cpuRequest: '0.25'
       mountSources: true
-#      volumeMounts:
-#        - name: npm
-#          path: /home/user/.npm
-#  - name: npm
-#    volume:
-#      size: 1G
 commands:
   - id: 1-dependencies
     exec:
@@ -42,7 +36,7 @@ commands:
       label: Run the web app
       component: tools
       workingDir: ${PROJECTS_ROOT}/pacman/src
-      commandLine: nodemon app.js
+      commandLine: npm start
       group:
         kind: run
   - id: 3-install-and-run
@@ -50,22 +44,6 @@ commands:
       label: Run the web app (and download dependencies)
       component: tools
       workingDir: ${PROJECTS_ROOT}/pacman/src
-      commandLine: npm install; nodemon app.js
-      group:
-        kind: run
-  - id: 4-debug
-    exec:
-      label: Run the web app (debugging enabled)
-      component: tools
-      workingDir: ${PROJECTS_ROOT}/pacman/src
-      commandLine: nodemon --inspect app.js
-      group:
-        kind: debug
-        isDefault: true
-  - id: 5-stopapp
-    exec:
-      label: Stop the web app
-      component: tools
-      commandLine: 'node_server_pids=$(pgrep -fx ''.*nodemon (--inspect )?app.js'' | tr "\\n" " ") && echo "Stopping node server with PIDs: ${node_server_pids}" &&  kill -15 ${node_server_pids} &>/dev/null && echo ''Done.'''
+      commandLine: npm install; npm start
       group:
         kind: run
