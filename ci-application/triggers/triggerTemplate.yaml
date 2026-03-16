@@ -88,7 +88,7 @@ spec:
             resources:
               requests:
                 storage: 20Gi
-            storageClassName: ocs-storagecluster-cephfs
+            storageClassName: lvms-vg1
       - name: workspace
         volumeClaimTemplate:
           spec:
@@ -97,4 +97,4 @@ spec:
             resources:
               requests:
                 storage: 1Gi
-            storageClassName: ocs-storagecluster-cephfs
+            storageClassName: lvms-vg1
