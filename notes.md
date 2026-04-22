@@ -18,13 +18,13 @@ oc apply -k .
 
 ````bash
 oc project pacman-ci
-oc get is/rhel9-nodejs-16 -o jsonpath='{.status.publicDockerImageRepository}''{":latest"}''{"\n"}'
+oc get is/rhel9-nodejs -o jsonpath='{.status.publicDockerImageRepository}''{":latest"}''{"\n"}'
 ````
 
 Update the dockerfile in src/dockerfile with the command : 
 
 ````bash
-echo -e "FROM $(oc get is/rhel9-nodejs-16 -o jsonpath='{.status.publicDockerImageRepository}''{":latest"}''{"\n"}')\nUSER 0\nCOPY . /opt/app-root/src/\nRUN chmod a+w /var/log\nUSER 1001\nCMD [\"npm\", \"start\"]" > src/dockerfile
+echo -e "FROM $(oc get is/rhel9-nodejs -o jsonpath='{.status.publicDockerImageRepository}''{":latest"}''{"\n"}')\nUSER 0\nCOPY . /opt/app-root/src/\nRUN chmod a+w /var/log\nUSER 1001\nCMD [\"npm\", \"start\"]" > src/dockerfile
 ````
 
 ## Create github access token
@@ -134,7 +134,7 @@ base64 decode the output and use the token below.
 Get the default route : 
 
 ````bash
- oc get is/rhel9-nodejs-16 -o jsonpath='{"https://"}''{.status.publicDockerImageRepository}' | cut -d "/" -f 1-3
+ oc get is/rhel9-nodejs -o jsonpath='{"https://"}''{.status.publicDockerImageRepository}' | cut -d "/" -f 1-3
  ````
 
 In ACS go to Platform configurations -> Integrations -> Image integration -> Generic Docker Registry and press the ‘Create integration’ button.
@@ -158,7 +158,7 @@ image-git-signing-setup/local-git-signing-setup.txt
 Get the path to the image in the image stream using the command :
 
 ````bash
-oc get is/rhel9-nodejs-16 -o jsonpath='{.status.publicDockerImageRepository}' | cut -d "/" -f 1
+oc get is/rhel9-nodejs -o jsonpath='{.status.publicDockerImageRepository}' | cut -d "/" -f 1
 ````
 
 Get the old default route from the file cd/env/01-dev/deployment.yaml
@@ -171,23 +171,23 @@ ci-application/pipelinerun.yaml - IMAGE_NAME property
 ci-application/triggers/triggerTemplate.yaml - IMAGE_NAME property
 
 ````bash
-echo -e "cd cd/env/01-dev\nsed -i 's/$(cat cd/env/01-dev/deployment.yaml | grep "image: default" | cut -d ":" -f 2 | tr -d " " | cut -d "/" -f 1)/$(oc get is/rhel9-nodejs-16 -o jsonpath='{.status.publicDockerImageRepository}' | cut -d "/" -f 1)/' deployment.yaml\ncd ../../.."    
+echo -e "cd cd/env/01-dev\nsed -i 's/$(cat cd/env/01-dev/deployment.yaml | grep "image: default" | cut -d ":" -f 2 | tr -d " " | cut -d "/" -f 1)/$(oc get is/rhel9-nodejs -o jsonpath='{.status.publicDockerImageRepository}' | cut -d "/" -f 1)/' deployment.yaml\ncd ../../.."    
 ````
 
 ````bash
-echo -e "cd cd/env/01-dev\nsed -i 's/$(cat cd/env/01-dev/kustomization.yaml | grep "name: default" | cut -d ":" -f 2 | tr -d " " | cut -d "/" -f 1)/$(oc get is/rhel9-nodejs-16 -o jsonpath='{.status.publicDockerImageRepository}' | cut -d "/" -f 1)/' kustomization.yaml\ncd ../../.."
+echo -e "cd cd/env/01-dev\nsed -i 's/$(cat cd/env/01-dev/kustomization.yaml | grep "name: default" | cut -d ":" -f 2 | tr -d " " | cut -d "/" -f 1)/$(oc get is/rhel9-nodejs -o jsonpath='{.status.publicDockerImageRepository}' | cut -d "/" -f 1)/' kustomization.yaml\ncd ../../.."
 ````
 
 ````bash
-echo -e "cd ci-application\nsed -i 's/$(cat ci-application/pipelinerun.yaml | grep "value: default" | cut -d ":" -f 2 | tr -d " " | cut -d "/" -f 1)/$(oc get is/rhel9-nodejs-16 -o jsonpath='{.status.publicDockerImageRepository}' | cut -d "/" -f 1)/' pipelinerun.yaml\ncd .."
+echo -e "cd ci-application\nsed -i 's/$(cat ci-application/pipelinerun.yaml | grep "value: default" | cut -d ":" -f 2 | tr -d " " | cut -d "/" -f 1)/$(oc get is/rhel9-nodejs -o jsonpath='{.status.publicDockerImageRepository}' | cut -d "/" -f 1)/' pipelinerun.yaml\ncd .."
  ````
 
  ````bash
- echo -e "cd ci-application/triggers\nsed -i 's/$(cat ci-application/triggers/triggerTemplate.yaml | grep "value: default" | cut -d ":" -f 2 | tr -d " " | cut -d "/" -f 1)/$(oc get is/rhel9-nodejs-16 -o jsonpath='{.status.publicDockerImageRepository}' | cut -d "/" -f 1)/' triggerTemplate.yaml\ncd ../.."
+ echo -e "cd ci-application/triggers\nsed -i 's/$(cat ci-application/triggers/triggerTemplate.yaml | grep "value: default" | cut -d ":" -f 2 | tr -d " " | cut -d "/" -f 1)/$(oc get is/rhel9-nodejs -o jsonpath='{.status.publicDockerImageRepository}' | cut -d "/" -f 1)/' triggerTemplate.yaml\ncd ../.."
  ````
 
 ````bash
- echo -e "cd ci-application\nsed -i 's/$(cat ci-application/pipelinerun.yaml | grep "keycloak" | cut -d ":" -f 3 | cut -d "/" -f 3 | cut -d "." -f 2-6)/$(oc get is/rhel9-nodejs-16 -o jsonpath='{.status.publicDockerImageRepository}' | cut -d "/" -f 1 | cut -d "." -f 2-7)/' pipelinerun.yaml\ncd .."
+ echo -e "cd ci-application\nsed -i 's/$(cat ci-application/pipelinerun.yaml | grep "keycloak" | cut -d ":" -f 3 | cut -d "/" -f 3 | cut -d "." -f 2-6)/$(oc get is/rhel9-nodejs -o jsonpath='{.status.publicDockerImageRepository}' | cut -d "/" -f 1 | cut -d "." -f 2-7)/' pipelinerun.yaml\ncd .."
  ````
 
 
