@@ -10,7 +10,7 @@ spec:
     - name: latest
       from:
         kind: DockerImage
-        name: 'registry.redhat.io/rhel9/nodejs-16:latest'
+        name: 'registry.redhat.io/rhel9/nodejs-20:latest'
       importPolicy:
         importMode: Legacy
       referencePolicy:
