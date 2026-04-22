@@ -79,10 +79,10 @@ spec:
         echo $(workspaces.resources.path)/sbom-image.json
 
         echo "1"
-        buildah images --storage-driver=$(params.STORAGE_DRIVER) --root /files/buildah-containers --format '{{ .Name }}:{{ .Tag }}@{{ .Digest }}' | grep rhel9-nodejs-16 > $(results.BASE_IMAGES_DIGESTS.path)
+        buildah images --storage-driver=$(params.STORAGE_DRIVER) --root /files/buildah-containers --format '{{ .Name }}:{{ .Tag }}@{{ .Digest }}' | grep rhel9-nodejs > $(results.BASE_IMAGES_DIGESTS.path)
 
         echo "2 - base image name"
-        buildah images --storage-driver=$(params.STORAGE_DRIVER) --root /files/buildah-containers --format '{{ .Name }}:{{ .Tag }}@{{ .Digest }}' | grep rhel9-nodejs-16
+        buildah images --storage-driver=$(params.STORAGE_DRIVER) --root /files/buildah-containers --format '{{ .Name }}:{{ .Tag }}@{{ .Digest }}' | grep rhel9-nodejs
 
         echo "3"
         base_image_name=$(buildah inspect --storage-driver=$(params.STORAGE_DRIVER) --root /files/buildah-containers --format '{{ index .ImageAnnotations "org.opencontainers.image.base.name"}}' $(params.quay-instance-url)/$(params.quay-account)/$(params.quay-repository):$(params.imageTag) | cut -f1 -d'@')
