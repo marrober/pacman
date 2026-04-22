@@ -26,7 +26,7 @@ spec:
       - -c
       args:
       - |-
-        npm install -g npm@9.2.0
+        npm install -g npm@latest
         npm install
         ls -al
       image: image-registry.openshift-image-registry.svc:5000/pacman-ci/rhel9-nodejs-16:latest
