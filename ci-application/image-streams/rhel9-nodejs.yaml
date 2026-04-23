@@ -15,7 +15,7 @@ spec:
         importMode: Legacy
       referencePolicy:
         type: Source
-----
+---
 kind: ImageStream
 apiVersion: image.openshift.io/v1
 metadata:
