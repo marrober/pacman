@@ -1,4 +1,4 @@
-FROM default-route-openshift-image-registry.apps.ocp4.mr-openshift.co.uk/pacman-ci/rhel9-nodejs:latest
+FROM default-route-openshift-image-registry.apps.ocp4.mr-openshift.co.uk/pacman-ci/rhel9-nodejs:1-1771417935
 USER 0
 COPY . /opt/app-root/src/
 RUN chmod a+w /var/log
