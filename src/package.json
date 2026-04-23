@@ -10,12 +10,12 @@
   },
   "license": "GPLv3",
   "dependencies": {
-    "body-parser": "^1.20.3",
-    "express": "^4.14.1",
-    "jade": "^1.11.0",
-    "mongodb": "^2.2.24"
+    "body-parser": "^2.2.2",
+    "express": "^5.2.1",
+    "mongodb": "^7.2.0",
+    "pug": "^3.0.4"
   },
   "devDependencies": {
-    "nodemon": "^1.11.0"
+    "nodemon": "^3.1.14"
   }
 }
