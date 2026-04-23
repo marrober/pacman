@@ -15,3 +15,21 @@ spec:
         importMode: Legacy
       referencePolicy:
         type: Source
+----
+kind: ImageStream
+apiVersion: image.openshift.io/v1
+metadata:
+  name: rhel9-nodejs
+  namespace: pacman-ci
+spec:
+  lookupPolicy:
+    local: false
+  tags:
+    - name: 1-1771417935
+      from:
+        kind: DockerImage
+        name: 'registry.redhat.io/rhel9/nodejs-20:1-1771417935'
+      importPolicy:
+        importMode: Legacy
+      referencePolicy:
+        type: Source
