@@ -13,7 +13,7 @@
     "body-parser": "^2.2.2",
     "express": "^5.2.1",
     "mongodb": "^2.2.24",
-    "_comment": "mongodb clean version is 7.2.0, and with vulnerabilities use 2.2.24",
+    "_comment": "mongodb clean version is 7.2.0, and for an example with vulnerabilities use 2.2.24",
     "pug": "^3.0.4"
   },
   "devDependencies": {
