@@ -9,6 +9,11 @@ spec:
     namespace: pacman-ci
     server: https://kubernetes.default.svc
   ignoreDifferences:
+  - group: image.openshift.io
+    kind: ImageStream
+    jqPathExpressions:
+      - .spec.tags[].annotations
+       - .spec.tags[].generation
   - group: argoproj.io
     jsonPointers:
     - /status
