@@ -7,14 +7,18 @@ spec:
   lookupPolicy:
     local: false
   tags:
-    - name: latest
-      from:
-        kind: DockerImage
-        name: 'registry.redhat.io/rhel9/nodejs-20:latest'
     - name: 1-1771417935
       from:
         kind: DockerImage
         name: 'registry.redhat.io/rhel9/nodejs-20:1-1771417935'
+      importPolicy:
+        importMode: Legacy
+      referencePolicy:
+        type: Source
+    - name: latest
+      from:
+        kind: DockerImage
+        name: 'registry.redhat.io/rhel9/nodejs-20:latest'
       importPolicy:
         importMode: Legacy
       referencePolicy:
