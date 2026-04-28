@@ -12,8 +12,8 @@ spec:
   - group: image.openshift.io
     kind: ImageStream
     jqPathExpressions:
-      - .spec.tags[].annotations
-       - .spec.tags[].generation
+    - .spec.tags[].annotations
+    - .spec.tags[].generation
   - group: argoproj.io
     jsonPointers:
     - /status
