@@ -138,8 +138,8 @@ spec:
       value: $(params.PATH_CONTEXT)
     - name: node_js_image_name
       value: $(params.node_js_image_name)
-    - name: $(params.node_js_image_tag)
-      value: node_js_image_tag
+    - name: node_js_image_tag
+      value: $(params.node_js_image_tag)
     runAfter:
 #    - verify-commit
      - fetch-repository
