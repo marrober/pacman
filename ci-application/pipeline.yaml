@@ -37,6 +37,8 @@ spec:
     type: string
   - name: node_js_image_name
     type: string
+  - name: node_js_image_tag
+    type: string
  # - name: VERSION
  #   default: 16-ubi8
  #   type: string
@@ -136,6 +138,8 @@ spec:
       value: $(params.PATH_CONTEXT)
     - name: node_js_image_name
       value: $(params.node_js_image_name)
+    - name: $(params.node_js_image_tag)
+      value: node_js_image_tag
     runAfter:
 #    - verify-commit
      - fetch-repository
