@@ -50,6 +50,8 @@ spec:
 
         echo "image to be scanned : $(params.public-url)"
 
+        ./roxctl version
+
         ./roxctl image scan --image $(params.public-url) --insecure-skip-tls-verify -e $ROX_CENTRAL_ENDPOINT --force > /dev/null 2>&1
 
         ./roxctl image check --image $(params.public-url) --insecure-skip-tls-verify -e $ROX_CENTRAL_ENDPOINT -o $(params.roxctl-output-format) --retries 0 > imageScanResult 2>&1
