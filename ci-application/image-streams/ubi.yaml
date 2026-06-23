@@ -11,7 +11,7 @@ spec:
       annotations: null
       from:
         kind: DockerImage
-        name: 'registry.access.redhat.com/ubi8/ubi:latest'
+        name: 'registry.access.redhat.com/ubi9/ubi:latest'
       importPolicy:
         importMode: Legacy
       referencePolicy:
