@@ -139,7 +139,7 @@ spec:
         find $(cat /workspace/container_path) -xtype l -delete
         syft dir:$(cat /workspace/container_path) --output cyclonedx-json=$(workspaces.resources.path)/sbom-image.json
 
-        cat $(workspaces.resources.path)/sbom-image.json
+        # cat $(workspaces.resources.path)/sbom-image.json
       resources:
         limits:
           memory: 500Mi

@@ -105,6 +105,24 @@ spec:
     - name: output
       workspace: workspace
 ##------------------------------------------------------------------
+# Base image check
+##------------------------------------------------------------------
+  - name: base-image-check
+    params:
+    - name: acs_central_endpoint
+      value: $(params.acs_central_endpoint)
+    - name: acs_api_token
+      value: $(params.acs_api_token)
+    - name: public-url
+      value: default-route-openshift-image-registry.apps.ocp4.mr-openshift.co.uk/$(context.taskRun.namespace)/$(params.node_js_image_name)/$(params.node_js_image_tag)
+    - name: roxctl-output-format
+      value: $(params.roxctl-output-format)
+    taskRef:
+      kind: Task
+      name: acs-image-build-check
+    runAfter:
+    - fetch-repository
+##------------------------------------------------------------------
 # Verify commit of code to the repository
 ##------------------------------------------------------------------
 #  - name: verify-commit
@@ -151,6 +169,7 @@ spec:
       workspace: workspace
     - name: files
       workspace: files
+
 #------------------------------------------------------------------
 # Push the new runtime image to OpenShift imagestream
 #------------------------------------------------------------------
