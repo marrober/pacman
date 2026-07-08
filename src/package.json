@@ -18,5 +18,9 @@
   },
   "devDependencies": {
     "nodemon": "^3.1.14"
-  }
+  },
+  "overrides": {
+  "picomatch": "^4.0.4",
+  "sigstore": "^4.1.1"
+}
 }
