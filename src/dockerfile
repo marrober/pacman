@@ -1,7 +1,6 @@
 FROM source-image
 USER 0
 COPY . /opt/app-root/src/
-RUN npm cache clean --force
 RUN chmod a+w /var/log
 USER 1001
 CMD ["npm", "start"]

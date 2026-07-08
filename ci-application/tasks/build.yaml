@@ -32,7 +32,7 @@ spec:
         echo " .... "
         ls -al /usr/local/lib/node_modules
         echo " ---- "
-        npm install -g npm@latest --omit=dev
+        npm install npm@latest --omit=dev
         npm ls picomatch
         npm ls sigstore
         ls -al
