@@ -10,4 +10,3 @@ resources:
 - ose.yaml
 - ubi.yaml
 - argocd.yaml
-- hummingbird-node-js.yaml
