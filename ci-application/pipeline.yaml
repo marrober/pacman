@@ -114,7 +114,7 @@ spec:
     - name: acs_api_token
       value: $(params.acs_api_token)
     - name: public-url
-      value: default-route-openshift-image-registry.apps.ocp4.mr-openshift.co.uk/$(context.taskRun.namespace)/$(params.node_js_image_name)/$(params.node_js_image_tag)
+      value: default-route-openshift-image-registry.apps.ocp4.mr-openshift.co.uk/$(context.taskRun.namespace)/$(params.node_js_image_name):$(params.node_js_image_tag)
     - name: roxctl-output-format
       value: $(params.roxctl-output-format)
     taskRef:
