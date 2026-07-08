@@ -30,7 +30,7 @@ spec:
       - |-
         pwd
         echo " .... "
-        npm install --omit=dev
+        npm install -g npm@latest --omit=dev
         npm ls picomatch
         npm ls sigstore
         ls -al
