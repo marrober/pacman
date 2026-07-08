@@ -28,8 +28,11 @@ spec:
       - -c
       args:
       - |-
+        rm -rf node_modules
         npm install -g npm@latest
         npm install
+        npm ls picomatch
+        mpn ls sigstore
         ls -al
       image: image-registry.openshift-image-registry.svc:5000/pacman-ci/$(params.node_js_image_name):$(params.node_js_image_tag)
       resources:
@@ -78,6 +81,7 @@ spec:
       - --layers
       - -f
       - ./new-dockerfile
+      - --no-cache
       - -t
       - my-container-image
       - .
