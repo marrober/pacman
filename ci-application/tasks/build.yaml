@@ -30,10 +30,13 @@ spec:
       - |-
         pwd
         echo " .... "
+        ls -al /usr/local/lib/node_modules
+        echo " ---- "
         npm install -g npm@latest --omit=dev
         npm ls picomatch
         npm ls sigstore
         ls -al
+        npm cache clean --force
       image: image-registry.openshift-image-registry.svc:5000/pacman-ci/$(params.node_js_image_name):$(params.node_js_image_tag)
       resources:
         limits:
