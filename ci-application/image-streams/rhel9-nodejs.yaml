@@ -7,6 +7,14 @@ spec:
   lookupPolicy:
     local: false
   tags:
+    - name: nodejs-22-1-177
+      from:
+        kind: DockerImage
+        name: 'registry.redhat.io/rhel9/nodejs-22:1-1777524498'
+      importPolicy:
+        importMode: Legacy
+      referencePolicy:
+        type: Source
     - name: nodejs-22-9.8-178
       from:
         kind: DockerImage
@@ -23,3 +31,9 @@ spec:
         importMode: Legacy
       referencePolicy:
         type: Source
+
+
+
+
+
+        
