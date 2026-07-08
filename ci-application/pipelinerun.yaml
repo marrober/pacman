@@ -40,9 +40,9 @@ spec:
   - name: TLSVERIFY
     value: false
   - name: node_js_image_name
-    value: rhel9-nodejs
+    value: nodejs
   - name: node_js_image_tag
-    value: 1-1778142166
+    value: nodejs-22:9.8-178
     ## Image validation parameters
   - name: acs_central_endpoint
     value: acs-secret
