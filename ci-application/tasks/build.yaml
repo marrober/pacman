@@ -29,10 +29,10 @@ spec:
       args:
       - |-
         pwd
-        rm -rf node_modules
         echo " .... "
+        npm install --omit=dev
         npm ls picomatch
-        npn ls sigstore
+        npm ls sigstore
         ls -al
       image: image-registry.openshift-image-registry.svc:5000/pacman-ci/$(params.node_js_image_name):$(params.node_js_image_tag)
       resources:
