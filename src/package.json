@@ -13,13 +13,11 @@
     "body-parser": "^2.2.2",
     "express": "^5.2.1",
     "mongodb": "^2.2.4",
-    "pug": "^3.0.4"
+    "pug": "^3.0.4",
+    "picomatch": "^4.0.4",
+    "sigstore": "^4.1.1"
   },
   "devDependencies": {
     "nodemon": "^3.1.14"
-  },
-  "overrides": {
-  "picomatch": "^4.0.4",
-  "sigstore": "^4.1.1"
-}
+  }
 }
