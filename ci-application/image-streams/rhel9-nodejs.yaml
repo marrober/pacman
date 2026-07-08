@@ -7,7 +7,7 @@ spec:
   lookupPolicy:
     local: false
   tags:
-    - name: nodejs-22:9.8-178
+    - name: nodejs-22-9.8-178
       from:
         kind: DockerImage
         name: 'registry.redhat.io/rhel9/nodejs-22:9.8-1783399991'
@@ -15,7 +15,7 @@ spec:
         importMode: Legacy
       referencePolicy:
         type: Source
-    - name: nodejs:h-22.23.1
+    - name: nodejs-h-22.23.1
       from:
         kind: DockerImage
         name: 'registry.access.redhat.com/hi/nodejs:22.23.1'
