@@ -8,14 +8,26 @@ spec:
   - name: gitrevision
   - name: branch
   resourcetemplates:
-  - apiVersion: tekton.dev/v1beta1
+  - apiVersion: tekton.dev/v1
     kind: PipelineRun
     metadata:
+      annotations:
+        chains.tekton.dev/signed: "true"
       generateName: pacman-ci-tr-
+      labels:
+        app.kubernetes.io/instance: pacman-git
+        app.kubernetes.io/name: pacman-git
+        pipeline.openshift.io/runtime: nodejs
+        pipeline.openshift.io/runtime-version: 16-ubi8
+        pipeline.openshift.io/type: kubernetes
+        tekton.dev/pipeline: pacman
     spec:
-      serviceAccountName: image-pusher
       pipelineRef:
         name: pacman
+      taskRunTemplate:
+        serviceAccountName: image-pusher
+      timeouts:
+        pipeline: 1h0m0s
       params:
         - name: GIT_REPO
           value: $(tt.params.gitrepository.url)
@@ -30,7 +42,7 @@ spec:
           value: user1@demo.redhat.com
           # value: $(tt.params.git-committer)
         - name: oidc-issuer
-          value:  https://default-route-openshift-image-registry.apps.ocp4.mr-openshift.co.uk/auth/realms/openshift
+          value:  https://default-route-openshift-image-registry.apps.ocp4.mr-openshift.co.uk/auth/realms/trusted-artifact-signer
         - name: rekor-url
           value: http://rekor-server.trusted-artifact-signer.svc
         - name: tuf-mirror
@@ -44,13 +56,15 @@ spec:
         - name: TLSVERIFY
           value: false
         - name: node_js_image_repo
-          value: registry.access.redhat.com/hi
+          value: default-route-openshift-image-registry.apps.ocp4.mr-openshift.co.uk/pacman-ci
+          # value: registry.access.redhat.com/hi
         - name: node_js_image_name
           value: nodejs
         - name: node_js_image_tag
+          value: nodejs-22-1-177
           # value: nodejs-22-9.8-178
-          # value: nodejs-22-1-177
-          value: nodejs-h-24.18.0
+          # value: nodejs-h-24.18.0
+          # value: latest
           ## Image validation parameters
         - name: acs_central_endpoint
           value: acs-secret
