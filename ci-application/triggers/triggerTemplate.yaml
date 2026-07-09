@@ -43,6 +43,8 @@ spec:
           value: vfs   
         - name: TLSVERIFY
           value: false
+        - name: node_js_image_repo
+          value: registry.access.redhat.com/hi
         - name: node_js_image_name
           value: nodejs
         - name: node_js_image_tag

@@ -39,12 +39,15 @@ spec:
     value: vfs   
   - name: TLSVERIFY
     value: false
+  - name: node_js_image_repo
+    value: registry.access.redhat.com/hi
   - name: node_js_image_name
     value: nodejs
   - name: node_js_image_tag
     # value: nodejs-22-9.8-178
     # value: nodejs-22-1-177
-    value: nodejs-h-24.18.0
+    # value: nodejs-h-24.18.0
+    value: latest
     ## Image validation parameters
   - name: acs_central_endpoint
     value: acs-secret
