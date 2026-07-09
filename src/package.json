@@ -10,9 +10,9 @@
   },
   "license": "GPLv3",
   "dependencies": {
-    "body-parser": "^2.2.2",
+    "body-parser": "^1.20.3",
     "bson": "^1.1.4",
-    "express": "^4.14.1",
+    "express": "^5.2.1",
     "mongodb": "^3.1.13",
     "npm": "^12.0.0",
     "picomatch": "^4.0.5",
