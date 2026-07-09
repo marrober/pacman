@@ -16,6 +16,17 @@ spec:
       description: Path for violation messages only present in the built image
       type: string
       default: /workspace/new-image-cves.json
+    - name: summary-file
+      description: Path for the violation comparison summary
+      type: string
+      default: /workspace/violation-comparison-summary.json
+  results:
+    - name: base-violation-count
+      description: Number of unique CVE/GHSA IDs in the base image violations file
+    - name: image-violation-count
+      description: Number of unique CVE/GHSA IDs in the built image violations file
+    - name: exclusive-image-violation-count
+      description: Number of unique CVE/GHSA IDs only present in the built image
   workspaces:
     - name: violations
       description: Workspace containing base and image violation files
@@ -31,6 +42,7 @@ spec:
         BASE_FILE="$(params.base-violations-file)"
         IMAGE_FILE="$(params.image-violations-file)"
         OUTPUT_FILE="$(params.output-file)"
+        SUMMARY_FILE="$(params.summary-file)"
 
         for file in "$BASE_FILE" "$IMAGE_FILE"; do
           if [[ ! -f "$file" ]]; then
@@ -41,25 +53,55 @@ spec:
 
         dnf install -yq jq
 
-        jq -n \
+        COMPARISON_RESULT=$(jq -n \
           --slurpfile base "$BASE_FILE" \
           --slurpfile image "$IMAGE_FILE" \
           '
-            def violations($doc):
-              if ($doc | type) == "array" then $doc
-              elif ($doc | type) == "object" and ($doc | length) == 0 then []
-              else [($doc.violations[]?.message), ($doc.messages[]?)] | map(select(. != null))
-              end;
-            def cve_id:
-              (capture("CVE-[0-9]{4}-[0-9]+")? | .string) // empty;
-            def cve_ids($list):
-              [$list[] | cve_id | select(length > 0)] | unique;
-            violations(image[0]) as $image_violations |
-            violations(base[0]) as $base_violations |
-            cve_ids($base_violations) as $base_cves |
-            [$image_violations[] | select((cve_id | length > 0) and (($base_cves | index(cve_id)) == null))]
-          ' > "$OUTPUT_FILE"
+            def extract_id:
+              if test("CVE-[0-9]{4}-[0-9]+") then (match("CVE-[0-9]{4}-[0-9]+") | .string)
+              elif test("GHSA-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}") then (match("GHSA-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}") | .string)
+              else null end;
+            ($base[0] // []) as $base |
+            ($image[0] // []) as $image |
+            ([$base[] | extract_id | select(. != null)] | unique) as $base_ids |
+            ([$image[] | extract_id | select(. != null)] | unique) as $image_ids |
+            [$image[]
+              | . as $line
+              | ($line | extract_id) as $id
+              | select($id != null and (($base_ids | index($id)) == null))
+              | $line
+            ] as $exclusive |
+            {
+              base_violation_count: ($base_ids | length),
+              image_violation_count: ($image_ids | length),
+              exclusive_image_violation_count: ($exclusive | length),
+              exclusive_violations: $exclusive
+            }
+          ')
 
+        echo "$COMPARISON_RESULT" | jq '.exclusive_violations' > "$OUTPUT_FILE"
+        echo "$COMPARISON_RESULT" | jq '{
+          base_violation_count,
+          image_violation_count,
+          exclusive_image_violation_count
+        }' > "$SUMMARY_FILE"
+
+        BASE_COUNT=$(jq -r '.base_violation_count' "$SUMMARY_FILE")
+        IMAGE_COUNT=$(jq -r '.image_violation_count' "$SUMMARY_FILE")
+        EXCLUSIVE_COUNT=$(jq -r '.exclusive_image_violation_count' "$SUMMARY_FILE")
+
+        echo -n "$BASE_COUNT" > "$(results.base-violation-count.path)"
+        echo -n "$IMAGE_COUNT" > "$(results.image-violation-count.path)"
+        echo -n "$EXCLUSIVE_COUNT" > "$(results.exclusive-image-violation-count.path)"
+
+        echo "Violation comparison summary:"
+        echo "  Base image violations:      $BASE_COUNT"
+        echo "  Built image violations:     $IMAGE_COUNT"
+        echo "  Exclusive to built image:   $EXCLUSIVE_COUNT"
+        echo ""
+        echo "Summary written to: $SUMMARY_FILE"
+        cat "$SUMMARY_FILE"
+        echo ""
         echo "Violations only present in built image:"
         cat "$OUTPUT_FILE"
       workingDir: /workspace
