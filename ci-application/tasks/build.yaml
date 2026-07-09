@@ -143,6 +143,8 @@ spec:
             else
                 echo "Directory inside container_path does not exist: $CONTAINER_PATH"
                 exit 1
+            fi
+        fi
 
         # cat $(workspaces.resources.path)/sbom-image.json
       resources:
