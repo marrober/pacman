@@ -59,6 +59,10 @@ spec:
 
         ./roxctl image scan --image "$(params.public-url)" --insecure-skip-tls-verify -e "$ROX_CENTRAL_ENDPOINT" --force > /dev/null 2>&1
 
+        ./roxctl image check --image $(params.public-url) --insecure-skip-tls-verify -e $ROX_CENTRAL_ENDPOINT -o $(params.roxctl-output-format) --retries 0 > imageScanResult 2>&1
+
+        cat imageScanResult
+
         if [[ "$(params.base_check)" == "true" ]]; then
           ./roxctl image check --image "$(params.public-url)" --insecure-skip-tls-verify -e "$ROX_CENTRAL_ENDPOINT" -o json --retries 0 > imageScanResult-json 2>imageScanError
           cat imageScanResult-json
