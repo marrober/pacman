@@ -109,6 +109,15 @@ spec:
               requests:
                 storage: 20Gi
             storageClassName: lvms-vg1
+      - name: violations
+        volumeClaimTemplate:
+          spec:
+            accessModes:
+            - ReadWriteOnce
+            resources:
+              requests:
+                storage: 100Mi
+            storageClassName: lvms-vg1
       - name: workspace
         volumeClaimTemplate:
           spec:

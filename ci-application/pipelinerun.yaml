@@ -116,4 +116,17 @@ spec:
           requests:
             storage: 20Gi
         storageClassName: lvms-vg1
-    
+  - name: violations
+    volumeClaimTemplate:
+      metadata:
+        creationTimestamp: null
+        labels:
+          tekton.dev/pipeline: pacman
+      spec:
+        accessModes:
+        - ReadWriteOnce
+        resources:
+          requests:
+            storage: 100Mi
+        storageClassName: lvms-vg1
+     

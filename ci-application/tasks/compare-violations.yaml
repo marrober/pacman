@@ -1,0 +1,65 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: compare-violations
+spec:
+  params:
+    - name: base-violations-file
+      description: Path to the base image violations file
+      type: string
+      default: /workspace/base-violations.json
+    - name: image-violations-file
+      description: Path to the built image violations file
+      type: string
+      default: /workspace/image-violations.json
+    - name: output-file
+      description: Path for violation messages only present in the built image
+      type: string
+      default: /workspace/new-image-cves.json
+  workspaces:
+    - name: violations
+      description: Workspace containing base and image violation files
+      mountPath: /workspace
+  steps:
+    - name: compare-cves
+      image: image-registry.openshift-image-registry.svc:5000/pacman-ci/ubi:latest
+      script: |
+        #!/usr/bin/env bash
+
+        set -euo pipefail
+
+        BASE_FILE="$(params.base-violations-file)"
+        IMAGE_FILE="$(params.image-violations-file)"
+        OUTPUT_FILE="$(params.output-file)"
+
+        for file in "$BASE_FILE" "$IMAGE_FILE"; do
+          if [[ ! -f "$file" ]]; then
+            echo "Required file not found: $file"
+            exit 1
+          fi
+        done
+
+        dnf install -yq jq
+
+        jq -n \
+          --slurpfile base "$BASE_FILE" \
+          --slurpfile image "$IMAGE_FILE" \
+          '
+            def violations($doc):
+              if ($doc | type) == "array" then $doc
+              elif ($doc | type) == "object" and ($doc | length) == 0 then []
+              else [($doc.violations[]?.message), ($doc.messages[]?)] | map(select(. != null))
+              end;
+            def cve_id:
+              (capture("CVE-[0-9]{4}-[0-9]+")? | .string) // empty;
+            def cve_ids($list):
+              [$list[] | cve_id | select(length > 0)] | unique;
+            violations(image[0]) as $image_violations |
+            violations(base[0]) as $base_violations |
+            cve_ids($base_violations) as $base_cves |
+            [$image_violations[] | select((cve_id | length > 0) and (($base_cves | index(cve_id)) == null))]
+          ' > "$OUTPUT_FILE"
+
+        echo "Violations only present in built image:"
+        cat "$OUTPUT_FILE"
+      workingDir: /workspace

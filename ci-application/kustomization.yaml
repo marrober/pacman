@@ -9,6 +9,7 @@ resources:
 - role-bindings/image-pusher-service-account.yaml
 - pipeline.yaml
 - tasks/acs-image-build-check.yaml
+- tasks/compare-violations.yaml
 - tasks/build.yaml
 - tasks/git-clone.yaml
 - tasks/push-image-to-imagestream.yaml

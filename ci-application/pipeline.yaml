@@ -126,6 +126,9 @@ spec:
       name: acs-image-build-check
     runAfter:
     - fetch-repository
+    workspaces:
+    - name: violations
+      workspace: violations
 ##------------------------------------------------------------------
 # Verify commit of code to the repository
 ##------------------------------------------------------------------
@@ -215,6 +218,22 @@ spec:
       name: acs-image-build-check
     runAfter:
     - push-image-to-imagestream
+    workspaces:
+    - name: violations
+      workspace: violations
+##------------------------------------------------------------------
+# Compare base and built image CVE violations
+##------------------------------------------------------------------
+  - name: compare-violations
+    taskRef:
+      kind: Task
+      name: compare-violations
+    runAfter:
+    - base-image-check
+    - image-build-check
+    workspaces:
+    - name: violations
+      workspace: violations
 ##------------------------------------------------------------------
 # Push the new runtime image to quay.io
 ##------------------------------------------------------------------
@@ -333,3 +352,4 @@ spec:
   workspaces:
   - name: workspace
   - name: files
+  - name: violations
