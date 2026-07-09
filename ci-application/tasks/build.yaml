@@ -146,7 +146,13 @@ spec:
             fi
         fi
 
-        head -n 50 $(workspaces.resources.path)/sbom-image.json
+        IMAGE_SBOM="$(workspaces.resources.path)/sbom-image.json"
+        if [ -f "$IMAGE_SBOM" ]; then
+            echo "=== Previewing top 50 lines of sbom-image.json ==="
+            head -n 50 "$IMAGE_SBOM"
+        else
+            echo "=== Finished: No image SBOM file was generated to preview ==="
+        fi
       resources:
         limits:
           memory: 500Mi
