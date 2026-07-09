@@ -59,11 +59,21 @@ spec:
 
         ./roxctl image scan --image "$(params.public-url)" --insecure-skip-tls-verify -e "$ROX_CENTRAL_ENDPOINT" --force > /dev/null 2>&1
 
-        ./roxctl image check --image $(params.public-url) --insecure-skip-tls-verify -e $ROX_CENTRAL_ENDPOINT -o json --retries 0 > imageScanResult-json 2>&1
+        ./roxctl image check --image $(params.public-url) --insecure-skip-tls-verify -e $ROX_CENTRAL_ENDPOINT -o $(params.roxctl-output-format) --retries 0 > imageScanResult 2>&1
 
-        dnf install -y jq 
+        cat imageScanResult
+
+        imageScanResultNewVar=$(cat imageScanResult)
+
+        if [[ "$imageScanResultNewVar" == *"failed policies found"* ]]; then
+          failTask=true
+        fi
+
+        dnf install -yq jq 
 
         ./roxctl image check --image "$(params.public-url)" --insecure-skip-tls-verify -e "$ROX_CENTRAL_ENDPOINT" -o json --retries 0 > imageScanResult-json 2>imageScanError
+
+        cat imageScanResult-json
 
         jq '[.results[].violatedPolicies[] | select(.name == "Fixable Severity at least important") | .violation] | if length == 1 then .[0] elif length > 0 then . else {} end' imageScanResult-json > /workspace/violations.json
 
