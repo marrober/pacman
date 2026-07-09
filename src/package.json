@@ -12,10 +12,11 @@
   "dependencies": {
     "body-parser": "^2.2.2",
     "express": "^5.2.1",
-    "mongodb": "^2.2.4",
+    "mongodb": "^3.1.13",
     "npm": "^11.18.0",
     "picomatch": "^4.0.5",
     "pug": "^3.0.4",
+    "bson": "^1.1.4",
     "sigstore": "^4.1.1"
   },
   "devDependencies": {
