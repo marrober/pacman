@@ -13,13 +13,17 @@ spec:
     - name: public-url
       type: string
     - name: roxctl-output-format
-      description : Roxctl output format - either table, json or csv
+      description: Roxctl output format - either table, json or csv
       type: string
+    - name: base_check
+      description: When true, run a JSON image check and extract violation details for the base image policy
+      type: string
+      default: "false"
   results:
     - name: scan-result
   steps:
 ##------------------------------------------------------------------
-# Rox iamge check - check built image
+# Rox image check - check built image
 ##------------------------------------------------------------------
     - name: rox-image-build-check
       env:
@@ -35,16 +39,17 @@ spec:
               name: $(params.acs_central_endpoint)
       image: image-registry.openshift-image-registry.svc:5000/pacman-ci/ubi:latest
       resources: {}
-      script: >-
+      script: |
         #!/usr/bin/env bash
 
         set +x
 
-        curl -s -k -L -H "Authorization: Bearer $ROX_API_TOKEN"
-        https://$ROX_CENTRAL_ENDPOINT/api/cli/download/roxctl-linux --output
-        ./roxctl > /dev/null; echo "Getting roxctl"
+        curl -s -k -L -H "Authorization: Bearer $ROX_API_TOKEN" \
+          "https://$ROX_CENTRAL_ENDPOINT/api/cli/download/roxctl-linux" \
+          --output ./roxctl > /dev/null
+        echo "Getting roxctl"
 
-        chmod +x ./roxctl  > /dev/null
+        chmod +x ./roxctl > /dev/null
 
         failTask="false"
 
@@ -52,30 +57,32 @@ spec:
 
         ./roxctl version
 
-        ./roxctl image scan --image $(params.public-url) --insecure-skip-tls-verify -e $ROX_CENTRAL_ENDPOINT --force > /dev/null 2>&1
+        ./roxctl image scan --image "$(params.public-url)" --insecure-skip-tls-verify -e "$ROX_CENTRAL_ENDPOINT" --force > /dev/null 2>&1
 
         ./roxctl image check --image $(params.public-url) --insecure-skip-tls-verify -e $ROX_CENTRAL_ENDPOINT -o $(params.roxctl-output-format) --retries 0 > imageScanResult 2>&1
 
         cat imageScanResult
 
-        imageScanResultNewVar=`cat imageScanResult`
+        if [[ "$(params.base_check)" == "true" ]]; then
+          ./roxctl image check --image "$(params.public-url)" --insecure-skip-tls-verify -e "$ROX_CENTRAL_ENDPOINT" -o json --retries 0 > imageScanResult-json 2>&1
+          cat imageScanResult
 
-        if [[ "$imageScanResultNewVar" == *"failed policies found"* ]]; then
-          failTask=true
+          python3 -c "import json; data=json.load(open('imageScanResult-json')); violation=next((p.get('violation') for r in data.get('results', []) for p in r.get('violatedPolicies', []) if p.get('name')=='Fixable Severity at least important'), None); print(json.dumps(violation if violation is not None else {}, indent=2))" > /workspace/base-violations.json
+
+          cat imageScanResult-json
+
+          imageScanResultNewVar=$(cat imageScanResult)
+
+          if [[ "$imageScanResultNewVar" == *"failed policies found"* ]]; then
+            failTask=true
+          fi
         fi
 
         if [[ "$failTask" == "true" ]]; then
-
           echo "Setting overall result to fail"
-
-          echo -n "fail" | tee $(results.scan-result.path) >> /dev/null
-
+          echo -n "fail" | tee "$(results.scan-result.path)" > /dev/null
         else
-
           echo "Setting overall result to pass"
-
-          echo -n "pass" | tee $(results.scan-result.path) >> /dev/null
-
+          echo -n "pass" | tee "$(results.scan-result.path)" > /dev/null
         fi
-
       workingDir: /workspace

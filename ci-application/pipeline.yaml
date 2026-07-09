@@ -119,6 +119,8 @@ spec:
       value: $(params.node_js_image_repo)/$(params.node_js_image_name):$(params.node_js_image_tag)
     - name: roxctl-output-format
       value: $(params.roxctl-output-format)
+    - name: base_check
+      value: "true"
     taskRef:
       kind: Task
       name: acs-image-build-check

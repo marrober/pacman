@@ -116,8 +116,8 @@ spec:
     - name: mount-container
       image: image-registry.openshift-image-registry.svc:5000/pacman-ci/buildah:latest
       script: |
-        container=$(buildah --storage-driver=$(params.STORAGE_DRIVER) --root files/buildah-containers from --pull-never localhost/my-container-image:latest)
-        buildah mount --storage-driver=$(params.STORAGE_DRIVER) --root files/buildah-containers $container | tee /workspace/container_path
+        container=$(buildah --storage-driver=$(params.STORAGE_DRIVER) --root /files/buildah-containers from --pull-never localhost/my-container-image:latest)
+        buildah mount --storage-driver=$(params.STORAGE_DRIVER) --root /files/buildah-containers $container | tee /workspace/container_path
         echo $container > /workspace/container_name
       securityContext:
         capabilities:
