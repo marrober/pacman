@@ -35,6 +35,8 @@ spec:
     type: string
   - name: TLSVERIFY
     type: string
+  - name: node_js_image_repo
+    type: string
   - name: node_js_image_name
     type: string
   - name: node_js_image_tag
