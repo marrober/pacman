@@ -146,7 +146,7 @@ spec:
             fi
         fi
 
-        # cat $(workspaces.resources.path)/sbom-image.json
+        head -n 50 $(workspaces.resources.path)/sbom-image.json
       resources:
         limits:
           memory: 500Mi
