@@ -59,17 +59,16 @@ spec:
 
         ./roxctl image scan --image "$(params.public-url)" --insecure-skip-tls-verify -e "$ROX_CENTRAL_ENDPOINT" --force > /dev/null 2>&1
 
-        ./roxctl image check --image $(params.public-url) --insecure-skip-tls-verify -e $ROX_CENTRAL_ENDPOINT -o $(params.roxctl-output-format) --retries 0 > imageScanResult 2>&1
-
-        cat imageScanResult
-
         if [[ "$(params.base_check)" == "true" ]]; then
-          ./roxctl image check --image "$(params.public-url)" --insecure-skip-tls-verify -e "$ROX_CENTRAL_ENDPOINT" -o json --retries 0 > imageScanResult-json 2>&1
-          cat imageScanResult
-
-          python3 -c "import json; data=json.load(open('imageScanResult-json')); violation=next((p.get('violation') for r in data.get('results', []) for p in r.get('violatedPolicies', []) if p.get('name')=='Fixable Severity at least important'), None); print(json.dumps(violation if violation is not None else {}, indent=2))" > /workspace/base-violations.json
-
+          ./roxctl image check --image "$(params.public-url)" --insecure-skip-tls-verify -e "$ROX_CENTRAL_ENDPOINT" -o json --retries 0 > imageScanResult-json 2>imageScanError
           cat imageScanResult-json
+          cat imageScanError >&2 || true
+
+          microdnf install -y jq > /dev/null 2>&1
+
+          jq '[.results[].violatedPolicies[] | select(.name == "Fixable Severity at least important") | .violation] | if length == 1 then .[0] elif length > 0 then . else {} end' imageScanResult-json > /workspace/base-violations.json
+
+          cat /workspace/base-violations.json
 
           imageScanResultNewVar=$(cat imageScanResult)
 
