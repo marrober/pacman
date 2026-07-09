@@ -61,7 +61,7 @@ spec:
 
         ./roxctl image check --image $(params.public-url) --insecure-skip-tls-verify -e $ROX_CENTRAL_ENDPOINT -o json --retries 0 > imageScanResult-json 2>&1
 
-        microdnf install -y jq 
+        dnf install -y jq 
 
         ./roxctl image check --image "$(params.public-url)" --insecure-skip-tls-verify -e "$ROX_CENTRAL_ENDPOINT" -o json --retries 0 > imageScanResult-json 2>imageScanError
 
