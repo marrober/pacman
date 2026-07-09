@@ -32,7 +32,6 @@ spec:
       - |-
         pwd
         npm install npm@latest --omit=dev
-        cat package-lock.json | grep express
         ls -al
       image: $(params.node_js_image_repo)/$(params.node_js_image_name):$(params.node_js_image_tag)
       resources:
