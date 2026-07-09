@@ -79,7 +79,7 @@ spec:
 
         cat imageScanResult-json
 
-        jq '[.results[].violatedPolicies[] | select(.name == "Fixable Severity at least Important") | .violation | (.messages[]?), (.violations[]?.message)] | map(select(type == "string" and length > 0)) | unique' imageScanResult-json > /workspace/violations.json
+        jq '[.results[].violatedPolicies[]  | select(.name == "Fixable Severity at least Important") | .violation] | if length == 1 then .[0] elif length > 0 then . else {} end' imageScanResult-json > /workspace/violations.json
 
         if [[ "$(params.base_check)" == "true" ]]; then
           cp /workspace/violations.json /workspace/base-violations.json

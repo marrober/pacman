@@ -45,8 +45,8 @@ spec:
   - name: node_js_image_name
     value: nodejs
   - name: node_js_image_tag
-    # value: nodejs-22-1-177
-    value: nodejs-22-9.8-178
+    value: nodejs-22-1-177
+    # value: nodejs-22-9.8-178
     # value: nodejs-h-24.18.0
     #. value: latest
     ## Image validation parameters
