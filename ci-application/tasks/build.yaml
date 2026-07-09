@@ -35,10 +35,7 @@ spec:
         ls -al /usr/local/lib/node_modules
         echo " ---- "
         npm install npm@latest --omit=dev
-        npm ls picomatch
-        npm ls sigstore
         ls -al
-        npm cache clean --force
       image: $(params.node_js_image_repo)/$(params.node_js_image_name):$(params.node_js_image_tag)
       resources:
         limits:
@@ -54,15 +51,13 @@ spec:
 
         set +x
 
-        NODE_IMAGE_TAG=$(params.node_js_image_tag)
+        # NODE_IMAGE_URL=$(oc get is/$(params.node_js_image_name) -o jsonpath='{.status.publicDockerImageRepository}')
 
-        echo $NODE_IMAGE_TAG
-
-        NODE_IMAGE_URL=$(oc get is/$(params.node_js_image_name) -o jsonpath='{.status.publicDockerImageRepository}')
+         NODE_IMAGE_URL=$(params.node_js_image_repo)/$(params.node_js_image_name):$(params.node_js_image_tag)
         
         echo $NODE_IMAGE_URL
 
-        sed -e "s|source-image|$NODE_IMAGE_URL:$NODE_IMAGE_TAG|g" dockerfile > new-dockerfile
+        sed -e "s|source-image|$NODE_IMAGE_URL|g" dockerfile > new-dockerfile
 
         cat new-dockerfile
 
