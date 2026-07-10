@@ -1,4 +1,4 @@
-dschemaVersion: 2.2.2
+schemaVersion: 2.2.2
 metadata:
   name: pacman
 projects:
