@@ -56,3 +56,6 @@ express - version 4.21.2
 ### Older versions
 
 From last week - this seemed to work
+default-route-openshift-image-registry.apps.ocp4.mr-openshift.co.uk/pacman-ci:1-1778142166
+comes from registry.redhat.io/rhel9/nodejs-20:1-1778142166
+express - version 3.19.1

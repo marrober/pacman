@@ -39,6 +39,14 @@ spec:
         importMode: Legacy
       referencePolicy:
         type: Source
+    - name: 1-1778142166
+      from:
+        kind: DockerImage
+        name: 'registry.redhat.io/rhel9/nodejs-20:1-1778142166'
+      importPolicy:
+        importMode: Legacy
+      referencePolicy:
+        type: Source
 
 
 
