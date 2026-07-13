@@ -12,6 +12,8 @@ spec:
       type: string
     - name: pipelineRunName
       type: string
+    - name: image-short-name
+      type: string
   results:
     - name: new-tag
   stepTemplate:
@@ -44,6 +46,11 @@ spec:
         localhost/my-container-image:latest \
 
         docker://$(params.imagestream-url):$tag
+
+        oc import-image $(params.image-short-name):$tag \
+        --from=$(params.imagestream-url):$tag \
+        -n $(context.taskRun.namespace) \
+        --confirm
 
       image: image-registry.openshift-image-registry.svc:5000/pacman-ci/buildah:latest  
       securityContext:

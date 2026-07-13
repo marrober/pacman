@@ -204,6 +204,8 @@ spec:
       value: "$(params.TLSVERIFY)"
     - name: pipelineRunName
       value: $(context.pipelineRun.name)
+    - name: image-short-name
+      value: $(params.IMAGE_SHORT_NAME)
     taskRef:
       kind: Task
       name: push-image-to-ocp
