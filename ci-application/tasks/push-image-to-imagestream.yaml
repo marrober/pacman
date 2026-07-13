@@ -53,28 +53,32 @@ spec:
           add: ["SETFCAP"]
       resources: {}
     - name: register-global-tag
-      script: >-
+      script: |
         #!/usr/bin/env bash
 
         set +x
 
-        var1=$(params.pipelineRunName)
+        var1="$(params.pipelineRunName)"
+        tag="${var1:(${#var1} - 5):${#var1}}"
+        namespace="$(context.taskRun.namespace)"
+        imagestream_url="$(params.imagestream-url)"
+        image_short_name="$(params.image-short-name)"
 
-        echo $var1
-
-        var2=${var1:(${#var1} - 5):${#var1}}
-
-        tag=$var2
-
-        echo $(params.imagestream-url):$tag
-        
-        echo $(context.taskRun.namespace)
+        echo "PipelineRun: ${var1}"
+        echo "Tag: ${tag}"
+        echo "Namespace: ${namespace}"
+        echo "ImageStream URL: ${imagestream_url}"
+        echo "Image short name: ${image_short_name}"
 
         sleep 30
 
-        oc import-image $(params.image-short-name):$tag --from=$(params.imagestream-url):$tag -n $(context.taskRun.namespace) \--confirm
+        import_cmd="oc import-image ${image_short_name}:${tag} --from=${imagestream_url}:${tag} -n ${namespace} --confirm"
 
-      image: quay.io/openshift/origin-cli:latest  
+        echo "Command to execute:"
+        echo "${import_cmd}"
+
+        eval "${import_cmd}"
+      image: quay.io/openshift/origin-cli:latest
       securityContext:
         capabilities:
           add: ["SETFCAP"]
