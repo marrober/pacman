@@ -51,7 +51,7 @@ spec:
           fi
         done
 
-        dnf install -yq jq
+        dnf install -y -q jq
 
         COMPARISON_RESULT=$(jq -n \
           --slurpfile base "$BASE_FILE" \
@@ -74,7 +74,7 @@ spec:
             {
               base_violation_count: ($base_ids | length),
               image_violation_count: ($image_ids | length),
-              exclusive_image_violation_count: ($exclusive | length),
+              application_layer_violation_count: ($exclusive | length),
               exclusive_violations: $exclusive
             }
           ')
@@ -103,5 +103,4 @@ spec:
         cat "$SUMMARY_FILE"
         echo ""
         echo "Application layer vulnerabilities:"
-        cat "$OUTPUT_FILE"
       workingDir: /workspace
