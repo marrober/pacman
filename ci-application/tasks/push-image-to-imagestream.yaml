@@ -68,6 +68,8 @@ spec:
 
         echo $(params.imagestream-url):$tag
 
+        sleep 60
+
         oc import-image $(params.image-short-name):$tag \
         --from=$(params.imagestream-url):$tag \
         -n $(context.taskRun.namespace) \
