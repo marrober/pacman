@@ -23,7 +23,7 @@ spec:
         importMode: Legacy
       referencePolicy:
         type: Source
-    - name: 22:1-1776174253
+    - name: 22-1-1776174253
       from:
         kind: DockerImage
         name: 'registry.redhat.io/rhel8/nodejs-22:1-1776174253'
