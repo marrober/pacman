@@ -42,7 +42,8 @@ spec:
   - name: node_js_image_name
     value: rhel9-nodejs
   - name: node_js_image_tag
-    value: 1-1778142166
+    value: 22:1-1776174253
+    # value: 1-1778142166
     ## Image validation parameters
   - name: acs_central_endpoint
     value: acs-secret
