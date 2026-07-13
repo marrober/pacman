@@ -1,5 +1,7 @@
 var express = require('express');
 var router = express.Router();
+console.log("DEBUG - express is:", express); 
+console.log("DEBUG - express.Router is:", express ? express.Router : "N/A");
 var bodyParser = require('body-parser');
 var Database = require('../lib/database');
 
