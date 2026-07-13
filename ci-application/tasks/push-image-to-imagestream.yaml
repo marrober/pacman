@@ -80,7 +80,14 @@ spec:
 
         eval "${tag_cmd}"
 
-        full_image_ref="$(oc get istag "${image_short_name}:${tag}" -n "${namespace}" -o jsonpath='{.status.dockerImageReference}')"
+        echo "ImageStream tags for ${image_short_name}:"
+        oc get is "${image_short_name}" -n "${namespace}" -o jsonpath='{range .status.tags[*]}{.tag}{"\t"}{.items[0].dockerImageReference}{"\n"}{end}'
+
+        full_image_ref="$(oc get is "${image_short_name}" -n "${namespace}" -o "jsonpath={.status.tags[?(@.tag=='${tag}')].items[0].dockerImageReference}")"
+
+        if [[ -z "${full_image_ref}" ]]; then
+          full_image_ref="$(oc get is "${image_short_name}" -n "${namespace}" -o "jsonpath={.status.tags[?(@.tag=='${tag}')].items[0].image.dockerImageReference}")"
+        fi
 
         if [[ -z "${full_image_ref}" ]]; then
           public_repo="$(oc get is "${image_short_name}" -n "${namespace}" -o jsonpath='{.status.publicDockerImageRepository}')"
