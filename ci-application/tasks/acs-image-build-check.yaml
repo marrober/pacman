@@ -57,14 +57,17 @@ spec:
         if [[ "$(params.base_check)" != "true" ]]; then
           echo "Checking if ImageStream tag $(params.image-short-name):$(params.image-tag) is synchronized..."
 
-          # Block and retry up to 12 times (60 seconds total)
+          echo "Checking status of image : $(params.image-short-name):$(params.image-tag) in ns $(params.image-build-namespace)"
+          
           for i in {1..12}; do
+            oc get istag $(params.image-short-name):$(params.image-tag) -n $(params.image-build-namespace)
+            echo $?
             if oc get istag $(params.image-short-name):$(params.image-tag) -n $(params.image-build-namespace) &>/dev/null; then
               echo "Success: ImageStream is updated and ready for scanning."
               break
             fi
             echo "Tag not ready yet. Retrying in 5 seconds... ($i/12)"
-            sleep 5
+            sleep 10
             if [[ "$i" -eq 12 ]]; then
               echo "Error: ImageStream sync timed out."
               exit 1
