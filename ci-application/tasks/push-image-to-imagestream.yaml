@@ -67,10 +67,11 @@ spec:
         tag=$var2
 
         echo $(params.imagestream-url):$tag
+        echo $(context.taskRun.namespace)
 
         sleep 30
 
-        oc import-image $(params.imagestream-url):$tag \
+        oc import-image $(params.image-short-name):$tag \
         --from=$(params.imagestream-url):$tag \
         -n $(context.taskRun.namespace) \
         --confirm
