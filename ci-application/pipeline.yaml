@@ -122,7 +122,7 @@ spec:
     - name: public-url
       value: $(params.node_js_image_repo)/$(params.node_js_image_name):$(params.node_js_image_tag)
     - name: image-short-name
-      value: (params.node_js_short_name)
+      value: $(params.node_js_short_name)
     - name: image-tag
       value: $(params.node_js_image_tag)
     - name: roxctl-output-format
@@ -220,7 +220,7 @@ spec:
     - name: public-url
       value: $(params.IMAGE_NAME):$(tasks.push-image-to-imagestream.results.new-tag)
     - name: image-short-name
-      value: (params.IMAGE_SHORT_NAME)
+      value: $(params.IMAGE_SHORT_NAME)
     - name: image-tag
       value: $(tasks.push-image-to-imagestream.results.new-tag)
     - name: roxctl-output-format

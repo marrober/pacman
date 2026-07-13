@@ -52,20 +52,23 @@ spec:
 
         set +x
 
-        echo "Checking if ImageStream tag $(params.image-short-name):$(params.image-tag) is synchronized..."
-      
-        # Block and retry up to 12 times (60 seconds total)
-        for i in {1..12}; do
-          if oc get istag $(params.image-short-name):$(params.image-tag) &>/dev/null; then
-            echo "Success: ImageStream is updated and ready for scanning."
-            exit 0
-          fi
+        if [[ "$(params.base_check)" != "true" ]]; then
+          echo "Checking if ImageStream tag $(params.image-short-name):$(params.image-tag) is synchronized..."
+
+          # Block and retry up to 12 times (60 seconds total)
+          for i in {1..12}; do
+            if oc get istag $(params.image-short-name):$(params.image-tag) &>/dev/null; then
+              echo "Success: ImageStream is updated and ready for scanning."
+              break
+            fi
             echo "Tag not ready yet. Retrying in 5 seconds... ($i/12)"
             sleep 5
-        done
-
-        echo "Error: ImageStream sync timed out."
-        exit 1
+            if [[ "$i" -eq 12 ]]; then
+              echo "Error: ImageStream sync timed out."
+              exit 1
+            fi
+          done
+        fi
 
         curl -s -k -L -H "Authorization: Bearer $ROX_API_TOKEN" \
           "https://$ROX_CENTRAL_ENDPOINT/api/cli/download/roxctl-linux" \

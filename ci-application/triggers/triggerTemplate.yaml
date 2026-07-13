@@ -49,6 +49,8 @@ spec:
           value: http://tuf.trusted-artifact-signer.svc
         - name: IMAGE_NAME
           value: default-route-openshift-image-registry.apps.ocp4.mr-openshift.co.uk/$(context.taskRun.namespace)/pacman
+        - name: IMAGE_SHORT_NAME
+          value: pacman
         - name: PATH_CONTEXT
           value: $(params.GIT_REPO_NAME)/src
         - name: STORAGE_DRIVER
@@ -58,6 +60,8 @@ spec:
         - name: node_js_image_repo
           value: default-route-openshift-image-registry.apps.ocp4.mr-openshift.co.uk/pacman-ci
           # value: registry.access.redhat.com/hi
+        - name: node_js_short_name
+          value: nodejs
         - name: node_js_image_name
           value: nodejs
         - name: node_js_image_tag
