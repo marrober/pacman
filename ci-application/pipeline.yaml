@@ -48,6 +48,8 @@ spec:
  #   type: string
     # OpenShift imagestream URL parameters
     #
+  - name: image-build-namespace
+    type: string
   - name: IMAGE_NAME 
     type: string
   - name: IMAGE_SHORT_NAME
@@ -125,6 +127,8 @@ spec:
       value: $(params.node_js_short_name)
     - name: image-tag
       value: $(params.node_js_image_tag)
+    - name: image-build-namespace
+      value: $(params.image-build-namespace)
     - name: roxctl-output-format
       value: $(params.roxctl-output-format)
     - name: base_check
@@ -223,6 +227,8 @@ spec:
       value: $(params.IMAGE_SHORT_NAME)
     - name: image-tag
       value: $(tasks.push-image-to-imagestream.results.new-tag)
+    - name: image-build-namespace
+      value: $(params.image-build-namespace)
     - name: roxctl-output-format
       value: $(params.roxctl-output-format)
     taskRef:
@@ -293,6 +299,8 @@ spec:
       value: $(params.IMAGE_SHORT_NAME)
     - name: image-tag
       value: $(tasks.push-image-to-imagestream.results.new-tag)
+    - name: image-build-namespace
+      value: $(params.image-build-namespace)
     - name: roxctl-output-format
       value: $(params.roxctl-output-format)
     taskRef:

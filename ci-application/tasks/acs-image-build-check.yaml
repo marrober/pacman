@@ -16,6 +16,8 @@ spec:
       type: string
     - name: image-tag
       type: string
+    - name: image-build-namespace
+      type: string
     - name: roxctl-output-format
       description: Roxctl output format - either table, json or csv
       type: string
@@ -57,7 +59,7 @@ spec:
 
           # Block and retry up to 12 times (60 seconds total)
           for i in {1..12}; do
-            if oc get istag $(params.image-short-name):$(params.image-tag) &>/dev/null; then
+            if oc get istag $(params.image-short-name):$(params.image-tag) -n $(params.image-build-namespace) &>/dev/null; then
               echo "Success: ImageStream is updated and ready for scanning."
               break
             fi
