@@ -47,11 +47,6 @@ spec:
 
         docker://$(params.imagestream-url):$tag
 
-        oc import-image $(params.image-short-name):$tag \
-        --from=$(params.imagestream-url):$tag \
-        -n $(context.taskRun.namespace) \
-        --confirm
-
       image: image-registry.openshift-image-registry.svc:5000/pacman-ci/buildah:latest  
       securityContext:
         capabilities:
