@@ -289,6 +289,10 @@ spec:
       value: $(params.acs_api_token)
     - name: public-url
       value: $(params.quay-instance-url)/$(params.quay-account)/$(params.quay-repository):$(tasks.push-image-to-imagestream.results.new-tag)
+    - name: image-short-name
+      value: $(params.IMAGE_SHORT_NAME)
+    - name: image-tag
+      value: $(tasks.push-image-to-imagestream.results.new-tag)
     - name: roxctl-output-format
       value: $(params.roxctl-output-format)
     taskRef:
