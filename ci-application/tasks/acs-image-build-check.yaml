@@ -59,6 +59,8 @@ spec:
 
         echo "image to be scanned : $(params.public-url)"
 
+        echo $ROX_API_TOKEN
+
         ./roxctl version
 
         ./roxctl image scan --image "$(params.public-url)" --insecure-skip-tls-verify -e "$ROX_CENTRAL_ENDPOINT" --force > /dev/null 2>&1
