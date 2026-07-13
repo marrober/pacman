@@ -15,14 +15,6 @@ spec:
         importMode: Legacy
       referencePolicy:
         type: Source
-    - name: nodejs-22-9.8-178
-      from:
-        kind: DockerImage
-        name: 'registry.redhat.io/rhel9/nodejs-22:9.8-1783399991'
-      importPolicy:
-        importMode: Legacy
-      referencePolicy:
-        type: Source
     - name: nodejs-h-22.23.1
       from:
         kind: DockerImage
@@ -39,15 +31,6 @@ spec:
         importMode: Legacy
       referencePolicy:
         type: Source
-    - name: 1-1778142166
-      from:
-        kind: DockerImage
-        name: 'registry.redhat.io/rhel9/nodejs-20:1-1778142166'
-      importPolicy:
-        importMode: Legacy
-      referencePolicy:
-        type: Source
-
 
 
 
