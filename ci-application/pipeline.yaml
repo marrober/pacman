@@ -37,6 +37,8 @@ spec:
     type: string
   - name: node_js_image_repo
     type: string
+  - name: node_js_short_name
+    type: string
   - name: node_js_image_name
     type: string
   - name: node_js_image_tag
@@ -47,6 +49,8 @@ spec:
     # OpenShift imagestream URL parameters
     #
   - name: IMAGE_NAME 
+    type: string
+  - name: IMAGE_SHORT_NAME
     type: string
     ## Image validation parameters
   - name: acs_central_endpoint              
@@ -117,6 +121,10 @@ spec:
       value: $(params.acs_api_token)
     - name: public-url
       value: $(params.node_js_image_repo)/$(params.node_js_image_name):$(params.node_js_image_tag)
+    - name: image-short-name
+      value: (params.node_js_short_name)
+    - name: image-tag
+      value: $(params.node_js_image_tag)
     - name: roxctl-output-format
       value: $(params.roxctl-output-format)
     - name: base_check
@@ -211,6 +219,10 @@ spec:
       value: $(params.acs_api_token)
     - name: public-url
       value: $(params.IMAGE_NAME):$(tasks.push-image-to-imagestream.results.new-tag)
+    - name: image-short-name
+      value: (params.IMAGE_SHORT_NAME)
+    - name: image-tag
+      value: $(tasks.push-image-to-imagestream.results.new-tag)
     - name: roxctl-output-format
       value: $(params.roxctl-output-format)
     taskRef:

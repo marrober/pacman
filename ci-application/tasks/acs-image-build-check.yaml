@@ -12,6 +12,10 @@ spec:
       type: string
     - name: public-url
       type: string
+    - name: image-short-name
+      type: string
+    - name: image-tag
+      type: string
     - name: roxctl-output-format
       description: Roxctl output format - either table, json or csv
       type: string
@@ -48,6 +52,21 @@ spec:
 
         set +x
 
+      echo "Checking if ImageStream tag pacman:8rcrm is synchronized..."
+      
+      # Block and retry up to 12 times (60 seconds total)
+      for i in {1..12}; do
+        if oc get istag pacman:8rcrm -n pacman-ci &>/dev/null; then
+          echo "Success: ImageStream is updated and ready for scanning."
+          exit 0
+        fi
+        echo "Tag not ready yet. Retrying in 5 seconds... ($i/12)"
+        sleep 5
+      done
+
+      echo "Error: ImageStream sync timed out."
+      exit 1
+
         curl -s -k -L -H "Authorization: Bearer $ROX_API_TOKEN" \
           "https://$ROX_CENTRAL_ENDPOINT/api/cli/download/roxctl-linux" \
           --output ./roxctl > /dev/null
@@ -58,7 +77,7 @@ spec:
         failTask="false"
 
         echo "image to be scanned : $(params.public-url)"
-        
+
         ./roxctl version
 
         ./roxctl image scan --image "$(params.public-url)" --insecure-skip-tls-verify -e "$ROX_CENTRAL_ENDPOINT" --force > /dev/null 2>&1
