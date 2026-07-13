@@ -40,5 +40,5 @@ spec:
     groups:
     - developers
     policies:
-    - p, proj:pacman:developer, applications, get, *, allow
-    - p, proj:pacman:developer, applications, sync, *, allow  
+    - p, proj:pacman:developer, applications, get, pacman/*, allow
+    - p, proj:pacman:developer, applications, sync, pacman/*, allow  
