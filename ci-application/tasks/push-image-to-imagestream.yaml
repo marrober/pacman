@@ -33,7 +33,7 @@ spec:
 
         tag=$var2
 
-        echo $tag
+        echo $(params.imagestream-url):$tag
 
         echo -n $tag >  $(results.new-tag.path)
 
