@@ -224,11 +224,11 @@ spec:
     - name: acs_api_token
       value: $(params.acs_api_token)
     - name: public-url
-      value: $(params.IMAGE_NAME):$(tasks.push-image-to-imagestream.results.new-tag)
+      value: $(tasks.push-image-to-imagestream.results.new-tag)
     - name: image-short-name
       value: $(params.IMAGE_SHORT_NAME)
     - name: image-tag
-      value: $(tasks.push-image-to-imagestream.results.new-tag)
+      value: $(tasks.push-image-to-imagestream.results.tag-name)
     - name: image-build-namespace
       value: $(params.image-build-namespace)
     - name: roxctl-output-format
@@ -270,7 +270,7 @@ spec:
     - name: STORAGE_DRIVER
       value: $(params.STORAGE_DRIVER)
     - name: imageTag
-      value: $(tasks.push-image-to-imagestream.results.new-tag)
+      value: $(tasks.push-image-to-imagestream.results.tag-name)
     taskRef:
       kind: Task
       name: push-image-to-quay
@@ -296,11 +296,11 @@ spec:
     - name: acs_api_token
       value: $(params.acs_api_token)
     - name: public-url
-      value: $(params.quay-instance-url)/$(params.quay-account)/$(params.quay-repository):$(tasks.push-image-to-imagestream.results.new-tag)
+      value: $(params.quay-instance-url)/$(params.quay-account)/$(params.quay-repository):$(tasks.push-image-to-imagestream.results.tag-name)
     - name: image-short-name
       value: $(params.IMAGE_SHORT_NAME)
     - name: image-tag
-      value: $(tasks.push-image-to-imagestream.results.new-tag)
+      value: $(tasks.push-image-to-imagestream.results.tag-name)
     - name: image-build-namespace
       value: $(params.image-build-namespace)
     - name: roxctl-output-format
@@ -336,7 +336,7 @@ spec:
     - name: GIT_COMMIT_COMMENT
       value: $(params.cd-git-commit-comment-dev)
     - name: IMAGE
-      value: $(params.IMAGE_NAME):$(tasks.push-image-to-imagestream.results.new-tag)
+      value: $(tasks.push-image-to-imagestream.results.new-tag)
     - name: LOCATION
       value: "dev"
     taskRef:

@@ -16,6 +16,9 @@ spec:
       type: string
   results:
     - name: new-tag
+      description: Full externally addressable image reference
+    - name: tag-name
+      description: Short symbolic tag name derived from the PipelineRun
   stepTemplate:
     env:
       - name: "HOME"
@@ -36,8 +39,6 @@ spec:
         tag=$var2
 
         echo $(params.imagestream-url):$tag
-
-        echo -n $tag >  $(results.new-tag.path)
 
         buildah push --storage-driver=$(params.STORAGE_DRIVER) \
 
@@ -72,12 +73,24 @@ spec:
 
         sleep 30
 
-        import_cmd="oc import-image ${image_short_name}:${tag} --from=${imagestream_url}:${tag} -n ${namespace} --confirm"
+        tag_cmd="oc tag ${imagestream_url}:${tag} ${image_short_name}:${tag} --reference -n ${namespace}"
 
         echo "Command to execute:"
-        echo "${import_cmd}"
+        echo "${tag_cmd}"
 
-        eval "${import_cmd}"
+        eval "${tag_cmd}"
+
+        full_image_ref="$(oc get istag "${image_short_name}:${tag}" -n "${namespace}" -o jsonpath='{.status.dockerImageReference}')"
+
+        if [[ -z "${full_image_ref}" ]]; then
+          public_repo="$(oc get is "${image_short_name}" -n "${namespace}" -o jsonpath='{.status.publicDockerImageRepository}')"
+          full_image_ref="${public_repo}:${tag}"
+        fi
+
+        echo "Registered image reference: ${full_image_ref}"
+
+        echo -n "${full_image_ref}" > "$(results.new-tag.path)"
+        echo -n "${tag}" > "$(results.tag-name.path)"
       image: quay.io/openshift/origin-cli:latest
       securityContext:
         capabilities:
