@@ -95,13 +95,13 @@ spec:
         echo -n "$EXCLUSIVE_COUNT" > "$(results.exclusive-image-violation-count.path)"
 
         echo "Violation comparison summary:"
-        echo "  Base image violations:      $BASE_COUNT"
-        echo "  Built image violations:     $IMAGE_COUNT"
-        echo "  Exclusive to built image:   $EXCLUSIVE_COUNT"
+        echo "  Base image violations:               $BASE_COUNT"
+        echo "  Built image violations:              $IMAGE_COUNT"
+        echo "  Application layer vulnerabilities:   $EXCLUSIVE_COUNT"
         echo ""
         echo "Summary written to: $SUMMARY_FILE"
         cat "$SUMMARY_FILE"
         echo ""
-        echo "Violations only present in built image:"
+        echo "Application layer vulnerabilities:"
         cat "$OUTPUT_FILE"
       workingDir: /workspace
