@@ -5,15 +5,15 @@ var path = require('path');
 var Database = require('./lib/database');
 var assert = require('assert');
 
+// App
+var app = express();
+
 // Constants
 
 // Routes
 var highscores = require('./routes/highscores');
 var user = require('./routes/user');
 var loc = require('./routes/location');
-
-// App
-var app = express();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
