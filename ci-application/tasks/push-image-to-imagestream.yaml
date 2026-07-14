@@ -16,9 +16,6 @@ spec:
       type: string
   results:
     - name: new-tag
-      description: Full externally addressable image reference
-    - name: tag-name
-      description: Short symbolic tag name derived from the PipelineRun
   stepTemplate:
     env:
       - name: "HOME"
@@ -40,7 +37,7 @@ spec:
 
         echo $(params.imagestream-url):$tag
 
-        echo -n $tag >  $(results.new-tag.path)
+        echo -n $tag > $(results.new-tag.path)
 
         buildah push --storage-driver=$(params.STORAGE_DRIVER) \
 
