@@ -40,13 +40,24 @@ spec:
 
         echo $(params.imagestream-url):$tag
 
-        buildah push --storage-driver=$(params.STORAGE_DRIVER) \
+        buildah tag --storage-driver=$(params.STORAGE_DRIVER) \
 
         --tls-verify=$(params.TLSVERIFY) --root /files/buildah-containers \
 
         localhost/my-container-image:latest \
 
-        docker://$(params.imagestream-url):$tag
+        $(params.imagestream-url):$tag
+
+        buildah images --storage-driver=$(params.STORAGE_DRIVER) \
+
+        --tls-verify=$(params.TLSVERIFY) --root /files/buildah-containers 
+        
+        buildah push --storage-driver=$(params.STORAGE_DRIVER) \
+
+        --tls-verify=$(params.TLSVERIFY) --root /files/buildah-containers \
+
+        $(params.imagestream-url):$tag
+
 
       image: image-registry.openshift-image-registry.svc:5000/pacman-ci/buildah:latest  
       securityContext:
@@ -83,11 +94,9 @@ spec:
         echo "ImageStream tags for ${image_short_name}:"
         oc get is "${image_short_name}" -n "${namespace}" -o jsonpath='{range .status.tags[*]}{.tag}{"\t"}{.items[0].dockerImageReference}{"\n"}{end}'
 
-        full_image_ref="$(oc get is "${image_short_name}" -n "${namespace}" -o "jsonpath={.status.tags[?(@.tag=='${tag}')].items[0].dockerImageReference}")"
+        full_image_ref="$(oc get is "${image_short_name}" -n "${namespace}" -o "jsonpath={.status.tags[?(@.tag=='xx6k7')].items[]}" | jq .dockerImageReference)"
 
-        if [[ -z "${full_image_ref}" ]]; then
-          full_image_ref="$(oc get is "${image_short_name}" -n "${namespace}" -o "jsonpath={.status.tags[?(@.tag=='${tag}')].items[0].image.dockerImageReference}")"
-        fi
+        echo $full_image_ref
 
         if [[ -z "${full_image_ref}" ]]; then
           public_repo="$(oc get is "${image_short_name}" -n "${namespace}" -o jsonpath='{.status.publicDockerImageRepository}')"
