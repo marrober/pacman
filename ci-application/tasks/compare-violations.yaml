@@ -44,6 +44,12 @@ spec:
         OUTPUT_FILE="$(params.output-file)"
         SUMMARY_FILE="$(params.summary-file)"
 
+        echo "Base image violations : "
+        cat $BASE_FILE
+
+        echo "Built container image violations : "
+        cat $IMAGE_FILE
+
         for file in "$BASE_FILE" "$IMAGE_FILE"; do
           if [[ ! -f "$file" ]]; then
             echo "Required file not found: $file"
@@ -88,7 +94,7 @@ spec:
 
         BASE_COUNT=$(jq -r '.base_violation_count' "$SUMMARY_FILE")
         IMAGE_COUNT=$(jq -r '.image_violation_count' "$SUMMARY_FILE")
-        EXCLUSIVE_COUNT=$(jq -r '.exclusive_image_violation_count' "$SUMMARY_FILE")
+        EXCLUSIVE_COUNT=$(jq -r '.applcation_layer_violation_count' "$SUMMARY_FILE")
 
         echo -n "$BASE_COUNT" > "$(results.base-violation-count.path)"
         echo -n "$IMAGE_COUNT" > "$(results.image-violation-count.path)"
