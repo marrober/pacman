@@ -42,27 +42,27 @@ spec:
 
         echo "tag image"
 
-        buildah tag --storage-driver=$(params.STORAGE_DRIVER) \
+#        buildah tag --storage-driver=$(params.STORAGE_DRIVER) \
 
-        --root /files/buildah-containers \
+#        --root /files/buildah-containers \
 
-        localhost/my-container-image:latest \
+#        localhost/my-container-image:latest \
 
-        $(params.imagestream-url):$tag
+#        $(params.imagestream-url):$tag
 
-        echo "list images"
+#        echo "list images"
 
-        buildah images --storage-driver=$(params.STORAGE_DRIVER) \
+#        buildah images --storage-driver=$(params.STORAGE_DRIVER) \
 
-        --root /files/buildah-containers 
+#        --root /files/buildah-containers 
 
-        echo "push image"
+#        echo "push image"
 
         buildah push --storage-driver=$(params.STORAGE_DRIVER) \
 
         --tls-verify=$(params.TLSVERIFY) --root /files/buildah-containers \
 
-        $(params.imagestream-url):$tag
+        localhost/my-container-image:latest $(params.imagestream-url):$tag
 
       image: image-registry.openshift-image-registry.svc:5000/pacman-ci/buildah:latest  
       securityContext:
@@ -75,43 +75,43 @@ spec:
 
         set +x
 
-        var1="$(params.pipelineRunName)"
-        tag="${var1:(${#var1} - 5):${#var1}}"
-        namespace="$(context.taskRun.namespace)"
-        imagestream_url="$(params.imagestream-url)"
-        image_short_name="$(params.image-short-name)"
+#        var1="$(params.pipelineRunName)"
+#        tag="${var1:(${#var1} - 5):${#var1}}"
+#        namespace="$(context.taskRun.namespace)"
+#        imagestream_url="$(params.imagestream-url)"
+#        image_short_name="$(params.image-short-name)"
 
-        echo "PipelineRun: ${var1}"
-        echo "Tag: ${tag}"
-        echo "Namespace: ${namespace}"
-        echo "ImageStream URL: ${imagestream_url}"
-        echo "Image short name: ${image_short_name}"
+#        echo "PipelineRun: ${var1}"
+#        echo "Tag: ${tag}"
+#        echo "Namespace: ${namespace}"
+#        echo "ImageStream URL: ${imagestream_url}"
+#        echo "Image short name: ${image_short_name}"
 
-        sleep 30
+#        sleep 30
 
-        tag_cmd="oc tag ${imagestream_url}:${tag} ${image_short_name}:${tag} --reference -n ${namespace}"
+#        tag_cmd="oc tag ${imagestream_url}:${tag} ${image_short_name}:${tag} --reference -n ${namespace}"
 
-        echo "Command to execute:"
-        echo "${tag_cmd}"
+#        echo "Command to execute:"
+#        echo "${tag_cmd}"
 
-        eval "${tag_cmd}"
+#        eval "${tag_cmd}"
 
-        echo "ImageStream tags for ${image_short_name}:"
-        oc get is "${image_short_name}" -n "${namespace}" -o jsonpath='{range .status.tags[*]}{.tag}{"\t"}{.items[0].dockerImageReference}{"\n"}{end}'
+#        echo "ImageStream tags for ${image_short_name}:"
+#        oc get is "${image_short_name}" -n "${namespace}" -o jsonpath='{range .status.tags[*]}{.tag}{"\t"}{.items[0].dockerImageReference}{"\n"}{end}'
 
-        full_image_ref="$(oc get is "${image_short_name}" -n "${namespace}" -o "jsonpath={.status.tags[?(@.tag=='xx6k7')].items[]}" | jq .dockerImageReference)"
+#        full_image_ref="$(oc get is "${image_short_name}" -n "${namespace}" -o "jsonpath={.status.tags[?(@.tag=='xx6k7')].items[]}" | jq .dockerImageReference)"
 
-        echo $full_image_ref
+#        echo $full_image_ref
 
-        if [[ -z "${full_image_ref}" ]]; then
-          public_repo="$(oc get is "${image_short_name}" -n "${namespace}" -o jsonpath='{.status.publicDockerImageRepository}')"
-          full_image_ref="${public_repo}:${tag}"
-        fi
+#        if [[ -z "${full_image_ref}" ]]; then
+#          public_repo="$(oc get is "${image_short_name}" -n "${namespace}" -o jsonpath='{.status.publicDockerImageRepository}')"
+#          full_image_ref="${public_repo}:${tag}"
+#        fi
 
-        echo "Registered image reference: ${full_image_ref}"
+#        echo "Registered image reference: ${full_image_ref}"
 
-        echo -n "${full_image_ref}" > "$(results.new-tag.path)"
-        echo -n "${tag}" > "$(results.tag-name.path)"
+#        echo -n "${full_image_ref}" > "$(results.new-tag.path)"
+#        echo -n "${tag}" > "$(results.tag-name.path)"
       image: quay.io/openshift/origin-cli:latest
       securityContext:
         capabilities:
