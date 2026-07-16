@@ -85,28 +85,25 @@ spec:
             }
           ')
 
+
         echo "$COMPARISON_RESULT" | jq '.exclusive_violations' > "$OUTPUT_FILE"
         echo "$COMPARISON_RESULT" | jq '{
           base_violation_count,
           image_violation_count,
-          exclusive_image_violation_count
+          application_layer_violation_count
         }' > "$SUMMARY_FILE"
 
         BASE_COUNT=$(jq -r '.base_violation_count' "$SUMMARY_FILE")
         IMAGE_COUNT=$(jq -r '.image_violation_count' "$SUMMARY_FILE")
-        EXCLUSIVE_COUNT=$(jq -r '.applcation_layer_violation_count' "$SUMMARY_FILE")
-
-        echo -n "$BASE_COUNT" > "$(results.base-violation-count.path)"
-        echo -n "$IMAGE_COUNT" > "$(results.image-violation-count.path)"
-        echo -n "$EXCLUSIVE_COUNT" > "$(results.exclusive-image-violation-count.path)"
+        EXCLUSIVE_COUNT=$(jq -r '.application_layer_violation_count' "$SUMMARY_FILE")
 
         echo "Violation comparison summary:"
         echo "  Base image violations:               $BASE_COUNT"
         echo "  Built image violations:              $IMAGE_COUNT"
         echo "  Application layer vulnerabilities:   $EXCLUSIVE_COUNT"
         echo ""
-        echo "Summary written to: $SUMMARY_FILE"
-        cat "$SUMMARY_FILE"
-        echo ""
         echo "Application layer vulnerabilities:"
+        cat $OUTPUT_FILE
+        echo ""
+        echo "Summary written to: $SUMMARY_FILE"
       workingDir: /workspace
