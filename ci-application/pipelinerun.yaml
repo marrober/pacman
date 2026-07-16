@@ -42,14 +42,15 @@ spec:
   - name: TLSVERIFY
     value: false
   - name: node_js_image_repo
-    value: default-route-openshift-image-registry.apps.ocp4.mr-openshift.co.uk/pacman-ci
-    # value: registry.access.redhat.com/hi
+    # value: default-route-openshift-image-registry.apps.ocp4.mr-openshift.co.uk/pacman-ci
+    value: registry.access.redhat.com/hi
   - name: node_js_short_name
     value: nodejs
   - name: node_js_image_name
     value: nodejs
   - name: node_js_image_tag
-    value: nodejs-22-1-177
+    # value: nodejs-22-1-177
+    value: latest
   - name: image-build-namespace
     value: $(context.taskRun.namespace)
     # value: nodejs-h-24.18.0
