@@ -336,7 +336,7 @@ spec:
     - name: GIT_COMMIT_COMMENT
       value: $(params.cd-git-commit-comment-dev)
     - name: IMAGE
-      value: $(tasks.push-image-to-imagestream.results.new-tag)
+      value: $(params.IMAGE_NAME):$(tasks.push-image-to-imagestream.results.new-tag)
     - name: LOCATION
       value: "dev"
     taskRef:
