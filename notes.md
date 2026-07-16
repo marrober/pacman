@@ -119,6 +119,13 @@ oc get sa/image-pusher -o yaml | grep image-pusher-dockercfg
 oc get secret/image-pusher-dockercfg-<whatever> -n pacman-ci -o 'go-template={{index .data ".dockercfg"}}' | base64 -d | jq .  
 ````
 
+To get the sa token in a single command use :
+
+````bash
+oc get secret/builder-dockercfg-bl7x5  -o json | jq -r '.data[".dockercfg"]' | base64 -d | jq -r '.["default-route-openshift-image-registry.apps.ocp4.mr-openshift.co.uk"] .auth' | base64 -d | sed 's/^<token>://'
+````
+
+
 ### Create a long lived token
 
 To create a token that will not time out quickly use the command below. This will create a token that will last 625 days.
@@ -263,4 +270,62 @@ git config --global user.email marrober@redhat.com
 git config --global user.name marrober
 ````
 
+## Vulnerability demonstrations
 
+
+## Clean packages spec :
+
+  "dependencies": {
+    "body-parser": "^2.2.2",
+    "express": "^5.2.1",
+    "mongodb": "^2.2.4",
+    "_comment": "mongodb clean version is 7.2.0, and for an example with vulnerabilities use 2.2.24",
+    "pug": "^3.0.4"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.14"
+
+## Old packages spec :
+
+  "dependencies": {
+    "body-parser": "^1.20.3",
+    "express": "^4.14.1",
+    "jade": "^1.11.0",
+    "mongodb": "^2.2.24"
+  },
+  "devDependencies": {
+    "nodemon": "^1.11.0"
+
+
+## Combinations of images and packages
+
+### Test 1
+registry.access.redhat.com/hi/nodejs/latest
+express - version 3.19.1
+
+The above generates a small number of violations in the base (typically 1) and over 35 in the application layer.
+The base image vulnerability doesn't currently show in the ACS view.
+
+example : pacman-pr-qgr6b
+
+### Test 2
+registry.access.redhat.com/hi/nodejs/latest
+express - version 4.21.2
+
+The above generates violations only in the base (typically 1).
+There are no vulnerabilities in the application layer.
+
+example : pacman-pr-jtctq
+
+### Test 3
+default-route-openshift-image-registry.apps.ocp4.mr-openshift.co.uk/pacman-ci/nodejs:nodejs-22-9.8-178
+express - version 4.21.2
+
+### Older versions
+
+From last week - this seemed to work
+default-route-openshift-image-registry.apps.ocp4.mr-openshift.co.uk/pacman-ci:1-1778142166
+comes from registry.redhat.io/rhel9/nodejs-20:1-1778142166
+express - version 3.19.1
+
+example : pacman-pr-dlpgni
