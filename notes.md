@@ -303,7 +303,7 @@ git config --global user.name marrober
 registry.access.redhat.com/hi/nodejs/latest
 express - version 3.19.1
 
-The above generates a small number of violations in the base (typically 1) and over 35 in the application layer.
+The above generates a small number of violations in the base (typically 1) and around 14 in the application layer.
 The base image vulnerability doesn't currently show in the ACS view.
 
 example : pacman-pr-qgr6b
