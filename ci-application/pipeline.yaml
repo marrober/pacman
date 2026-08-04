@@ -315,6 +315,9 @@ spec:
       - "pass"
     runAfter:
     - push-image-to-quay
+    workspaces:
+    - name: violations
+      workspace: violations
 ##------------------------------------------------------------------
 # Clone the cd repository and update the argocd application file 
 # to refer to the new tagged image.
