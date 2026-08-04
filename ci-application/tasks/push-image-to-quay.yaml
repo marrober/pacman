@@ -53,7 +53,7 @@ spec:
           
     - name: buildah-tag-image
       script: |
-        echo "Tagging image : $(params.quay-instance-url)/$(params.quay-account)/$(params.quay-repository):$(params.imageTag)""
+        echo "Tagging image : $(params.quay-instance-url)/$(params.quay-account)/$(params.quay-repository):$(params.imageTag)"
 
         buildah tag --storage-driver=$(params.STORAGE_DRIVER) --root /files/buildah-containers $(params.image-stream-location):$(params.imageTag) $(params.quay-instance-url)/$(params.quay-account)/$(params.quay-repository):$(params.imageTag)
 
