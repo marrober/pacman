@@ -271,6 +271,8 @@ spec:
       value: $(params.STORAGE_DRIVER)
     - name: imageTag
       value: $(tasks.push-image-to-imagestream.results.new-tag)
+    - name: node_js_image_name
+      value: $(params.node_js_image_name)
     taskRef:
       kind: Task
       name: push-image-to-quay
