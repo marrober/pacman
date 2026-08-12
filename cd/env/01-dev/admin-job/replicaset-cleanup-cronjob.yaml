@@ -19,7 +19,7 @@ spec:
         spec:
           containers:
             - name: terminal
-              image: 'default-route-openshift-image-registry.apps.ocp4.mr-openshift.co.uk/pacman-development/terminal:latest'
+              image: 'quay.io/marrober/devex-terminal-4:minimal-terminal-1.4'
               command:
                 - /bin/sh
               args:
