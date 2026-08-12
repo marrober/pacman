@@ -24,7 +24,7 @@ spec:
     spec:
       containers:
         - name: pacman
-          image: default-route-openshift-image-registry.apps.ocp4.mr-openshift.co.uk/pacman-ci/pacman
+          image: quay.io/marrober/devex-terminal-4:minimal-terminal-1.4
           ports:
             - containerPort: 8080
               protocol: TCP

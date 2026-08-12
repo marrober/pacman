@@ -1,0 +1,28 @@
+kind: Role
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: delete-replicaset
+  namespace: pacman-development
+rules:
+  - apiGroups:
+      - apps
+    resources:
+      - replicasets
+    verbs:
+      - delete
+      - list
+      - get
+---
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: deployer-delete-replicaset
+  namespace: pacman-development
+subjects:
+  - kind: ServiceAccount
+    name: deployer
+    namespace: pacman-development
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: delete-replicaset

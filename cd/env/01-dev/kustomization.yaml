@@ -7,6 +7,8 @@ resources:
 - deployment.yaml
 - service.yaml
 - route.yaml
+- admin-job/role-and-binding.yaml
+- admin-job/replicaset-cleanup-cronjob.yaml
 
 images:
 - name: default-route-openshift-image-registry.apps.ocp4.mr-openshift.co.uk/pacman-ci/pacman
