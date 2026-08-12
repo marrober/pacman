@@ -42,15 +42,19 @@ spec:
   - name: TLSVERIFY
     value: false
   - name: node_js_image_repo
-    value: registry.redhat.io/rhel9
+    # value: registry.redhat.io/rhel9
     # value: registry.access.redhat.com/hi
+    value: default-route-openshift-image-registry.apps.ocp4.mr-openshift.co.uk/pacman-ci
   - name: node_js_short_name
-    value: nodejs-22
+    # value: nodejs-22
+    value: nodejs
   - name: node_js_image_name
-    value: nodejs-22
+    # value: nodejs-22
+    value: nodejs
   - name: node_js_image_tag
     # value: 1-1777524498
-    value: 1-1777916853
+    # value: 1-1777916853
+    nodejs-22-1-177
   - name: image-build-namespace
     value: $(context.taskRun.namespace)
     ## Image validation parameters
