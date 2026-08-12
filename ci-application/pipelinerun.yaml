@@ -49,7 +49,8 @@ spec:
   - name: node_js_image_name
     value: nodejs-22
   - name: node_js_image_tag
-    value: 1-1777524498
+    # value: 1-1777524498
+    value: 1-1777916853
   - name: image-build-namespace
     value: $(context.taskRun.namespace)
     ## Image validation parameters
