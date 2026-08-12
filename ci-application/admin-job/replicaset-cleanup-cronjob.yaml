@@ -1,0 +1,42 @@
+kind: CronJob
+apiVersion: batch/v1
+metadata:
+  name: remove-stale-replicasets
+  namespace: pacman-ci
+  labels:
+    app.kubernetes.io/part-of: Triggers
+spec:
+  schedule: 0 9-17 * * *
+  concurrencyPolicy: Allow
+  suspend: false
+  jobTemplate:
+    metadata:
+      creationTimestamp: null
+    spec:
+      template:
+        metadata:
+          creationTimestamp: null
+        spec:
+          containers:
+            - name: terminal
+              image: 'default-route-openshift-image-registry.apps.ocp4.mr-openshift.co.uk/pacman-ci/terminal:latest'
+              command:
+                - /bin/sh
+              args:
+                - '-c'
+                - |
+                  echo "Pruning old replicasets"
+                  oc get replicaset -o jsonpath='{range .items[?(@.spec.replicas==0)]}{.metadata.name}{"\n"}{end}' | xargs -r oc delete replicaset
+              resources: {}
+              terminationMessagePath: /dev/termination-log
+              terminationMessagePolicy: File
+              imagePullPolicy: Always
+          restartPolicy: OnFailure
+          terminationGracePeriodSeconds: 30
+          dnsPolicy: ClusterFirst
+          serviceAccountName: deployer
+          serviceAccount: deployer
+          securityContext: {}
+          schedulerName: default-scheduler
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 1
