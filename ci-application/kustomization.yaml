@@ -22,5 +22,3 @@ resources:
 - triggers/triggerBinding.yaml
 - triggers/triggerTemplate.yaml
 - image-streams/
-- admin-job/role-and-binding.yaml
-- admin-job/replicaset-cleanup-cronjob.yaml
