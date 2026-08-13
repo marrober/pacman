@@ -24,7 +24,7 @@ spec:
       - name: "HOME"
         value: "/tekton/home"
   results:
-    - name: sbom
+    - name: sbom-report
   steps:
     - name: package-node-app
       command:
