@@ -145,12 +145,26 @@ spec:
         - name: quay-auth-secret
           mountPath: /etc/secret-volume
           readOnly: true
+    - name: check-mount
+      image: image-registry.openshift-image-registry.svc:5000/pacman-ci/buildah:latest
+      env: 
+        - name: DOCKER_CONFIG
+          value: "/etc/secret-volume/config.json"
+      script: |
+        echo "Checking the mounted secret data"
+
+        cat $DOCKER_CONFIG
+
+      volumeMounts:
+        - name: quay-auth-secret
+          mountPath: /etc/secret-volume
+          readOnly: true
 
     - name: upload-sbom
       image: image-registry.openshift-image-registry.svc:5000/pacman-ci/cosign:v2.1.1
       env: 
-        - name: REGISTRY_AUTH_FILE
-          value: "/etc/secret-volume/.dockerconfigjson"
+        - name: DOCKER_CONFIG
+          value: "/etc/secret-volume/config.json"
       args:
         - attach
         - sbom
