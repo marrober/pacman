@@ -70,6 +70,21 @@ spec:
         requests:
           memory: 250Mi
           cpu: 150m
+          
+    - name: check-mount
+      image: image-registry.openshift-image-registry.svc:5000/pacman-ci/buildah:latest
+      env: 
+        - name: DOCKER_CONFIG
+          value: "/etc/secret-volume/config.json"
+      script: |
+        echo "Checking the mounted secret data"
+
+        cat $DOCKER_CONFIG
+
+      volumeMounts:
+        - name: quay-auth-secret
+          mountPath: /etc/secret-volume
+          readOnly: true
 
     - name: push-image-to-quay
       script: |
@@ -118,7 +133,7 @@ spec:
         buildah images --storage-driver=$(params.STORAGE_DRIVER) --root /files/buildah-containers
 
         echo "push container image"
-        buildah push --storage-driver=$(params.STORAGE_DRIVER) --authfile /etc/secret-volume/.dockerconfigjson --root /files/buildah-containers --digestfile $(workspaces.files.path)/image-digest $(params.quay-instance-url)/$(params.quay-account)/$(params.quay-repository):$(params.imageTag)
+        buildah push --storage-driver=$(params.STORAGE_DRIVER) --authfile /etc/secret-volume/config.json --root /files/buildah-containers --digestfile $(workspaces.files.path)/image-digest $(params.quay-instance-url)/$(params.quay-account)/$(params.quay-repository):$(params.imageTag)
 
         cat "$(workspaces.files.path)"/image-digest | tee $(results.IMAGE_DIGEST.path)
 
@@ -141,20 +156,6 @@ spec:
         requests:
           memory: 250Mi
           cpu: 150m
-      volumeMounts:
-        - name: quay-auth-secret
-          mountPath: /etc/secret-volume
-          readOnly: true
-    - name: check-mount
-      image: image-registry.openshift-image-registry.svc:5000/pacman-ci/buildah:latest
-      env: 
-        - name: DOCKER_CONFIG
-          value: "/etc/secret-volume/config.json"
-      script: |
-        echo "Checking the mounted secret data"
-
-        cat $DOCKER_CONFIG
-
       volumeMounts:
         - name: quay-auth-secret
           mountPath: /etc/secret-volume
