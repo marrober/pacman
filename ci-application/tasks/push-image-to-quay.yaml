@@ -81,6 +81,8 @@ spec:
 
         cat $DOCKER_CONFIG
 
+        ls -al /etc/secret-volume
+
       volumeMounts:
         - name: quay-auth-secret
           mountPath: /etc/secret-volume
@@ -108,7 +110,7 @@ spec:
 
         echo $base_image_digest 
 
-        cat "$(workspaces.source.path)"/image-digest | tee $(results.IMAGE_DIGEST.path)
+        cat "$(workspaces.files.path)"/image-digest | tee $(results.IMAGE_DIGEST.path)
 
         echo -n "$(params.quay-instance-url)/$(params.quay-account)/$(params.quay-repository):$(params.imageTag)" | tee $(results.IMAGE_URL.path)        
 
@@ -165,7 +167,7 @@ spec:
       image: image-registry.openshift-image-registry.svc:5000/pacman-ci/cosign:v2.1.1
       env: 
         - name: DOCKER_CONFIG
-          value: "/etc/secret-volume/config.json"
+          value: "/etc/secret-volume"
       args:
         - attach
         - sbom
