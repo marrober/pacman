@@ -38,5 +38,5 @@ spec:
           serviceAccount: deployer
           securityContext: {}
           schedulerName: default-scheduler
-  successfulJobsHistoryLimit: 3
+  successfulJobsHistoryLimit: 1
   failedJobsHistoryLimit: 1
