@@ -206,6 +206,8 @@ spec:
       value: $(context.pipelineRun.name)
     - name: image-short-name
       value: $(params.IMAGE_SHORT_NAME)
+    - name: git-commit
+      value: $(tasks.fetch-repository.results.commit)
     taskRef:
       kind: Task
       name: push-image-to-ocp
