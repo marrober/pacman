@@ -78,7 +78,7 @@ spec:
         
         sleep 10
 
-        oc import-image $(params.image-short-name):$tag --from=$(params.imagestream-url):$tag -n $(context.taskRun.namespace) --confirm -o name
+        oc import-image $(params.image-short-name):$tag --from=$(params.imagestream-url):$(results.new-tag.path) -n $(context.taskRun.namespace) --confirm -o name
 
       image: quay.io/openshift/origin-cli:latest  
       securityContext:
