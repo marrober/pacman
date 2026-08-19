@@ -14,4 +14,4 @@ images:
 - name: default-route-openshift-image-registry.apps.ocp4.mr-openshift.co.uk/pacman-ci/pacman
   newTag: vgjr7-dd22e
 - name: quay.io/marrober/pacman
-  newTag: v2rqx-df07b
+  newTag: vgjr7-dd22e
