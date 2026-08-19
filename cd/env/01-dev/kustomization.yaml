@@ -12,6 +12,6 @@ resources:
 
 images:
 - name: default-route-openshift-image-registry.apps.ocp4.mr-openshift.co.uk/pacman-ci/pacman
-  newTag: gxs2j-6894b
+  newTag: ddpxb-141fc
 - name: quay.io/marrober/pacman
   newTag: gxs2j-6894b
