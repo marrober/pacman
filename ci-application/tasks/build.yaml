@@ -111,6 +111,25 @@ spec:
           - SETFCAP
       workingDir: /
 
+    - name: get-annotations
+      script: |
+        container=$(buildah --storage-driver=$(params.STORAGE_DRIVER) --root /files/buildah-containers from --pull-never localhost/my-container-image:latest)
+
+        buildah inspect --storage-driver=$(params.STORAGE_DRIVER) --root /files/buildah-containers $container | tee /workspace/container_path | jq .ImageAnnotations
+
+      image: image-registry.openshift-image-registry.svc:5000/pacman-ci/buildah:latest
+      resources:
+        limits:
+          memory: 500Mi
+          cpu: 500m
+        requests:
+          memory: 250Mi
+          cpu: 150m
+      securityContext:
+        capabilities:
+          add:
+          - SETFCAP
+      workingDir: /
     - name: mount-container
       image: image-registry.openshift-image-registry.svc:5000/pacman-ci/buildah:latest
       script: |
