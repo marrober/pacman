@@ -43,7 +43,6 @@ spec:
     value: false
   - name: node_js_image_repo
     value: registry.redhat.io/rhel9
-    # value: registry.access.redhat.com/hi
   - name: node_js_short_name
     value: nodejs-22
   - name: node_js_image_name
