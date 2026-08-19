@@ -115,7 +115,7 @@ spec:
       script: |
         container=$(buildah --storage-driver=$(params.STORAGE_DRIVER) --root /files/buildah-containers from --pull-never localhost/my-container-image:latest)
 
-        buildah inspect --storage-driver=$(params.STORAGE_DRIVER) --root /files/buildah-containers $container | tee /workspace/container_path | jq .ImageAnnotations
+        buildah inspect --storage-driver=$(params.STORAGE_DRIVER) --root /files/buildah-containers $container | tee /workspace/container_path | grep -A10 ImageAnnotations
 
       image: image-registry.openshift-image-registry.svc:5000/pacman-ci/buildah:latest
       resources:
