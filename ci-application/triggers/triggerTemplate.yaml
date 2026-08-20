@@ -70,6 +70,8 @@ spec:
           # value: nodejs-h-24.18.0
           # value: latest
           ## Image validation parameters
+        - name: image-build-namespace
+          value: $(context.taskRun.namespace)
         - name: acs_central_endpoint
           value: acs-secret
         - name: acs_api_token
