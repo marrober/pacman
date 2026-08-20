@@ -12,6 +12,6 @@ resources:
 
 images:
 - name: default-route-openshift-image-registry.apps.ocp4.mr-openshift.co.uk/pacman-ci/pacman
-  newTag: sk7z6-eec15
+  newTag: 22hrl-8efa5
 - name: quay.io/marrober/pacman
   newTag: sk7z6-eec15
