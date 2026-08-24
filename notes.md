@@ -271,6 +271,7 @@ git config --global user.name marrober
 git config --global gitsign.fulcio $(oc get fulcio -o jsonpath='{.items[0].status.url}' -n trusted-artifact-signer)
 git config --global gitsign.issuer $(oc get route keycloak -n keycloak-system -o jsonpath='{"https://"}{.spec.host}{"/auth/realm/OpenShift"}')
 git config --global gitsign.rekor $(oc get rekor -n trusted-artifact-signer -o jsonpath='{.items[0].status.url}')
+git config --local commit.gpgsign true
 ````
 
 Get the current git environment information with :

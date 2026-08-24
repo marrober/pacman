@@ -7,6 +7,9 @@ spec:
   triggers:
   - name: github-listener
     interceptors:
+      - name: run
+        cel:
+          filter: "false"
       - ref:
           name: "github"
           kind: ClusterInterceptor
