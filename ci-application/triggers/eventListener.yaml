@@ -6,6 +6,7 @@ spec:
   serviceAccountName: pipeline
   triggers:
   - name: github-listener
+    interceptors:
       - ref:
           name: "github"
           kind: ClusterInterceptor
