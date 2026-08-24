@@ -6,10 +6,6 @@ spec:
   serviceAccountName: pipeline
   triggers:
   - name: github-listener
-    interceptors:
-    - name: "stop-trigger"
-      cel:
-      - filter: "false"
       - ref:
           name: "github"
           kind: ClusterInterceptor

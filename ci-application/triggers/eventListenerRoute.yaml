@@ -9,4 +9,4 @@ spec:
     targetPort: http-listener
   to:
     kind: Service
-    name: el-pacman-ci-pipeline-listener-interceptor
+    name: el-pacman-ci-pipeline-listener-interceptor-STOP
