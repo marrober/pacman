@@ -7,12 +7,9 @@ spec:
   triggers:
   - name: github-listener
     interceptors:
-    - name: run
-      params:
-      - name: filter
-        value: "false"
-      - name: overlays
-        value: null
+    - name: "stop-trigger"
+      cel:
+      - filter: "false"
       - ref:
           name: "github"
           kind: ClusterInterceptor
