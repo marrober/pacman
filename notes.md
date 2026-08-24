@@ -264,11 +264,20 @@ Do this before creating any DevSpaces.
 Apply the following in a terminal window for the devspaces instance :
 
 ````bash
-git config --global commit.gpgsign false
-git config --global tag.gpgsign false
+git config --global commit.gpgsign true
+git config --global tag.gpgsign true
 git config --global user.email marrober@redhat.com
 git config --global user.name marrober
+git config --global gitsign.fulcio $(oc get fulcio -o jsonpath='{.items[0].status.url}' -n trusted-artifact-signer)
+git config --global gitsign.issuer $(oc get route keycloak -n keycloak-system -o jsonpath='{"https://"}{.spec.host}{"/auth/realm/OpenShift"}')
+git config --global gitsign.rekor $(oc get rekor -n trusted-artifact-signer -o jsonpath='{.items[0].status.url}')
 ````
+
+Get the current git environment information with :
+
+`````bash
+git config -l | cat
+`````
 
 ## Vulnerability demonstrations
 
