@@ -19,9 +19,11 @@ spec:
   - description: Rekor URL
     name: rekor-url
     type: string
+    default: http://rekor-server.trusted-artifact-signer.svc
   - name: tuf-root-hash
     type: string
-    default: http://rekor-server.trusted-artifact-signer.svc
+  - name: git-repo-name
+    type: string
   description: This task verifies the latest commit signature
   stepTemplate:
     env:
@@ -31,7 +33,7 @@ spec:
   - image: image-registry.openshift-image-registry.svc:5000/pacman-ci/terminal:2.1
     name: git-verify
     script: |
-      cd /workspace/repository
+      cd /workspace/repository/$(params.git-repo-name)
       ls -al
       git config --global --add safe.directory /workspace/repository
       cosign initialize --mirror=$(params.tuf-mirror) --root=$(params.tuf-mirror)/root.json --root-checksum=$(params.tuf-root-hash)

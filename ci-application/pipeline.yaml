@@ -158,6 +158,8 @@ spec:
       value: $(params.tuf-mirror)
     - name: tuf-root-hash
       value: $(params.tuf-root-hash)
+    - name: git-repo-name
+      value: $(params.GIT_REPO_NAME)
     runAfter:
       - fetch-repository
     taskRef:
