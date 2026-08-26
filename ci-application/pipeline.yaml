@@ -190,7 +190,6 @@ spec:
       workspace: workspace
     - name: files
       workspace: files
-
 #------------------------------------------------------------------
 # Push the new runtime image to OpenShift imagestream
 #------------------------------------------------------------------
