@@ -29,6 +29,8 @@ spec:
   - image: image-registry.openshift-image-registry.svc:5000/pacman-ci/terminal:2.1
     name: git-verify
     script: |
+      cd /workspace/repository
+      ls -al
       git config --global --add safe.directory /workspace/repository
       cosign initialize --mirror=$(params.tuf-mirror) --root=$(params.tuf-mirror)/root.json
       git show -s
