@@ -269,9 +269,14 @@ git config --global tag.gpgsign true
 git config --global user.email marrober@redhat.com
 git config --global user.name marrober
 git config --global gitsign.fulcio $(oc get fulcio -o jsonpath='{.items[0].status.url}' -n trusted-artifact-signer)
-git config --global gitsign.issuer $(oc get route keycloak -n keycloak-system -o jsonpath='{"https://"}{.spec.host}{"/auth/realm/OpenShift"}')
+git config --global gitsign.issuer $(oc get route keycloak -n keycloak-system -o jsonpath='{"https://"}{.spec.host}{"/auth/realms/openshift"}')
 git config --global gitsign.rekor $(oc get rekor -n trusted-artifact-signer -o jsonpath='{.items[0].status.url}')
 git config --local commit.gpgsign true
+
+export SIGSTORE_TUF_ROOT="$HOME/.sigstore/root"
+export SIGSTORE_REKOR_URL=$(oc get rekor -o jsonpath='{.items[0].status.url}' -n trusted-artifact-signer)
+export SIGSTORE_FULCIO_URL=$(oc get fulcio -o jsonpath='{.items[0].status.url}' -n trusted-artifact-signer)
+export TUF_URL=$(oc get tuf -o jsonpath='{.items[0].status.url}' -n trusted-artifact-signer)
 ````
 
 Get the current git environment information with :

@@ -22,14 +22,14 @@ spec:
     value: pacman
     ## Verify git commit parameters
   - name: certificate-identity
-    value: user1@demo.redhat.com
+    value: ".*"
     # value: $(tt.params.git-committer)
   - name: oidc-issuer
-    value:  https://default-route-openshift-image-registry.apps.ocp4.mr-openshift.co.uk/auth/realms/trusted-artifact-signer
+    value:  https://keycloak-keycloak-system.apps.ocp4.mr-openshift.co.uk/auth/realm/openshift
   - name: rekor-url
-    value: http://rekor-server.trusted-artifact-signer.svc
+    value: https://rekor-server-trusted-artifact-signer.apps.ocp4.mr-openshift.co.uk
   - name: tuf-mirror
-    value: http://tuf.trusted-artifact-signer.svc
+    value: https://tuf-trusted-artifact-signer.apps.ocp4.mr-openshift.co.uk
     ## Image build parameters
   - name: IMAGE_NAME
     value: default-route-openshift-image-registry.apps.ocp4.mr-openshift.co.uk/$(context.taskRun.namespace)/pacman
