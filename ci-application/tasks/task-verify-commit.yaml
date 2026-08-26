@@ -35,7 +35,7 @@ spec:
     script: |
       cd /workspace/repository/$(params.git-repo-name)
       ls -al
-      git config --global --add safe.directory /workspace/repository
+      git config --global --add safe.directory /workspace/repository/$(params.git-repo-name)
       cosign initialize --mirror=$(params.tuf-mirror) --root=$(params.tuf-mirror)/root.json --root-checksum=$(params.tuf-root-hash)
       git show -s
       gitsign verify --certificate-identity-regexp=$(params.certificate-identity) --certificate-oidc-issuer=$(params.oidc-issuer) HEAD \
