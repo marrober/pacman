@@ -37,7 +37,7 @@ spec:
             secretKeyRef:
               key: "token"
               name: "github-access-token"
-      image: image-registry.openshift-image-registry.svc:5000/pacman-ci/terminal:latest
+      image: image-registry.openshift-image-registry.svc:5000/pacman-ci/terminal:2.1
       securityContext:
         capabilities:
           add: ["SETFCAP"]
