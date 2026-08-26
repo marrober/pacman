@@ -19,6 +19,8 @@ spec:
   - description: Rekor URL
     name: rekor-url
     type: string
+  - name: tuf-root-hash
+    type: string
     default: http://rekor-server.trusted-artifact-signer.svc
   description: This task verifies the latest commit signature
   stepTemplate:
@@ -32,7 +34,7 @@ spec:
       cd /workspace/repository
       ls -al
       git config --global --add safe.directory /workspace/repository
-      cosign initialize --mirror=$(params.tuf-mirror) --root=$(params.tuf-mirror)/root.json
+      cosign initialize --mirror=$(params.tuf-mirror) --root=$(params.tuf-mirror)/root.json --root-checksum=$(params.tuf-root-hash)
       git show -s
       gitsign verify --certificate-identity-regexp=$(params.certificate-identity) --certificate-oidc-issuer=$(params.oidc-issuer) HEAD \
       || (echo "Unable to verify commit signature!  Please ensure that the RHEL9 VM was used for source code commits or you have configured GitSign on your development machine correctly." && exit 1)
