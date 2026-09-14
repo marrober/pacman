@@ -42,7 +42,16 @@ spec:
       git --no-pager config --list
       echo "----------------------------------"
       git config --global --add safe.directory /workspace/repository/$(params.git-repo-name)
-       echo "Cosign initialize"
+      echo "----------------------------------" 
+      echo "cosign version"
+      echo "----------------------------------" 
+      cosign version
+      echo "----------------------------------" 
+      echo "cosign environment"
+      echo "----------------------------------" 
+      cosign env
+      echo "----------------------------------" 
+      echo "Cosign initialize"
       echo "----------------------------------"   
       cosign initialize --mirror=$(params.tuf-mirror) --root=$(params.tuf-mirror)/root.json --root-checksum=$(params.tuf-root-hash)
       echo "----------------------------------"  
