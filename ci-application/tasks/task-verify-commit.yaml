@@ -11,15 +11,13 @@ spec:
   - description: Email address of committer
     name: certificate-identity
     type: string
-    default: user1@demo.redhat.com
   - description: OIDC issuer
     name: oidc-issuer
     type: string
-    default: https://keycloak-rhsso.apps.cluster-v42rv.sandbox795.opentlc.com/auth/realms/sigstore
   - description: Rekor URL
     name: rekor-url
     type: string
-    default: http://rekor-server.trusted-artifact-signer.svc
+
   - name: tuf-root-hash
     type: string
   - name: git-repo-name
@@ -35,11 +33,32 @@ spec:
     script: |
       cd /workspace/repository/$(params.git-repo-name)
       ls -al
+      echo "GITSIGN REKOR URL environment setting"
+      echo "----------------------------------"
+      echo $GITSIGN_REKOR_URL
+      echo "----------------------------------"
+      echo "git config information"
+      echo "----------------------------------"
+      git --no-pager config --list
+      echo "----------------------------------"
       git config --global --add safe.directory /workspace/repository/$(params.git-repo-name)
+       echo "Cosign initialize"
+      echo "----------------------------------"   
       cosign initialize --mirror=$(params.tuf-mirror) --root=$(params.tuf-mirror)/root.json --root-checksum=$(params.tuf-root-hash)
+      echo "----------------------------------"  
+      echo "git show - display the commit ID"
+      echo "----------------------------------"
       git show -s
+      echo "----------------------------------"
+      echo "gitsign command version and connection information"
+      echo "----------------------------------"
+      gitsign --version
+      echo "----------------------------------"
+      echo "gitsign verify"
+      echo "----------------------------------"
       gitsign verify --certificate-identity-regexp=$(params.certificate-identity) --certificate-oidc-issuer=$(params.oidc-issuer) HEAD \
       || (echo "Unable to verify commit signature!  Please ensure that the RHEL9 VM was used for source code commits or you have configured GitSign on your development machine correctly." && exit 1)
+      echo "----------------------------------"
     workingDir: /workspace/repository
   workspaces:
   - name: repository
