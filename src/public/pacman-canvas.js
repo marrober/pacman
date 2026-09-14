@@ -289,7 +289,7 @@ function geronimo() {
         };
         this.gameOver = false;
         this.canvas = $("#myCanvas").get(0);
-        this.wallColor = "Blue";
+        this.wallColor = "Green";
         this.width = this.canvas.width;
         this.height = this.canvas.height;
 
