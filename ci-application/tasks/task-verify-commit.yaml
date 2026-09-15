@@ -49,6 +49,7 @@ spec:
       echo "----------------------------------" 
       echo "Cosign initialize"
       echo "----------------------------------"   
+      echo "cosign initialize --mirror=$(params.tuf-mirror) --root=$(params.tuf-mirror)/root.json --root-checksum=$(params.tuf-root-hash)"
       cosign initialize --mirror=$(params.tuf-mirror) --root=$(params.tuf-mirror)/root.json --root-checksum=$(params.tuf-root-hash)
       echo "----------------------------------"  
       echo "cosign environment"
@@ -69,14 +70,5 @@ spec:
       || (echo "Unable to verify commit signature!  Please ensure that the RHEL9 VM was used for source code commits or you have configured GitSign on your development machine correctly." && exit 1)
       echo "----------------------------------"
     workingDir: /workspace/repository
-    volumeMounts:
-      - name: trusted-ca-volume
-        mountPath: /etc/ssl/certs/ocp-tuf-route.crt
-        subPath: service-ca.crt
-        readOnly: true
   workspaces:
   - name: repository
-  volumes:
-    - name: trusted-ca-volume
-      configMap:
-        name: injected-cluster-ca
