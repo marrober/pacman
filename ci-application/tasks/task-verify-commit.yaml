@@ -37,9 +37,11 @@ spec:
     script: |
       cd /workspace/repository/$(params.git-repo-name)
       ls -al
-      echo "GITSIGN REKOR URL environment setting"
+      echo "Environment settings"
       echo "----------------------------------"
       echo $GITSIGN_REKOR_URL
+      echo $SIGSTORE_REKOR_VERBOSE
+      echo $COSIGN_LOGLEVEL
       echo "----------------------------------"
       echo "git config information"
       echo "----------------------------------"
