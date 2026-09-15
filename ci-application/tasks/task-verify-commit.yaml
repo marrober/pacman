@@ -39,6 +39,8 @@ spec:
     script: |
       cd /workspace/repository/$(params.git-repo-name)
       ls -al
+      ls -al /etc/ssl/certs/ocp-tuf-route.crt
+      
       echo "Environment settings"
       echo "----------------------------------"
       echo $GITSIGN_REKOR_URL
