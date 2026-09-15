@@ -83,11 +83,11 @@ spec:
     volumeMounts:
       - name: trusted-ca-volume
         mountPath: /etc/ssl/certs/ocp-tuf-route.crt
-        subPath: ca-bundle.crt
+        subPath: service-ca.crt
         readOnly: true
   workspaces:
   - name: repository
   volumes:
     - name: trusted-ca-volume
       configMap:
-        name: custom-ca-bundle
+        name: injected-cluster-ca
