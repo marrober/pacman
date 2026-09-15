@@ -7,7 +7,6 @@ spec:
   - description: TUF mirror
     name: tuf-mirror
     type: string
-    default: http://tuf.trusted-artifact-signer.svc
   - description: Email address of committer
     name: certificate-identity
     type: string
@@ -17,7 +16,6 @@ spec:
   - description: Rekor URL
     name: rekor-url
     type: string
-
   - name: tuf-root-hash
     type: string
   - name: git-repo-name
@@ -27,12 +25,6 @@ spec:
     env:
       - name: GITSIGN_REKOR_URL
         value: $(params.rekor-url)
-      - name: SIGSTORE_REKOR_VERBOSE
-        value: 'true'
-      - name: COSIGN_LOGLEVEL
-        value: 'debug'
-      - name: SSL_CERT_FILE
-        value: '/etc/ssl/certs/ocp-tuf-route.crt'
   steps:
   - image: image-registry.openshift-image-registry.svc:5000/pacman-ci/terminal:2.1
     name: git-verify
@@ -44,9 +36,6 @@ spec:
       echo "Environment settings"
       echo "----------------------------------"
       echo $GITSIGN_REKOR_URL
-      echo $SIGSTORE_REKOR_VERBOSE
-      echo $COSIGN_LOGLEVEL
-      echo $SSL_CERT_FILE
       echo "----------------------------------"
       echo "git config information"
       echo "----------------------------------"

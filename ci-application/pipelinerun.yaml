@@ -27,9 +27,9 @@ spec:
   - name: oidc-issuer
     value:  https://keycloak-keycloak-system.apps.ocp4.mr-openshift.co.uk/auth/realm/openshift
   - name: rekor-url
-    value: https://rekor-server-trusted-artifact-signer.apps.ocp4.mr-openshift.co.uk
+    value: http://rekor-server.trusted-artifact-signer.svc
   - name: tuf-mirror
-    value: https://tuf-trusted-artifact-signer.apps.ocp4.mr-openshift.co.uk
+    value: http://tuf.trusted-artifact-signer.svc
   - name: tuf-root-hash
     value: "f9a974355acffb8c3036e52380becaf797f97edc13bf6041400904955625c24a"
     ## Image build parameters
