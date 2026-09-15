@@ -31,6 +31,8 @@ spec:
         value: 'true'
       - name: COSIGN_LOGLEVEL
         value: 'debug'
+      - name: SSL_CERT_FILE
+        value: '/etc/ssl/certs/ocp-tuf-route.crt'
   steps:
   - image: image-registry.openshift-image-registry.svc:5000/pacman-ci/terminal:2.1
     name: git-verify
@@ -42,6 +44,7 @@ spec:
       echo $GITSIGN_REKOR_URL
       echo $SIGSTORE_REKOR_VERBOSE
       echo $COSIGN_LOGLEVEL
+      echo $SSL_CERT_FILE
       echo "----------------------------------"
       echo "git config information"
       echo "----------------------------------"
@@ -75,5 +78,14 @@ spec:
       || (echo "Unable to verify commit signature!  Please ensure that the RHEL9 VM was used for source code commits or you have configured GitSign on your development machine correctly." && exit 1)
       echo "----------------------------------"
     workingDir: /workspace/repository
+    volumeMounts:
+      - name: trusted-ca-volume
+        mountPath: /etc/ssl/certs/ocp-tuf-route.crt
+        subPath: ca-bundle.crt
+        readOnly: true
   workspaces:
   - name: repository
+  volumes:
+    - name: trusted-ca-volume
+      configMap:
+        name: custom-ca-bundle
