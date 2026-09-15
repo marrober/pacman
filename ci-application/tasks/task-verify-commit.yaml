@@ -47,14 +47,14 @@ spec:
       echo "----------------------------------" 
       cosign version
       echo "----------------------------------" 
-      echo "cosign environment"
-      echo "----------------------------------" 
-      cosign env
-      echo "----------------------------------" 
       echo "Cosign initialize"
       echo "----------------------------------"   
       cosign initialize --mirror=$(params.tuf-mirror) --root=$(params.tuf-mirror)/root.json --root-checksum=$(params.tuf-root-hash)
       echo "----------------------------------"  
+      echo "cosign environment"
+      echo "----------------------------------" 
+      cosign env
+      echo "----------------------------------" 
       echo "git show - display the commit ID"
       echo "----------------------------------"
       git show -s
