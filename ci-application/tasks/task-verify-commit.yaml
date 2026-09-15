@@ -27,6 +27,10 @@ spec:
     env:
       - name: GITSIGN_REKOR_URL
         value: $(params.rekor-url)
+      - name: SIGSTORE_REKOR_VERBOSE
+        value: 'true'
+      - name: COSIGN_LOGLEVEL
+        value: 'debug'
   steps:
   - image: image-registry.openshift-image-registry.svc:5000/pacman-ci/terminal:2.1
     name: git-verify
