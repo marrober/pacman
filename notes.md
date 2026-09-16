@@ -272,6 +272,7 @@ git config --global gitsign.fulcio $(oc get fulcio -o jsonpath='{.items[0].statu
 git config --global gitsign.issuer $(oc get route keycloak -n keycloak-system -o jsonpath='{"https://"}{.spec.host}{"/auth/realms/openshift"}')
 git config --global gitsign.rekor $(oc get rekor -n trusted-artifact-signer -o jsonpath='{.items[0].status.url}')
 git config --local commit.gpgsign true
+git config --global gitsign.clientid trusted-artifact-signer
 
 export SIGSTORE_TUF_ROOT="$HOME/.sigstore/root"
 export SIGSTORE_REKOR_URL=$(oc get rekor -o jsonpath='{.items[0].status.url}' -n trusted-artifact-signer)
