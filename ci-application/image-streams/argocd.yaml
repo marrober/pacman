@@ -13,3 +13,4 @@ spec:
         name: 'quay.io/argoproj/argocd:v3.5.3'
       importPolicy:
         importMode: Legacy
+        insecure: false 
