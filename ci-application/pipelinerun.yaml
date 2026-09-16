@@ -86,7 +86,7 @@ spec:
   - name: argocd-revision
     value: "main"
   - name: argocd-version
-    value: "v2.4.14"
+    value: "v3.5.3"
   - name: quay-instance-url
     value: "quay.io"
   - name: quay-account
