@@ -270,7 +270,7 @@ function geronimo() {
     // Manages the whole game ("God Object")
     function Game() {
         this.timer = new Timer();
-        this.refreshRate = 33;        // speed of the game, will increase in higher levels
+        this.refreshRate = 33;        // speed of the game - will increase in higher levels
         this.databaseUpdateInterval = 10; // in seconds
         this.running = false;
         this.pause = true;
