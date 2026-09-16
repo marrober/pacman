@@ -30,7 +30,8 @@ spec:
     name: git-verify
     script: |
       cd /workspace/repository/$(params.git-repo-name)
-      ls -al
+      ls /usr/bin/g*
+      printenv
       echo "Environment settings"
       echo "----------------------------------"
       echo $GITSIGN_REKOR_URL
