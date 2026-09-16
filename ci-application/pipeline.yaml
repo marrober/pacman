@@ -146,28 +146,28 @@ spec:
 ##------------------------------------------------------------------
 # Verify commit of code to the repository
 ##------------------------------------------------------------------
-  - name: verify-commit
-    params:
-    - name: certificate-identity
-      value: $(params.certificate-identity)
-    - name: oidc-issuer
-      value: $(params.oidc-issuer)
-    - name: rekor-url
-      value: $(params.rekor-url)
-    - name: tuf-mirror
-      value: $(params.tuf-mirror)
-    - name: tuf-root-hash
-      value: $(params.tuf-root-hash)
-    - name: git-repo-name
-      value: $(params.GIT_REPO_NAME)
-    runAfter:
-      - fetch-repository
-    taskRef:
-      kind: Task
-      name: verify-commit
-    workspaces:
-      - name: repository
-        workspace: workspace
+#  - name: verify-commit
+#    params:
+#    - name: certificate-identity
+#      value: $(params.certificate-identity)
+#    - name: oidc-issuer
+#      value: $(params.oidc-issuer)
+#    - name: rekor-url
+#      value: $(params.rekor-url)
+#    - name: tuf-mirror
+#      value: $(params.tuf-mirror)
+#    - name: tuf-root-hash
+#      value: $(params.tuf-root-hash)
+#    - name: git-repo-name
+#      value: $(params.GIT_REPO_NAME)
+#    runAfter:
+#      - fetch-repository
+#    taskRef:
+#      kind: Task
+#      name: verify-commit
+#    workspaces:
+#      - name: repository
+#        workspace: workspace
 ##------------------------------------------------------------------
 # Build Node.JS application
 ##------------------------------------------------------------------
