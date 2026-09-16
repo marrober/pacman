@@ -141,7 +141,7 @@ base64 decode the output and use the token below.
 Get the default route : 
 
 ````bash
- oc get is/rhel9-nodejs -o jsonpath='{"https://"}''{.status.publicDockerImageRepository}' | cut -d "/" -f 1-3
+ oc get is/nodejs -o jsonpath='{"https://"}''{.status.publicDockerImageRepository}' | cut -d "/" -f 1-3
  ````
 
 In ACS go to Platform configurations -> Integrations -> Image integration -> Generic Docker Registry and press the ‘Create integration’ button.
@@ -165,7 +165,7 @@ image-git-signing-setup/local-git-signing-setup.txt
 Get the path to the image in the image stream using the command :
 
 ````bash
-oc get is/rhel9-nodejs -o jsonpath='{.status.publicDockerImageRepository}' | cut -d "/" -f 1
+oc get is/nodejs -o jsonpath='{.status.publicDockerImageRepository}' | cut -d "/" -f 1
 ````
 
 Get the old default route from the file cd/env/01-dev/deployment.yaml
