@@ -43,16 +43,16 @@ spec:
       echo "----------------------------------" 
       echo "cosign version"
       echo "----------------------------------" 
-      cosign version
+      cosign-2 version
       echo "----------------------------------" 
       echo "Cosign initialize"
       echo "----------------------------------"   
-      echo "cosign initialize --mirror=$(params.tuf-mirror) --root=$(params.tuf-mirror)/root.json --root-checksum=$(params.tuf-root-hash)"
-      cosign initialize --mirror=$(params.tuf-mirror) --root=$(params.tuf-mirror)/root.json --root-checksum=$(params.tuf-root-hash)
+      echo "cosign-2 initialize --mirror=$(params.tuf-mirror) --root=$(params.tuf-mirror)/root.json --root-checksum=$(params.tuf-root-hash)"
+      cosign-2 initialize --mirror=$(params.tuf-mirror) --root=$(params.tuf-mirror)/root.json --root-checksum=$(params.tuf-root-hash)
       echo "----------------------------------"  
       echo "cosign environment"
       echo "----------------------------------" 
-      cosign env
+      cosign-2 env
       echo "----------------------------------" 
       echo "git show - display the commit ID"
       echo "----------------------------------"
