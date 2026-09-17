@@ -30,18 +30,19 @@ spec:
     name: git-verify
     script: |
       cd /workspace/repository/$(params.git-repo-name)
-      ls /usr/bin/g*
       printenv
       echo "Environment settings"
       echo "----------------------------------"
       echo $GITSIGN_REKOR_URL
+      echo "Certificate identity : $(params.certificate-identity)" 
+      echo "Certificate OIDC issuer : $(params.oidc-issuer)"
       echo "----------------------------------"
+      git config --global --add safe.directory /workspace/repository/$(params.git-repo-name)
+      echo "----------------------------------" 
       echo "git config information"
       echo "----------------------------------"
       git --no-pager config --list
       echo "----------------------------------"
-      git config --global --add safe.directory /workspace/repository/$(params.git-repo-name)
-      echo "----------------------------------" 
       echo "cosign version"
       echo "----------------------------------" 
       cosign-2 version
@@ -52,17 +53,9 @@ spec:
       cosign-2 initialize --mirror=$(params.tuf-mirror) --root=$(params.tuf-mirror)/root.json 
       # Root checksum option is not needed for cosign-2 --root-checksum=$(params.tuf-root-hash)
       echo "----------------------------------"  
-      echo "cosign environment"
-      echo "----------------------------------" 
-      cosign-2 env
-      echo "----------------------------------" 
       echo "git show - display the commit ID"
       echo "----------------------------------"
       git show -s
-      echo "----------------------------------"
-      echo "gitsign command version and connection information"
-      echo "----------------------------------"
-      gitsign --version
       echo "----------------------------------"
       echo "gitsign verify"
       echo "----------------------------------"

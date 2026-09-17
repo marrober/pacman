@@ -25,7 +25,7 @@ spec:
     value: ".*"
     # value: $(tt.params.git-committer)
   - name: oidc-issuer
-    value:  https://keycloak-keycloak-system.apps.ocp4.mr-openshift.co.uk/auth/realm/openshift
+    value: https://keycloak-keycloak-system.apps.ocp4.mr-openshift.co.uk/auth/realms/openshift
   - name: rekor-url
     value: http://rekor-server.trusted-artifact-signer.svc
   - name: tuf-mirror
