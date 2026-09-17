@@ -283,7 +283,7 @@ export TUF_URL=$(oc get tuf -o jsonpath='{.items[0].status.url}' -n trusted-arti
 To switch off git signing afterwards use the command 
 
 `````bash
-git config --global commit.gpgsign false
+git config --local commit.gpgsign false
 `````
 
 
