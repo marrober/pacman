@@ -121,7 +121,8 @@ spec:
         value: "$(params.HOMEDIR)"
 
   steps:
-    - script: |
+    - name: create-images-yaml
+      script: |
         cat <<EOF | tee /workspace/images.yaml
         ---
         components:
@@ -132,19 +133,18 @@ spec:
                 revision: "$(params.GIT_REVISION)"
         EOF
       image: 'ubi8/ubi-minimal'
-      name: create-images-yaml
       resources: {}
-    - args:
+    - name: extract-signing-secret
+      args:
         - >-
           oc get secret signing-secrets -n openshift-pipelines -o json > /workspace/signing-secrets
       command:
         - /bin/bash
         - '-c'
       image: 'quay.io/openshift/origin-cli:latest'
-      name: extract-signing-secret
       resources: {}
-    - image: quay.io/redhat-gpte/jq
-      name: extract-cosign-public-key
+    - name: extract-cosign-public-key
+      image: quay.io/redhat-gpte/jq
       resources: {}
       script: |
         set +x
@@ -205,6 +205,11 @@ spec:
       volumeMounts:
       - name: docker-config
         mountPath: $(params.HOMEDIR)/.docker
+    - name: list-output-files 
+      image: quay.io/enterprise-contract/ec-cli:362c6d6824695987bcdb7936c2efa35fd8ffb0e0
+      command: [ls]
+      args:
+        - "$(params.HOMEDIR)"
     - name: report
       image: quay.io/enterprise-contract/ec-cli:362c6d6824695987bcdb7936c2efa35fd8ffb0e0
       command: [cat]
@@ -220,10 +225,16 @@ spec:
       command: [cat]
       args:
         - "$(params.HOMEDIR)/attestations.jsonl"
-    - name: report-json
+    - name: report-json-text
       image: quay.io/enterprise-contract/ec-cli:362c6d6824695987bcdb7936c2efa35fd8ffb0e0
       command: [cat]
       args:
+        - "$(params.HOMEDIR)/report-json.json"
+    - name: report-json
+      image: quay.io/enterprise-contract/ec-cli:362c6d6824695987bcdb7936c2efa35fd8ffb0e0
+      command: [jq]
+      args:
+        - "."
         - "$(params.HOMEDIR)/report-json.json"
     - name: summary
       image: quay.io/enterprise-contract/ec-cli:362c6d6824695987bcdb7936c2efa35fd8ffb0e0

@@ -9,7 +9,7 @@ metadata:
 spec:
   taskRunSpecs:
   - pipelineTaskName: verify-enterprise-contract
-    serviceAccountName: job-runner
+    serviceAccountName: pipeline
   params:
     ## Image repository parameters
   - name: git-repo-url
