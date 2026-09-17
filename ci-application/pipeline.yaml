@@ -186,8 +186,8 @@ spec:
     - name: node_js_image_tag
       value: $(params.node_js_image_tag)
     runAfter:
-#    - verify-commit
-     - fetch-repository
+     - verify-commit
+#     - fetch-repository
     taskRef:
       kind: Task
       name: build
