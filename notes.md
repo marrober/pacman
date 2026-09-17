@@ -128,7 +128,7 @@ oc get secret/builder-dockercfg-bl7x5  -o json | jq -r '.data[".dockercfg"]' | b
 
 ### Create a long lived token
 
-To create a token that will not time out quickly use the command below. This will create a token that will last 625 days.
+To create a token that will not time out quickly use the command below. This will create a token that will last 625 days
 
 ````bash
 oc create token image-pusher --duration=15000h --bound-object-kind Secret --bound-object-name image-pusher-dockercfg-<whatever>
@@ -279,6 +279,13 @@ export SIGSTORE_REKOR_URL=$(oc get rekor -o jsonpath='{.items[0].status.url}' -n
 export SIGSTORE_FULCIO_URL=$(oc get fulcio -o jsonpath='{.items[0].status.url}' -n trusted-artifact-signer)
 export TUF_URL=$(oc get tuf -o jsonpath='{.items[0].status.url}' -n trusted-artifact-signer)
 ````
+
+To switch off git signing afterwards use the command 
+
+`````bash
+git config --global commit.gpgsign false
+`````
+
 
 Get the current git environment information with :
 
