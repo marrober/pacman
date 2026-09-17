@@ -49,7 +49,8 @@ spec:
       echo "Cosign initialize"
       echo "----------------------------------"   
       echo "cosign-2 initialize --mirror=$(params.tuf-mirror) --root=$(params.tuf-mirror)/root.json --root-checksum=$(params.tuf-root-hash)"
-      cosign-2 initialize --mirror=$(params.tuf-mirror) --root=$(params.tuf-mirror)/root.json --root-checksum=$(params.tuf-root-hash)
+      cosign-2 initialize --mirror=$(params.tuf-mirror) --root=$(params.tuf-mirror)/root.json 
+      # Root checksum option is not needed for cosign-2 --root-checksum=$(params.tuf-root-hash)
       echo "----------------------------------"  
       echo "cosign environment"
       echo "----------------------------------" 
