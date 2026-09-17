@@ -20,7 +20,6 @@ spec:
           name: argocd-env-configmap
       - secretRef:
           name: argocd-env-secret
-    name: ''
     resources: {}
   steps:
     - image: image-registry.openshift-image-registry.svc:5000/pacman-ci/argocd:$(params.argocd-version)
