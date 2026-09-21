@@ -76,6 +76,11 @@ spec:
       env: 
         - name: DOCKER_CONFIG
           value: "/etc/secret-volume/.dockerconfigjson"
+        - name: COSIGN_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: signing-secrets
+              key: cosign.password
       script: |
         echo "Checking the mounted secret data"
 
@@ -83,9 +88,20 @@ spec:
 
         ls -al /etc/secret-volume
 
+        echo "----------------------------------"
+
+        ls -al /etc/cosign-keys
+
+        printenv | grep COSIGN_PASSWORD
+
+        cat /etc/cosign-keys/cosign.key
+
       volumeMounts:
         - name: quay-auth-secret
           mountPath: /etc/secret-volume
+          readOnly: true
+        - name: cosign-secret
+          mountPath: /etc/cosign-keys
           readOnly: true
 
     - name: push-image-to-quay
@@ -163,29 +179,61 @@ spec:
           mountPath: /etc/secret-volume
           readOnly: true
 
-    - name: upload-sbom
+    - name: sign-and-attest-sbom
       image: image-registry.openshift-image-registry.svc:5000/pacman-ci/cosign:v2.1.1
       env: 
         - name: DOCKER_CONFIG
-          value: "/etc/secret-volume"
+          value: "/etc/secret-volume/.dockerconfigjson"
+        - name: COSIGN_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: signing-secrets
+              key: cosign.password
       args:
-        - attach
-        - sbom
-        - --sbom
-        - sbom-image.json
-        - --verbose
+        - attest
+        - --key
+        - /etc/cosign-keys/cosign.key
         - --type
         - cyclonedx
+        - --predicate
+        - sbom-image.json
+        - --verbose
         - $(params.quay-instance-url)/$(params.quay-account)/$(params.quay-repository):$(params.imageTag)
       workingDir: $(workspaces.resources.path)
       volumeMounts:
         - name: quay-auth-secret
           mountPath: /etc/secret-volume
           readOnly: true
+        - name: cosign-secret
+          mountPath: /etc/cosign-keys
+          readOnly: true
+
+#    - name: upload-sbom
+#      image: image-registry.openshift-image-registry.svc:5000/pacman-ci/cosign:v2.1.1
+#      env: 
+#        - name: DOCKER_CONFIG
+#          value: "/etc/secret-volume"
+#      args:
+#        - attach
+#        - sbom
+#        - --sbom
+#        - sbom-image.json
+#        - --verbose
+#        - --type
+#        - cyclonedx
+#        - $(params.quay-instance-url)/$(params.quay-account)/$(params.quay-repository):$(params.imageTag)
+#      workingDir: $(workspaces.resources.path)
+#      volumeMounts:
+#        - name: quay-auth-secret
+#          mountPath: /etc/secret-volume
+#          readOnly: true
   volumes:
     - name: quay-auth-secret
       secret:
         secretName: quay-auth-secret
+    - name: cosign-secret
+      secret: 
+        secretName: signing-secrets
   workspaces:
   - name: files
     mountPath: /files
