@@ -108,31 +108,20 @@ spec:
       script: |
         echo $(workspaces.resources.path)/sbom-image.json
 
-        echo "1"
         buildah images --storage-driver=$(params.STORAGE_DRIVER) --root /files/buildah-containers --format '{{ .Name }}:{{ .Tag }}@{{ .Digest }}' | grep $(params.node_js_image_name) > $(results.BASE_IMAGES_DIGESTS.path)
 
-        echo "2 - base image name"
+        echo "Base image identification -"
         buildah images --storage-driver=$(params.STORAGE_DRIVER) --root /files/buildah-containers --format '{{ .Name }}:{{ .Tag }}@{{ .Digest }}' | grep $(params.node_js_image_name)
 
-        echo "3"
         base_image_name=$(buildah inspect --storage-driver=$(params.STORAGE_DRIVER) --root /files/buildah-containers --format '{{ index .ImageAnnotations "org.opencontainers.image.base.name"}}' $(params.quay-instance-url)/$(params.quay-account)/$(params.quay-repository):$(params.imageTag) | cut -f1 -d'@')
-
-        echo "4 - base image name taken from the built image"
-        echo $base_image_name
-     
+   
         base_image_digest=$(buildah inspect --storage-driver=$(params.STORAGE_DRIVER) --root /files/buildah-containers --format '{{ index .ImageAnnotations "org.opencontainers.image.base.digest"}}' $(params.quay-instance-url)/$(params.quay-account)/$(params.quay-repository):$(params.imageTag))
 
-        echo "5 - base image digest taken from the built image"
+        echo "Base image name   : $base_image_name"
 
-        echo $base_image_digest 
+        echo "Base image digest : $base_image_digest"
 
-        cat "$(workspaces.files.path)"/image-digest | tee $(results.IMAGE_DIGEST.path)
-
-        echo -n "$(params.quay-instance-url)/$(params.quay-account)/$(params.quay-repository):$(params.imageTag)" | tee $(results.IMAGE_URL.path)        
-
-        echo "Image to update"
-
-        echo $(params.quay-instance-url)/$(params.quay-account)/$(params.quay-repository):$(params.imageTag)
+        echo -n "$(params.quay-instance-url)/$(params.quay-account)/$(params.quay-repository):$(params.imageTag)" | tee $(results.IMAGE_URL.path); echo
 
         container=$(buildah from --storage-driver=$(params.STORAGE_DRIVER) --root /files/buildah-containers --pull-never $(params.quay-instance-url)/$(params.quay-account)/$(params.quay-repository):$(params.imageTag))
 
@@ -154,19 +143,13 @@ spec:
         buildah push --storage-driver=$(params.STORAGE_DRIVER) --authfile /etc/secret-volume/.dockerconfigjson --root /files/buildah-containers --digestfile $(workspaces.files.path)/image-digest $(params.quay-instance-url)/$(params.quay-account)/$(params.quay-repository):$(params.imageTag)
 
         echo " --- image pushed ---"
-        cat "$(workspaces.files.path)"/image-digest | tee $(results.IMAGE_DIGEST.path)
+        cat "$(workspaces.files.path)"/image-digest | tee $(results.IMAGE_DIGEST.path); echo
 
         echo " - "
 
-        echo -n "$(params.quay-instance-url)/$(params.quay-account)/$(params.quay-repository):$(params.imageTag)" | tee $(results.IMAGE_URL.path)
-
-        echo " -- "
+        echo "$(params.quay-instance-url)/$(params.quay-account)/$(params.quay-repository):$(params.imageTag)" | tee $(results.IMAGE_URL.path)
 
         echo "$(params.quay-instance-url)/$(params.quay-account)/$(params.quay-repository):$(params.imageTag)" > $(results.quay-image-repo-location.path)
-
-        echo "-------------------------------------"
-
-        cat $(results.quay-image-repo-location.path)        
 
       image: image-registry.openshift-image-registry.svc:5000/pacman-ci/buildah:latest
       securityContext:
@@ -195,7 +178,7 @@ spec:
               name: signing-secrets
               key: cosign.password
       command:   
-      - cosign
+      - cosign-2
       args:
         - attest
         - --key
