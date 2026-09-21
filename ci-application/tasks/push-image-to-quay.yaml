@@ -166,12 +166,16 @@ spec:
     - name: test
       image: image-registry.openshift-image-registry.svc:5000/pacman-ci/terminal:2.3
       env: 
-        - name: IMAGE_DIGEST
-          value: /tekton/results/IMAGE_DIGEST
+        - name: IMAGE_DIGEST_VAR
+          value: $(results.IMAGE_DIGEST.path)
       script: |
         ls -al /tekton/results
         
-        echo $IMAGE_DIGEST
+        cat /tekton/results/IMAGE_DIGEST
+
+        echo "----------"
+
+        printenv | grep IMAGE_
 
     - name: sign-and-attest-sbom
       image: image-registry.openshift-image-registry.svc:5000/pacman-ci/terminal:2.3
@@ -183,8 +187,8 @@ spec:
             secretKeyRef:
               name: signing-secrets
               key: cosign.password
-        - name: IMAGE_DIGEST
-          value: /tekton/results/IMAGE_DIGEST
+        - name: IMAGE_DIGEST_VAR
+          value: $(results.IMAGE_DIGEST.path)
       command:   
       - cosign-2
       args:
@@ -196,7 +200,7 @@ spec:
         - --predicate
         - sbom-image.json
         - --verbose
-        - $IMAGE_DIGEST
+        - $IMAGE_DIGEST_VAR
       workingDir: $(workspaces.resources.path)
       volumeMounts:
         - name: quay-auth-secret
