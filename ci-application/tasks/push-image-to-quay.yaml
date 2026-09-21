@@ -156,7 +156,11 @@ spec:
         echo " --- image pushed ---"
         cat "$(workspaces.files.path)"/image-digest | tee $(results.IMAGE_DIGEST.path)
 
+        echo " - "
+
         echo -n "$(params.quay-instance-url)/$(params.quay-account)/$(params.quay-repository):$(params.imageTag)" | tee $(results.IMAGE_URL.path)
+
+        echo " -- "
 
         echo "$(params.quay-instance-url)/$(params.quay-account)/$(params.quay-repository):$(params.imageTag)" > $(results.quay-image-repo-location.path)
 
@@ -181,7 +185,7 @@ spec:
           readOnly: true
 
     - name: sign-and-attest-sbom
-      image: image-registry.openshift-image-registry.svc:5000/pacman-ci/cosign:v2.1.1
+      image: image-registry.openshift-image-registry.svc:5000/pacman-ci/terminal:2.3
       env: 
         - name: DOCKER_CONFIG
           value: "/etc/secret-volume"
@@ -190,6 +194,8 @@ spec:
             secretKeyRef:
               name: signing-secrets
               key: cosign.password
+      command:   
+      - cosign
       args:
         - attest
         - --key
@@ -199,7 +205,7 @@ spec:
         - --predicate
         - sbom-image.json
         - --verbose
-        - $(params.quay-instance-url)/$(params.quay-account)/$(params.quay-repository):$(params.imageTag)
+        - $(results.IMAGE_DIGEST.path)
       workingDir: $(workspaces.resources.path)
       volumeMounts:
         - name: quay-auth-secret
