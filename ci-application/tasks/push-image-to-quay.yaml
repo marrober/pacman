@@ -110,9 +110,6 @@ spec:
 
         buildah images --storage-driver=$(params.STORAGE_DRIVER) --root /files/buildah-containers --format '{{ .Name }}:{{ .Tag }}@{{ .Digest }}' | grep $(params.node_js_image_name) > $(results.BASE_IMAGES_DIGESTS.path)
 
-        echo "Base image identification -"
-        buildah images --storage-driver=$(params.STORAGE_DRIVER) --root /files/buildah-containers --format '{{ .Name }}:{{ .Tag }}@{{ .Digest }}' | grep $(params.node_js_image_name)
-
         base_image_name=$(buildah inspect --storage-driver=$(params.STORAGE_DRIVER) --root /files/buildah-containers --format '{{ index .ImageAnnotations "org.opencontainers.image.base.name"}}' $(params.quay-instance-url)/$(params.quay-account)/$(params.quay-repository):$(params.imageTag) | cut -f1 -d'@')
    
         base_image_digest=$(buildah inspect --storage-driver=$(params.STORAGE_DRIVER) --root /files/buildah-containers --format '{{ index .ImageAnnotations "org.opencontainers.image.base.digest"}}' $(params.quay-instance-url)/$(params.quay-account)/$(params.quay-repository):$(params.imageTag))
@@ -166,6 +163,15 @@ spec:
         - name: quay-auth-secret
           mountPath: /etc/secret-volume
           readOnly: true
+    - name: test
+      image: image-registry.openshift-image-registry.svc:5000/pacman-ci/terminal:2.3
+      env: 
+        - name: IMAGE_DIGEST
+          value: /tekton/results/IMAGE_DIGEST
+      script: |
+        ls -al /tekton/results
+        
+        echo $IMAGE_DIGEST
 
     - name: sign-and-attest-sbom
       image: image-registry.openshift-image-registry.svc:5000/pacman-ci/terminal:2.3
@@ -177,6 +183,8 @@ spec:
             secretKeyRef:
               name: signing-secrets
               key: cosign.password
+        - name: IMAGE_DIGEST
+          value: /tekton/results/IMAGE_DIGEST
       command:   
       - cosign-2
       args:
@@ -188,7 +196,7 @@ spec:
         - --predicate
         - sbom-image.json
         - --verbose
-        - $(results.IMAGE_DIGEST.path)
+        - $IMAGE_DIGEST
       workingDir: $(workspaces.resources.path)
       volumeMounts:
         - name: quay-auth-secret
