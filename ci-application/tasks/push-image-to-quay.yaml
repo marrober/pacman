@@ -75,7 +75,7 @@ spec:
       image: image-registry.openshift-image-registry.svc:5000/pacman-ci/buildah:latest
       env: 
         - name: DOCKER_CONFIG
-          value: "/etc/secret-volume/config.json"
+          value: "/etc/secret-volume/.dockerconfigjson"
       script: |
         echo "Checking the mounted secret data"
 
