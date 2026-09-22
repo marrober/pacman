@@ -214,9 +214,17 @@ spec:
 
         head -n 10 sbom-image.json
 
-        echo "6 ---------"
- 
-        cosign-2 attest --key /etc/cosign-keys/cosign.key --type cyclonedx --predicate sbom-image.json --verbose $IMAGE
+        echo "6 ----------"
+
+        $USERNAME=$(cat $DOCKER_CONFIG.dockerconfigjson | jq -r '.auths["quay.io"].auth' | base64 -d | cut -d':' -f1)
+        $PASSWORD=$(cat $DOCKER_CONFIG.dockerconfigjson | jq -r '.auths["quay.io"].auth' | base64 -d | cut -d':' -f2)
+
+        echo $USERNAME; echo 
+        echo $PASSWORD; echo
+
+        echo "7 ----------"
+
+        cosign-2 attest --registry-username=$USERNAME --registry-password=$PASSWORD --key /etc/cosign-keys/cosign.key --type cyclonedx --predicate sbom-image.json --verbose $IMAGE
       workingDir: $(workspaces.resources.path)
       volumeMounts:
         - name: quay-auth-secret
