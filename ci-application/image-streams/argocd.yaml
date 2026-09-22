@@ -1,7 +1,7 @@
 kind: ImageStream
 apiVersion: image.openshift.io/v1
 metadata:
-  name: argocd
+  name: argocd-test
   namespace: pacman-ci
 spec:
   lookupPolicy:
