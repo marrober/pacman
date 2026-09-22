@@ -212,7 +212,7 @@ spec:
 
         head -n 10 bom-image.json
 
-        echo "6 ----------"
+        echo "6 ---------"
  
         cosign-2 attest --key /etc/cosign-keys/cosign.key --type cyclonedx --predicate bom-image.json --verbose $IMAGE
       workingDir: $(workspaces.resources.path)
