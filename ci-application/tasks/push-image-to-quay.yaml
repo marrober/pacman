@@ -187,6 +187,8 @@ spec:
             secretKeyRef:
               name: signing-secrets
               key: cosign.password
+        - name: IMAGE
+          value: $(results.IMAGE_DIGEST.value)
       script: |
         ls -al /tekton/results
         
@@ -210,11 +212,11 @@ spec:
 
         echo "5 ----------"
 
-        head -n 10 bom-image.json
+        head -n 10 sbom-image.json
 
         echo "6 ---------"
  
-        cosign-2 attest --key /etc/cosign-keys/cosign.key --type cyclonedx --predicate bom-image.json --verbose $IMAGE
+        cosign-2 attest --key /etc/cosign-keys/cosign.key --type cyclonedx --predicate sbom-image.json --verbose $IMAGE
       workingDir: $(workspaces.resources.path)
       volumeMounts:
         - name: quay-auth-secret
