@@ -198,7 +198,7 @@ spec:
 
         echo "2 ----------"
 
-        cat /tekton/results/IMAGE_DIGEST > $IMAGE
+        export IMAGE=$(cat /tekton/results/IMAGE_DIGEST)
 
         echo "3 ----------"
 
