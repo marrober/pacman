@@ -187,20 +187,26 @@ spec:
             secretKeyRef:
               name: signing-secrets
               key: cosign.password
-        - name: IMAGE_DIGEST_VAR
-          value: $(results.IMAGE_DIGEST.path)
-      command:   
-      - cosign-2
-      args:
-        - attest
-        - --key
-        - /etc/cosign-keys/cosign.key
-        - --type
-        - cyclonedx
-        - --predicate
-        - sbom-image.json
-        - --verbose
-        - $IMAGE_DIGEST_VAR
+      script: |
+        ls -al /tekton/results
+        
+        cat /tekton/results/IMAGE_DIGEST
+
+        echo "----------"
+
+        printenv | grep IMAGE_
+
+        cat /tekton/results/IMAGE_DIGEST > $IMAGE
+
+        printenv | grep IMAGE
+
+        echo "----------"
+
+        ls -al /etc/cosign-keys
+
+        head -n 10 bom-image.json
+ 
+        cosign-2 attest --key /etc/cosign-keys/cosign.key --type cyclonedx --predicate bom-image.json --verbose $IMAGE
       workingDir: $(workspaces.resources.path)
       volumeMounts:
         - name: quay-auth-secret
