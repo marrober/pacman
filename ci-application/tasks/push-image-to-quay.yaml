@@ -163,19 +163,19 @@ spec:
         - name: quay-auth-secret
           mountPath: /etc/secret-volume
           readOnly: true
-    - name: test
-      image: image-registry.openshift-image-registry.svc:5000/pacman-ci/terminal:2.3
-      env: 
-        - name: IMAGE_DIGEST_VAR
-          value: $(results.IMAGE_DIGEST.path)
-      script: |
-        ls -al /tekton/results
-        
-        cat /tekton/results/IMAGE_DIGEST
+#    - name: test
+#      image: image-registry.openshift-image-registry.svc:5000/pacman-ci/terminal:2.3
+#      env: 
+#        - name: IMAGE_DIGEST_VAR
+#          value: $(results.IMAGE_DIGEST.path)
+#      script: |
+#        ls -al /tekton/results
+#        
+#        cat /tekton/results/IMAGE_DIGEST
 
-        echo "----------"
+#        echo "----------"
 
-        printenv | grep IMAGE_
+#        printenv | grep IMAGE_
 
     - name: sign-and-attest-sbom
       image: image-registry.openshift-image-registry.svc:5000/pacman-ci/terminal:2.3
@@ -190,21 +190,29 @@ spec:
       script: |
         ls -al /tekton/results
         
-        cat /tekton/results/IMAGE_DIGEST
+        cat /tekton/results/IMAGE_DIGEST; echo 
 
-        echo "----------"
+        echo "1 ----------"
 
         printenv | grep IMAGE_
 
+        echo "2 ----------"
+
         cat /tekton/results/IMAGE_DIGEST > $IMAGE
+
+        echo "3 ----------"
 
         printenv | grep IMAGE
 
-        echo "----------"
+        echo "4 ----------"
 
         ls -al /etc/cosign-keys
 
+        echo "5 ----------"
+
         head -n 10 bom-image.json
+
+        echo "6 ----------"
  
         cosign-2 attest --key /etc/cosign-keys/cosign.key --type cyclonedx --predicate bom-image.json --verbose $IMAGE
       workingDir: $(workspaces.resources.path)
