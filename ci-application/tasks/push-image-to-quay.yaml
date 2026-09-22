@@ -224,7 +224,7 @@ spec:
 
         echo "7 ----------"
 
-        cosign-2 attest --registry-username=$USERNAME --registry-password=$PASSWORD --key /etc/cosign-keys/cosign.key --type cyclonedx --predicate sbom-image.json --verbose $IMAGE
+        cosign-2 attest --registry-username=$USERNAME --registry-token=$PASSWORD --key /etc/cosign-keys/cosign.key --type cyclonedx --predicate sbom-image.json --verbose $IMAGE
       workingDir: $(workspaces.resources.path)
       volumeMounts:
         - name: quay-auth-secret
