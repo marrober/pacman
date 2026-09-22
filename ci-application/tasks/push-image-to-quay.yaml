@@ -216,8 +216,8 @@ spec:
 
         echo "6 ----------"
 
-        $USERNAME=$(cat $DOCKER_CONFIG/.dockerconfigjson | jq -r '.auths["quay.io"].auth' | base64 -d | cut -d':' -f1)
-        $PASSWORD=$(cat $DOCKER_CONFIG/.dockerconfigjson | jq -r '.auths["quay.io"].auth' | base64 -d | cut -d':' -f2)
+        USERNAME=$(cat $DOCKER_CONFIG/.dockerconfigjson | jq -r '.auths["quay.io"].auth' | base64 -d | cut -d':' -f1)
+        PASSWORD=$(cat $DOCKER_CONFIG/.dockerconfigjson | jq -r '.auths["quay.io"].auth' | base64 -d | cut -d':' -f2)
 
         echo $USERNAME; echo 
         echo $PASSWORD; echo
