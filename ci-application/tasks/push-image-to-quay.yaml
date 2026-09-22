@@ -194,7 +194,7 @@ spec:
 
         echo "1 ----------"
 
-        printenv | grep IMAGE_
+        printenv
 
         echo "2 ----------"
 
@@ -202,7 +202,7 @@ spec:
 
         echo "3 ----------"
 
-        printenv | grep IMAGE
+        printenv
 
         echo "4 ----------"
 
