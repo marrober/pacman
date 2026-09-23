@@ -89,9 +89,6 @@ spec:
         - name: quay-auth-secret
           mountPath: /etc/secret-volume
           readOnly: true
-        - name: cosign-secret
-          mountPath: /etc/cosign-keys
-          readOnly: true
 
     - name: push-image-to-quay
       script: |
@@ -200,11 +197,7 @@ spec:
 
         printenv
 
-        echo "4 ----------"
-
-        ls -al /etc/cosign-keys
-
-        echo "5 ----------"
+         echo "5 ----------"
 
         head -n 10 sbom-image.json
 
@@ -221,9 +214,6 @@ spec:
       volumeMounts:
         - name: quay-auth-secret
           mountPath: /etc/secret-volume
-          readOnly: true
-        - name: cosign-secret
-          mountPath: /etc/cosign-keys
           readOnly: true
 
 #    - name: upload-sbom
