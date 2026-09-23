@@ -70,27 +70,7 @@ spec:
         requests:
           memory: 250Mi
           cpu: 150m
-          
-    - name: check-mount
-      image: image-registry.openshift-image-registry.svc:5000/pacman-ci/buildah:latest
-      env: 
-        - name: DOCKER_CONFIG
-          value: "/etc/secret-volume/.dockerconfigjson"
-      script: |
-        echo "Checking the mounted secret data"
-
-        cat $DOCKER_CONFIG
-
-        ls -al /etc/secret-volume
-
-        echo "----------------------------------"
-
-      volumeMounts:
-        - name: quay-auth-secret
-          mountPath: /etc/secret-volume
-          readOnly: true
-
-    - name: push-image-to-quay
+              - name: push-image-to-quay
       script: |
         echo $(workspaces.resources.path)/sbom-image.json
 
@@ -149,20 +129,6 @@ spec:
         - name: quay-auth-secret
           mountPath: /etc/secret-volume
           readOnly: true
-#    - name: test
-#      image: image-registry.openshift-image-registry.svc:5000/pacman-ci/terminal:2.3
-#      env: 
-#        - name: IMAGE_DIGEST_VAR
-#          value: $(results.IMAGE_DIGEST.path)
-#      script: |
-#        ls -al /tekton/results
-#        
-#        cat /tekton/results/IMAGE_DIGEST
-
-#        echo "----------"
-
-#        printenv | grep IMAGE_
-
     - name: sign-and-attest-sbom
       image: image-registry.openshift-image-registry.svc:5000/pacman-ci/terminal:2.3
       env: 
