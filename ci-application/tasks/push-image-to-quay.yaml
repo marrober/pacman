@@ -189,6 +189,16 @@ spec:
               key: cosign.password
         - name: IMAGE
           value: $(results.IMAGE_DIGEST.value)
+        - name: QUAY_ROBOT_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: quay-sbom-secret
+              key: username
+        - name: QUAY_ROBOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: quay-sbom-secret
+              key: password
       script: |
         ls -al /tekton/results
         
@@ -216,15 +226,13 @@ spec:
 
         echo "6 ----------"
 
-        USERNAME=$(cat $DOCKER_CONFIG/.dockerconfigjson | jq -r '.auths["quay.io"].auth' | base64 -d | cut -d':' -f1)
-        PASSWORD=$(cat $DOCKER_CONFIG/.dockerconfigjson | jq -r '.auths["quay.io"].auth' | base64 -d | cut -d':' -f2)
 
-        echo $USERNAME; echo 
-        echo $PASSWORD; echo
+        echo $QUAY_ROBOT_USERNAME; echo 
+        echo $QUAY_ROBOT_PASSWORD; echo
 
         echo "7 ----------"
 
-        cosign-2 attest --registry-username=$USERNAME --registry-token=$PASSWORD --key /etc/cosign-keys/cosign.key --type cyclonedx --predicate sbom-image.json --verbose $IMAGE
+        cosign-2 attest --registry-username=$QUAY_ROBOT_USERNAME --registry-password=$QUAY_ROBOT_PASSWORD --key k8s://openshift-pipelines/signing-secrets --type cyclonedx --predicate sbom-image.json --tlog-upload=false --verbose $(params.quay-instance-url)/$(params.quay-account)/$(params.quay-repository):$IMAGE
       workingDir: $(workspaces.resources.path)
       volumeMounts:
         - name: quay-auth-secret
@@ -260,6 +268,9 @@ spec:
     - name: cosign-secret
       secret: 
         secretName: signing-secrets
+    - name: quay-sbom-secret
+      secret: 
+        secretName: quay-robot
   workspaces:
   - name: files
     mountPath: /files

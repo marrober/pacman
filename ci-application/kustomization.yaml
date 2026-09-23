@@ -2,12 +2,8 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
 resources:
-- role-bindings/argo-cd-admin.yaml
-#- role-bindings/pipeline-service-role.yaml
-#- role-bindings/pipeline-service-account.yaml
-#- role-bindings/pipeline-service-rolebinding.yaml
-# - role-bindings/image-pusher-service-account.yaml
-- role-bindings/image-push-for-pipeline-sa.yaml
+- rbac/argo-cd-admin.yaml
+- rbac/image-push-for-pipeline-sa.yaml
 - pipeline.yaml
 - tasks/acs-image-build-check.yaml
 - tasks/compare-violations.yaml
