@@ -76,11 +76,6 @@ spec:
       env: 
         - name: DOCKER_CONFIG
           value: "/etc/secret-volume/.dockerconfigjson"
-        - name: COSIGN_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: signing-secrets
-              key: cosign.password
       script: |
         echo "Checking the mounted secret data"
 
@@ -89,12 +84,6 @@ spec:
         ls -al /etc/secret-volume
 
         echo "----------------------------------"
-
-        ls -al /etc/cosign-keys
-
-        printenv | grep COSIGN_PASSWORD
-
-        cat /etc/cosign-keys/cosign.key
 
       volumeMounts:
         - name: quay-auth-secret
@@ -182,22 +171,17 @@ spec:
       env: 
         - name: DOCKER_CONFIG
           value: "/etc/secret-volume"
-        - name: COSIGN_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: signing-secrets
-              key: cosign.password
         - name: IMAGE
           value: $(results.IMAGE_DIGEST.value)
         - name: QUAY_ROBOT_USERNAME
           valueFrom:
             secretKeyRef:
-              name: quay-sbom-secret
+              name: quay-robot
               key: username
         - name: QUAY_ROBOT_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: quay-sbom-secret
+              name: quay-robot
               key: password
       script: |
         ls -al /tekton/results
@@ -265,12 +249,6 @@ spec:
     - name: quay-auth-secret
       secret:
         secretName: quay-auth-secret
-    - name: cosign-secret
-      secret: 
-        secretName: signing-secrets
-    - name: quay-sbom-secret
-      secret: 
-        secretName: quay-robot
   workspaces:
   - name: files
     mountPath: /files
