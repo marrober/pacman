@@ -125,6 +125,48 @@ To get the sa token in a single command use :
 oc get secret/builder-dockercfg-bl7x5  -o json | jq -r '.data[".dockercfg"]' | base64 -d | jq -r '.["default-route-openshift-image-registry.apps.ocp4.mr-openshift.co.uk"] .auth' | base64 -d | sed 's/^<token>://'
 ````
 
+Create a secret for the quay.io robot account to write the SBOM and attestation to the pacman registry.
+
+````bash
+oc create secret generic quay-robot -n pacman-ci --from-literal=username=marrober+api_access --from-literal=password=<password>
+````
+
+Create a new role in the openshift-pipelines namespace to grant permission to read secrets.
+
+````bash
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: view-secret
+  namespace: openshift-pipelines
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - secrets
+  verbs:
+  - get
+  - watch
+  - list
+````
+
+Create a role binding to the pipeline SA in the pacman-ci namespace.
+
+````bash
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: pacman-ci-sa-pipeline-view-secrets-ocp-pipelines
+  namespace: openshift-pipelines
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: view-secret
+subjects:
+- kind: ServiceAccount
+  name: pipeline
+  namespace: pacman-ci
+````
 
 ### Create a long lived token
 
