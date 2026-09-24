@@ -100,6 +100,8 @@ spec:
           cat /workspace/image-violations.json
         fi
 
+        ls -al /workspace
+
         if [[ "$failTask" == "true" ]]; then
           echo "Setting overall result to fail"
           echo -n "fail" | tee "$(results.scan-result.path)" > /dev/null
