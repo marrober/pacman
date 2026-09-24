@@ -44,6 +44,9 @@ spec:
         OUTPUT_FILE="$(params.output-file)"
         SUMMARY_FILE="$(params.summary-file)"
 
+        echo $BASE_FILE; echo
+        echo $IMAGE_FILE; echo
+
         echo "Base image violations : "
         cat $BASE_FILE
 
@@ -56,8 +59,6 @@ spec:
             exit 1
           fi
         done
-
-        dnf install -y -q jq
 
         COMPARISON_RESULT=$(jq -n \
           --slurpfile base "$BASE_FILE" \
