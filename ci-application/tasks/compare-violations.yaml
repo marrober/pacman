@@ -44,16 +44,7 @@ spec:
         OUTPUT_FILE="$(params.output-file)"
         SUMMARY_FILE="$(params.summary-file)"
 
-        echo $BASE_FILE; echo
-        echo $IMAGE_FILE; echo
-
-        echo "Base image violations : "
-        cat $BASE_FILE
-
-        echo "Built container image violations : "
-        cat $IMAGE_FILE
-
-        for file in "$BASE_FILE" "$IMAGE_FILE"; do
+        for file in "$BASE_FILE" "$APP_FILE"; do
           if [[ ! -f "$file" ]]; then
             echo "Required file not found: $file"
             exit 1
@@ -62,49 +53,82 @@ spec:
 
         COMPARISON_RESULT=$(jq -n \
           --slurpfile base "$BASE_FILE" \
-          --slurpfile image "$IMAGE_FILE" \
+          --slurpfile app "$APP_FILE" \
           '
             def extract_id:
               if test("CVE-[0-9]{4}-[0-9]+") then (match("CVE-[0-9]{4}-[0-9]+") | .string)
               elif test("GHSA-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}") then (match("GHSA-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}") | .string)
               else null end;
-            ($base[0] // []) as $base |
-            ($image[0] // []) as $image |
-            ([$base[] | extract_id | select(. != null)] | unique) as $base_ids |
-            ([$image[] | extract_id | select(. != null)] | unique) as $image_ids |
-            [$image[]
-              | . as $line
-              | ($line | extract_id) as $id
-              | select($id != null and (($base_ids | index($id)) == null))
-              | $line
-            ] as $exclusive |
+
+            def parse:
+              . as $line |
+              ($line | extract_id) as $id |
+              (if $line | test("component '\''[^'\'']+'\''") then
+                ($line | match("component '\''([^'\'']+)'\''") | .captures[0].string)
+              else null end) as $component |
+              (if $line | test("\\(version [^)]+\\)") then
+                ($line | match("\\(version ([^)]+)\\)") | .captures[0].string)
+              else null end) as $version |
+              select($id != null and $component != null and $version != null) |
+              {id: $id, component: $component, version: $version, key: ($id + "|" + $component + "|" + $version)};
+
+            def group_by_id:
+              group_by(.id) |
+              map({
+                id: .[0].id,
+                components: ([.[] | {component, version}] | unique | sort_by(.component, .version))
+              }) |
+              sort_by(.id);
+
+            ([$base[0][]? | parse]) as $base_entries |
+            ([$app[0][]? | parse]) as $app_entries |
+            ($base_entries | map({key: .key, value: true}) | from_entries) as $base_keys |
+            ([$app_entries[] | select($base_keys[.key] | not)] ) as $app_only_entries |
+            ($base_entries | group_by_id) as $base_vulns |
+            ($app_only_entries | group_by_id) as $app_vulns |
             {
-              base_violation_count: ($base_ids | length),
-              image_violation_count: ($image_ids | length),
-              application_layer_violation_count: ($exclusive | length),
-              exclusive_violations: $exclusive
+              base_violation_count: ($base_vulns | length),
+              app_layer_count: ($app_vulns | length),
+              base_vulnerabilities: $base_vulns,
+              app_layer_vulnerabilities: $app_vulns
             }
           ')
 
+        echo "$COMPARISON_RESULT" | jq '{
+          base_vulnerabilities,
+          app_layer_vulnerabilities
+        }' > "$OUTPUT_FILE"
 
-        echo "$COMPARISON_RESULT" | jq '.exclusive_violations' > "$OUTPUT_FILE"
         echo "$COMPARISON_RESULT" | jq '{
           base_violation_count,
-          image_violation_count,
-          application_layer_violation_count
+          app_layer_count
         }' > "$SUMMARY_FILE"
 
         BASE_COUNT=$(jq -r '.base_violation_count' "$SUMMARY_FILE")
-        IMAGE_COUNT=$(jq -r '.image_violation_count' "$SUMMARY_FILE")
-        EXCLUSIVE_COUNT=$(jq -r '.application_layer_violation_count' "$SUMMARY_FILE")
+        APP_LAYER_COUNT=$(jq -r '.app_layer_count' "$SUMMARY_FILE")
+
+        print_vulns() {
+          local field="$1"
+          jq -r --arg field "$field" '
+            .[$field][]? |
+            .id,
+            (.components[] | "  - \(.component) (\(.version))")
+          ' "$OUTPUT_FILE"
+        }
+
+        echo "Base image vulnerabilities ($BASE_COUNT):"
+        print_vulns base_vulnerabilities
+        echo ""
+
+        echo "App-layer vulnerabilities ($APP_LAYER_COUNT):"
+        print_vulns app_layer_vulnerabilities
+        echo ""
 
         echo "Violation comparison summary:"
-        echo "  Base image violations:               $BASE_COUNT"
-        echo "  Built image violations:              $IMAGE_COUNT"
-        echo "  Application layer vulnerabilities:   $EXCLUSIVE_COUNT"
+        echo "  Base image vulnerabilities:            $BASE_COUNT"
+        echo "  App layer introduced vulnerabilities:  $APP_LAYER_COUNT"
         echo ""
-        echo "Application layer vulnerabilities:"
-        cat $OUTPUT_FILE
-        echo ""
+
+        echo "Details written to: $OUTPUT_FILE"
         echo "Summary written to: $SUMMARY_FILE"
       workingDir: /workspace
