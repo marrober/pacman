@@ -29,7 +29,7 @@ spec:
       description: Number of unique CVE/GHSA IDs only present in the built image
   workspaces:
     - name: violations
-      description: Workspace containing base and image violation files.
+      description: Workspace containing base and image violation files
       mountPath: /workspace
   steps:
     - name: compare-cves
