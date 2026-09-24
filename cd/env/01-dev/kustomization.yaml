@@ -11,7 +11,5 @@ resources:
 - admin-job/replicaset-cleanup-cronjob.yaml
 
 images:
-- name: default-route-openshift-image-registry.apps.ocp4.mr-openshift.co.uk/pacman-ci/pacman
-  newTag: 777jq-56427
 - name: quay.io/marrober/pacman
   newTag: 2hdls-2441f

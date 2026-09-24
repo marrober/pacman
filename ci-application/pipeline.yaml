@@ -280,6 +280,8 @@ spec:
       value: $(tasks.push-image-to-imagestream.results.new-tag)
     - name: node_js_image_name
       value: $(params.node_js_image_name)
+    - name: rekor-url
+      value: $(params.rekor-url)
     taskRef:
       kind: Task
       name: push-image-to-quay
@@ -298,35 +300,35 @@ spec:
 ##------------------------------------------------------------------
 # Perform image build check after push to quay.io
 ##------------------------------------------------------------------
-  - name: image-build-check-in-quay-io
-    params:
-    - name: acs_central_endpoint
-      value: $(params.acs_central_endpoint)
-    - name: acs_api_token
-      value: $(params.acs_api_token)
-    - name: public-url
-      value: $(params.quay-instance-url)/$(params.quay-account)/$(params.quay-repository):$(tasks.push-image-to-imagestream.results.new-tag)
-    - name: image-short-name
-      value: $(params.IMAGE_SHORT_NAME)
-    - name: image-tag
-      value: $(tasks.push-image-to-imagestream.results.new-tag)
-    - name: image-build-namespace
-      value: $(params.image-build-namespace)
-    - name: roxctl-output-format
-      value: $(params.roxctl-output-format)
-    taskRef:
-      kind: Task
-      name: acs-image-build-check
-    when:
-    - input: "$(tasks.image-build-check.results.scan-result)"
-      operator: in
-      values:
-      - "pass"
-    runAfter:
-    - push-image-to-quay
-    workspaces:
-    - name: violations
-      workspace: violations
+#  - name: image-build-check-in-quay-io
+#    params:
+#    - name: acs_central_endpoint
+#      value: $(params.acs_central_endpoint)
+#    - name: acs_api_token
+#      value: $(params.acs_api_token)
+#    - name: public-url
+#      value: $(params.quay-instance-url)/$(params.quay-account)/$(params.quay-repository):$(tasks.push-image-to-imagestream.results.new-tag)
+#    - name: image-short-name
+#      value: $(params.IMAGE_SHORT_NAME)
+#    - name: image-tag
+#      value: $(tasks.push-image-to-imagestream.results.new-tag)
+#    - name: image-build-namespace
+#      value: $(params.image-build-namespace)
+#    - name: roxctl-output-format
+#      value: $(params.roxctl-output-format)
+#    taskRef:
+#      kind: Task
+#      name: acs-image-build-check
+#    when:
+#    - input: "$(tasks.image-build-check.results.scan-result)"
+#      operator: in
+#      values:
+#      - "pass"
+#    runAfter:
+#    - push-image-to-quay
+#    workspaces:
+#    - name: violations
+#      workspace: violations
 ##------------------------------------------------------------------
 # Clone the cd repository and update the argocd application file 
 # to refer to the new tagged image.
@@ -348,33 +350,33 @@ spec:
     - name: GIT_COMMIT_COMMENT
       value: $(params.cd-git-commit-comment-dev)
     - name: IMAGE
-      value: $(params.IMAGE_NAME):$(tasks.push-image-to-imagestream.results.new-tag)
+      value: $(params.quay-instance-url)/$(params.quay-account)/$(params.quay-repository):$(tasks.push-image-to-imagestream.results.new-tag)
     - name: LOCATION
       value: "dev"
     taskRef:
       kind: Task
       name: update-and-commit-argocd-app-file
     runAfter:
-    - push-image-to-imagestream
+    - push-image-to-quay
     workspaces:
     - name: files
       workspace: files
 ##------------------------------------------------------------------
 # Force ArgoCD sync
 ##------------------------------------------------------------------
-#  - name: sync-argocd
-#    params:
-#    - name: application-name
-#      value: $(params.argocd-project-name-development)
-#    - name: revision
-#      value: $(params.argocd-revision)
-#    - name: argocd-version
-#      value: $(params.argocd-version)
-#    taskRef:
-#      kind: Task
-#      name: argocd-sync-and-wait
-#    runAfter:
-#    - update-dev-deployment
+  - name: sync-argocd
+    params:
+    - name: application-name
+      value: $(params.argocd-project-name-development)
+    - name: revision
+      value: $(params.argocd-revision)
+    - name: argocd-version
+      value: $(params.argocd-version)
+    taskRef:
+      kind: Task
+      name: argocd-sync-and-wait
+    runAfter:
+    - update-dev-deployment
 ##------------------------------------------------------------------
 # Workspaces
 ##------------------------------------------------------------------
