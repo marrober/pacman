@@ -88,7 +88,7 @@ spec:
 
         oc import-image $(params.image-short-name):$tag --from=$(params.imagestream-url):$tag -n $(context.taskRun.namespace) --confirm -o name
 
-      image: quay.io/openshift/origin-cli:latest  
+      image: quay.io/openshift/terminal:2.3
       securityContext:
         capabilities:
           add: ["SETFCAP"]
