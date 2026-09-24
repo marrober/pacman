@@ -58,7 +58,7 @@ spec:
 
         cat new-dockerfile
 
-      image: image-registry.openshift-image-registry.svc:5000/pacman-ci/ose-cli:latest
+      image: image-registry.openshift-image-registry.svc:5000/pacman-ci/buildah:latest
       resources:
         limits:
           memory: 500Mi
