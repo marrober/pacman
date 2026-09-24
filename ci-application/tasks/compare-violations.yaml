@@ -40,7 +40,7 @@ spec:
         set -euo pipefail
 
         BASE_FILE="$(params.base-violations-file)"
-        IMAGE_FILE="$(params.image-violations-file)"
+        APP_FILE="$(params.image-violations-file)"
         OUTPUT_FILE="$(params.output-file)"
         SUMMARY_FILE="$(params.summary-file)"
 
