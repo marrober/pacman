@@ -153,6 +153,8 @@ spec:
         
         cat /tekton/results/IMAGE_DIGEST; echo 
 
+        export IMAGE=$(cat /tekton/results/IMAGE_DIGEST)
+
         export REKOR_SERVER=$(params.rekor-url)
 
         cosign-2 attest --registry-username=$QUAY_ROBOT_USERNAME --registry-password=$QUAY_ROBOT_PASSWORD --key k8s://openshift-pipelines/signing-secrets --type cyclonedx --predicate sbom-image.json --insecure-skip-verify=true --attachment-tag-prefix=sbom- $(params.quay-instance-url)/$(params.quay-account)/$(params.quay-repository)@$IMAGE
