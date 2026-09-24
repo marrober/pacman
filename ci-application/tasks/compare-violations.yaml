@@ -33,7 +33,7 @@ spec:
       mountPath: /workspace
   steps:
     - name: compare-cves
-      image: image-registry.openshift-image-registry.svc:5000/pacman-ci/terminal:latest
+      image: image-registry.openshift-image-registry.svc:5000/pacman-ci/terminal:2.3
       script: |
         #!/usr/bin/env bash
 
