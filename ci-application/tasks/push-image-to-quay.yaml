@@ -175,7 +175,7 @@ spec:
 
         echo "7 ----------"
 
-        cosign-2 attest --registry-username=$QUAY_ROBOT_USERNAME --registry-password=$QUAY_ROBOT_PASSWORD --key k8s://openshift-pipelines/signing-secrets --type cyclonedx --predicate sbom-image.json --tlog-upload=false --verbose $(params.quay-instance-url)/$(params.quay-account)/$(params.quay-repository)@$IMAGE
+        cosign-2 attest --registry-username=$QUAY_ROBOT_USERNAME --registry-password=$QUAY_ROBOT_PASSWORD --key k8s://openshift-pipelines/signing-secrets --type cyclonedx --predicate sbom-image.json --tlog-upload=false --attachment-tag-prefix=sbom- --verbose $(params.quay-instance-url)/$(params.quay-account)/$(params.quay-repository)@$IMAGE
       workingDir: $(workspaces.resources.path)
       volumeMounts:
         - name: quay-auth-secret
