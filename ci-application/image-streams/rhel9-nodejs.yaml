@@ -14,7 +14,7 @@ spec:
       importPolicy:
         importMode: Legacy
       referencePolicy:
-        type: Source
+        type: Local
     - name: nodejs-h-22.23.1
       from:
         kind: DockerImage
@@ -22,7 +22,7 @@ spec:
       importPolicy:
         importMode: Legacy
       referencePolicy:
-        type: Source
+        type: Local
     - name: nodejs-h-24.18.0
       from:
         kind: DockerImage
@@ -30,7 +30,7 @@ spec:
       importPolicy:
         importMode: Legacy
       referencePolicy:
-        type: Source
+        type: Local
 
 
 

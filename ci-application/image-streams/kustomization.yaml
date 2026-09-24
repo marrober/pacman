@@ -9,3 +9,4 @@ resources:
 #- ose.yaml
 #- ubi.yaml
 #- argocd.yaml
+#- rhel9-nodejs.yaml
