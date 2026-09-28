@@ -78,9 +78,7 @@ spec:
 
         echo "-----------------------------------------------------------------"
 
-        echo "git clone command : "
-
-        echo "git clone https://${GITHOSTACCESSTOKEN}@$(params.GIT_URL).git"
+        echo "git clone"
 
         git clone https://${GITHOSTACCESSTOKEN}@$(params.GIT_URL).git
 
@@ -121,16 +119,19 @@ spec:
         cd /workspace/files/$(params.LOCATION)/$(params.GIT_REPO_NAME)
 
         echo "-----------------------------------------------------------------"
+        
         echo " git add ."
 
         git add .
 
         echo "-----------------------------------------------------------------"
+
         echo "git commit --no-gpg-sign -m \"$(params.GIT_COMMIT_COMMENT)\""
 
         git commit --no-gpg-sign -m "$(params.GIT_COMMIT_COMMENT)"
 
         echo "-----------------------------------------------------------------"
+
         echo "git push"
 
         git push 
