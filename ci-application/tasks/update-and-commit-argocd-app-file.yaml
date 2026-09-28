@@ -114,13 +114,23 @@ spec:
 
         cd /workspace/files/$(params.LOCATION)/$(params.GIT_REPO_NAME)
 
+        echo "-----------------------------------------------------------------"
+        echo " git add ."
+
         git add .
+
+        echo "-----------------------------------------------------------------"
+        echo "git commit --no-gpg-sign -m \"$(params.GIT_COMMIT_COMMENT)\""
 
         git commit --no-gpg-sign -m "$(params.GIT_COMMIT_COMMENT)"
 
         echo "-----------------------------------------------------------------"
+        echo "git push"
 
         git push 
+
+        echo "-----------------------------------------------------------------"
+        echo "get the git commit id : "
         
         git rev-parse HEAD > $(results.commit-id.path)
 
