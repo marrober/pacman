@@ -116,12 +116,12 @@ spec:
 
         git add .
 
-        git commit -m "$(params.GIT_COMMIT_COMMENT)"
+        git commit --no-gpg-sign -m "$(params.GIT_COMMIT_COMMENT)"
 
         echo "-----------------------------------------------------------------"
 
-        git push https://${GITHOSTACCESSTOKEN}@$(params.GIT_URL).git HEAD:$(params.GIT_BRANCH)
-
+        git push 
+        
         git rev-parse HEAD > $(results.commit-id.path)
 
         cat $(results.commit-id.path)
