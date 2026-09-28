@@ -76,6 +76,12 @@ spec:
 
         ls -alR
 
+        echo "-----------------------------------------------------------------"
+
+        echo "git clone command : "
+
+        echo "git clone https://${GITHOSTACCESSTOKEN}@$(params.GIT_URL).git"
+
         git clone https://${GITHOSTACCESSTOKEN}@$(params.GIT_URL).git
 
         echo "-----------------------------------------------------------------"
