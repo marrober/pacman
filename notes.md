@@ -14,7 +14,7 @@ cd < clone-location >/pacman
 oc apply -k .
 ````
 
-## Get image information for dockerfile
+## Get image information for dockerfile.
 
 ````bash
 oc project pacman-ci
