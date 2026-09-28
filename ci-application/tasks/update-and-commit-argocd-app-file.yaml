@@ -120,7 +120,7 @@ spec:
 
         echo "-----------------------------------------------------------------"
 
-        git push https://x-oauth-basic:${GITHOSTACCESSTOKEN}@$(params.GIT_URL).git HEAD:$(params.GIT_BRANCH)
+        git push https://${GITHOSTACCESSTOKEN}@$(params.GIT_URL).git HEAD:$(params.GIT_BRANCH)
 
         git rev-parse HEAD > $(results.commit-id.path)
 
