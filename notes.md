@@ -113,24 +113,6 @@ oc create secret generic acs-secret \
 oc get sa/image-pusher -o yaml | grep image-pusher-dockercfg
 ````
 
-## Get SA secret for ACS access to registry
-
-````bash
-oc get secret/image-pusher-dockercfg-<whatever> -n pacman-ci -o 'go-template={{index .data ".dockercfg"}}' | base64 -d | jq .  
-````
-
-To get the sa token in a single command use :
-
-````bash
-oc get secret/builder-dockercfg-bl7x5  -o json | jq -r '.data[".dockercfg"]' | base64 -d | jq -r '.["default-route-openshift-image-registry.apps.ocp4.mr-openshift.co.uk"] .auth' | base64 -d | sed 's/^<token>://'
-````
-
-Create a secret for the quay.io robot account to write the SBOM and attestation to the pacman registry.
-
-````bash
-oc create secret generic quay-robot -n pacman-ci --from-literal=username=marrober+api_access --from-literal=password=<password>
-````
-
 Create a new role in the openshift-pipelines namespace to grant permission to read secrets.
 
 ````bash
