@@ -155,7 +155,7 @@ subjects:
 To create a token that will not time out quickly use the command below. This will create a token that will last 625 days.
 
 ````bash
-oc create token image-pusher --duration=15000h --bound-object-kind Secret --bound-object-name image-pusher-dockercfg-<whatever>
+oc create token pipeine --duration=15000h --bound-object-kind Secret --bound-object-name pipeine-dockercfg-<whatever>
 ````
 
 Take the password section from the item with index : default-route-openshift-image-registry.apps.cluster-.....
