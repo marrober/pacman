@@ -49,6 +49,8 @@ spec:
           value: http://tuf.trusted-artifact-signer.svc
         - name: IMAGE_NAME
           value: default-route-openshift-image-registry.apps.ocp4.mr-openshift.co.uk/$(context.taskRun.namespace)/pacman
+        - name: tuf-root-hash
+          value: "f9a974355acffb8c3036e52380becaf797f97edc13bf6041400904955625c24a"
         - name: IMAGE_SHORT_NAME
           value: pacman
         - name: PATH_CONTEXT
