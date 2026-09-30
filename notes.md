@@ -177,6 +177,27 @@ Fill in the details as :
 	Check the option : Disable TLS certificate validation (insecure)
 Test the integration and save if successful.
 
+## For signing container images
+
+To enable tekton chains to sign container images and commit signatures and attestations to quay.io create a secret that provides the credentials for a quay.io robot account.
+
+````bash
+oc create secret docker-registry quay-chains-creds \
+  --docker-server=quay.io \
+  --docker-username='marrober+tekton_chains' \
+  --docker-password='<robot account password>' \
+  -n openshift-pipelines
+````
+
+then patch the tekton chains controller service account
+
+````bash
+oc patch serviceaccount tekton-chains-controller \
+  -n openshift-pipelines \
+  -p '{"imagePullSecrets": [{"name": "quay-chains-creds"}], "secrets": [{"name": "quay-chains-creds"}]}'
+````
+
+
 ## For signing commits to GitHub
 
 Run the script content at : Note : Copy and paste the content into a command window. Do not run as a shell script.
