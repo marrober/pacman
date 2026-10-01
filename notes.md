@@ -182,20 +182,82 @@ Test the integration and save if successful.
 To enable tekton chains to sign container images and commit signatures and attestations to quay.io create a secret that provides the credentials for a quay.io robot account.
 
 ````bash
-oc create secret docker-registry quay-chains-creds \
-  --docker-server=quay.io \
-  --docker-username='marrober+tekton_chains' \
-  --docker-password='<robot account password>' \
-  -n openshift-pipelines
+oc create secret generic quay-chains-creds --from-file=.dockerconfigjson=<(oc create secret docker-registry temp-quay-secret \
+    --docker-server=quay.io \
+    --docker-username='marrober+api_access' \
+    --docker-password='<quay-robot-account-password>' \
+    --dry-run=client -o jsonpath='{.data.\.dockerconfigjson}' | base64 -d) --type=kubernetes.io/dockerconfigjson -n pacman-ci
 ````
 
-then patch the tekton chains controller service account
+Then patch the pipeline service account to reference the above secret
 
 ````bash
-oc patch serviceaccount tekton-chains-controller \
-  -n openshift-pipelines \
-  -p '{"imagePullSecrets": [{"name": "quay-chains-creds"}], "secrets": [{"name": "quay-chains-creds"}]}'
+oc patch serviceaccount pipeline   -n pacman-ci   --type='json'   -p='[{"op": "add", "path": "/secrets/-", "value": {"name": "quay-chains-creds"}}]'
 ````
+
+After this modify the Tekton chains config map as :
+
+````bash
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: chains-config
+  namespace: openshift-pipelines
+data:
+  artifacts.taskrun.storage: oci
+  artifacts.pipelinerun.storage: oci
+  artifacts.oci.storage.secret: quay-auth-secret
+  artifacts.pipelinerun.format: in-toto
+  transparency.enabled: 'true'
+  artifacts.taskrun.format: slsa/v1
+  performance: |
+    disable-ha: false
+  artifacts.oci.storage: oci
+  artifacts.oci.format: simplesigning
+````
+
+## Verification
+
+Verifying the image signature and getting the attestation information
+
+### Verify the signature
+
+````bash
+cosign-2 verify --key <cosign-public-key> <container-image>
+````
+
+The above should report :
+
+````bash
+Verification for <container-image> --
+The following checks were performed on each of these signatures:
+  - The cosign claims were validated
+  - Existence of the claims in the transparency log was verified offline
+  - The signatures were verified against the specified public key
+
+[{"critical":{"identity":{"docker-reference":"<image-name>"},"image":{"docker-manifest-digest":"sha256:108b44d3d8ba35b9ae20f17f77a79b1c01b7c6d5f84589c1049a611fafeb081b"},"type":"cosign container image signature"},"optional":null}]
+````
+
+### To extract the attestation
+
+````bash
+cosign-2 verify-attestation --key <cosign-public-key> --type https://slsa.dev/provenance/v0.2 <container-image> | jq -s -r '.[0].payload' | base64 -d
+````
+
+The above command results in a test block similar to :
+
+````bash
+Verification for quay.io/marrober/pacman:fjbpj-02f7c --
+The following checks were performed on each of these signatures:
+  - The cosign claims were validated
+  - Existence of the claims in the transparency log was verified offline
+  - The signatures were verified against the specified public key
+{"_type":"https://in-toto.io/Statement/v0.1","subject":[{"name":"quay.io/marrober/pacman","digest":{"sha256":"108b44d3d8ba35b9ae20f17f77a79b1c01b7c6d5f84589c1049a611fafeb081b"}}],"predicateType":"https://slsa.dev/provenance/v0.2","predicate":{"buildConfig":{"steps":[{"annotations":null,"
+````
+
+The text information is send to std error or some other stream because the json block can be simply piped to jq to present the information better or to extract specific fields of interest.
+
+The second payload section includes more extensive information on the build process. The above command repeated with the json query '.[1].payload' results in a more extensive block of text that contains a breakdown of the build process.
 
 
 ## For signing commits to GitHub
