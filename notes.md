@@ -201,7 +201,7 @@ Update the TektonInstallerSet custom resource definition :
 apiVersion: operator.tekton.dev/v1alpha1
 kind: TektonInstallerSet
 metadata:
-  name: chain-config-nvwjw
+  name: chain-config-<something>>
 spec:
   manifests:
     - apiVersion: v1
@@ -217,6 +217,13 @@ spec:
         transparency.url: 'http://rekor-server.trusted-artifact-signer.svc.cluster.local'
         artifacts.oci.format: simplesigning
       kind: ConfigMap
+````
+
+To suspend signing of container images in Tekton add the field :
+
+````bash
+      data:
+        artifacts.oci.signer: "none" 
 ````
 
 
