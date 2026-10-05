@@ -39,8 +39,8 @@ spec:
 
         echo $var3
 
-        var3=${var3:(${#var3} - 5):${#var3}}
-
+        var3=${var3:0:7}
+        
         tag=$var2-$var3
 
         echo $(params.imagestream-url):$tag
