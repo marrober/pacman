@@ -227,7 +227,14 @@ To suspend signing of container images in Tekton add the field :
         artifacts.oci.signer: "none" 
 ````
 
+Check the status of the Tekton signing configuration :
 
+''''bash
+oc get configmap/chains-config -n openshift-pipelines -o jsonpath='{.data['\''transparency\.enabled'\'']}' ; echo ""\n
+oc get configmap/chains-config -n openshift-pipelines -o jsonpath='{.data['\''artifacts\.oci\.signer'\'']}' ; echo ""\n
+oc get configmap/chains-config -n openshift-pipelines -o jsonpath='{.data['\''artifacts\.pipelinerun\.format'\'']}' ; echo ""\n
+oc get configmap/chains-config -n openshift-pipelines -o jsonpath='{.data['\''transparency\.url'\'']}' ; echo ""\n
+ ''''
 
 ## Verification
 
