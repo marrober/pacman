@@ -216,6 +216,7 @@ spec:
         artifacts.oci.storage: oci
         transparency.url: 'http://rekor-server.trusted-artifact-signer.svc.cluster.local'
         artifacts.oci.format: simplesigning
+        artifacts.oci.signer: x509
       kind: ConfigMap
 ````
 
