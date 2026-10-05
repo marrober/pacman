@@ -195,26 +195,31 @@ Then patch the pipeline service account to reference the above secret
 oc patch serviceaccount pipeline   -n pacman-ci   --type='json'   -p='[{"op": "add", "path": "/secrets/-", "value": {"name": "quay-chains-creds"}}]'
 ````
 
-After this modify the Tekton chains config map as :
+Update the TektonInstallerSet custom resource definition :
 
 ````bash
-kind: ConfigMap
-apiVersion: v1
+apiVersion: operator.tekton.dev/v1alpha1
+kind: TektonInstallerSet
 metadata:
-  name: chains-config
-  namespace: openshift-pipelines
-data:
-  artifacts.taskrun.storage: oci
-  artifacts.pipelinerun.storage: oci
-  artifacts.oci.storage.secret: quay-auth-secret
-  artifacts.pipelinerun.format: in-toto
-  transparency.enabled: 'true'
-  artifacts.taskrun.format: slsa/v1
-  performance: |
-    disable-ha: false
-  artifacts.oci.storage: oci
-  artifacts.oci.format: simplesigning
+  name: chain-config-nvwjw
+spec:
+  manifests:
+    - apiVersion: v1
+      data:
+        artifacts.taskrun.storage: oci
+        artifacts.pipelinerun.storage: oci
+        artifacts.pipelinerun.format: in-toto
+        transparency.enabled: 'true'
+        artifacts.taskrun.format: slsa/v1
+        performance: |
+          disable-ha: false
+        artifacts.oci.storage: oci
+        transparency.url: 'http://rekor-server.trusted-artifact-signer.svc.cluster.local'
+        artifacts.oci.format: simplesigning
+      kind: ConfigMap
 ````
+
+
 
 ## Verification
 
