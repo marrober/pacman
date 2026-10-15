@@ -295,6 +295,64 @@ Get the path to the image in the image stream using the command :
 oc get is/nodejs -o jsonpath='{.status.publicDockerImageRepository}' | cut -d "/" -f 1
 ````
 
+## SBOM Upload to Trusted Profile Analyser
+
+A Secret called trustification-secret is required in the project. To create it use the command :
+
+````bash
+BOMBASTIC_API_URL="https://$(oc get route -n trusted-profile-analyzer -o jsonpath='{.items[0].spec.host}')"
+OIDC_ISSUER_URL=$(oc get cm server-auth -n trusted-profile-analyzer \
+  -o jsonpath='{.data.auth\.yaml}' | awk '/clientId: cli/{f=1} f&&/issuerUrl:/{print $2; exit}')
+OIDC_CLIENT_ID=cli
+OIDC_CLIENT_SECRET=$(oc get secret oidc-cli -n trusted-profile-analyzer \
+  -o jsonpath='{.data.client-secret}' | base64 -d)
+
+oc create secret generic trustification-secret -n pacman-ci \
+  --from-literal=bombastic_api_url="$BOMBASTIC_API_URL" \
+  --from-literal=oidc_issuer_url="$OIDC_ISSUER_URL" \
+  --from-literal=oidc_client_id="$OIDC_CLIENT_ID" \
+  --from-literal=oidc_client_secret="$OIDC_CLIENT_SECRET"
+  ````
+
+To validate it use the command :
+
+````bash
+# Should return a token_endpoint
+curl -sk "${OIDC_ISSUER_URL}/.well-known/openid-configuration" | jq -r .token_endpoint
+
+# Should return an access_token
+curl -sk -u "${OIDC_CLIENT_ID}:${OIDC_CLIENT_SECRET}" \
+  -d grant_type=client_credentials \
+  "$(curl -sk "${OIDC_ISSUER_URL}/.well-known/openid-configuration" | jq -r .token_endpoint)" \
+  | jq -r .access_token
+````
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 Get the old default route from the file cd/env/01-dev/deployment.yaml
 
 Update this value in :

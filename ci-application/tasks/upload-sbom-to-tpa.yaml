@@ -1,0 +1,229 @@
+apiVersion: tekton.dev/v1
+kind: Task
+metadata:
+  annotations:
+    tekton.dev/tags: "sbom, trustification"
+  name: upload-sbom-to-tpa
+spec:
+  description: |-
+    Upload CycloneDX SBOMs produced by the build task's sbom-syft-generate step
+    (sbom-image.json / sbom-source.json) to Trustification via the BOMbastic API.
+
+    Requires a secret (default: trustification-secret) with:
+    - bombastic_api_url
+    - oidc_issuer_url
+    - oidc_client_id
+    - oidc_client_secret
+
+    Optional secret key:
+    - supported_cyclonedx_version — if set and the SBOM is newer, convert with syft first
+  params:
+  - name: COMPONENT_ID
+    description: Name shown for the SBOM component in the TPA UI
+    type: string
+  - name: SBOM_FILES
+    default: "sbom-image.json"
+    description: >-
+      Space-separated list of SBOM filenames (relative to the sboms workspace)
+      produced by sbom-syft-generate. Typical values: sbom-image.json,
+      sbom-source.json, or both.
+    type: string
+  - name: HTTP_RETRIES
+    default: "3"
+    description: Maximum number of retries for transient HTTP(S) errors
+    type: string
+  - name: TRUSTIFICATION_SECRET_NAME
+    default: trustification-secret
+    description: Name of the Secret containing auth and configuration
+    type: string
+  - name: FAIL_IF_TRUSTIFICATION_NOT_CONFIGURED
+    default: "true"
+    description: >-
+      If true, fail when the secret is missing required keys.
+      If false, skip upload and exit successfully.
+    type: string
+  workspaces:
+  - name: sboms
+    description: Workspace containing SBOM files from the build task (resources workspace)
+  volumes:
+  - name: trustification-secret
+    secret:
+      secretName: $(params.TRUSTIFICATION_SECRET_NAME)
+      optional: true
+  stepTemplate:
+    env:
+    - name: SBOMS_DIR
+      value: $(workspaces.sboms.path)
+    - name: SBOM_FILES
+      value: $(params.SBOM_FILES)
+    - name: COMPONENT_ID
+      value: $(params.COMPONENT_ID)
+    - name: HTTP_RETRIES
+      value: $(params.HTTP_RETRIES)
+    - name: TRUSTIFICATION_SECRET_NAME
+      value: $(params.TRUSTIFICATION_SECRET_NAME)
+    - name: TRUSTIFICATION_SECRET_PATH
+      value: /run/secrets/trustification
+    - name: FAIL_IF_TRUSTIFICATION_NOT_CONFIGURED
+      value: $(params.FAIL_IF_TRUSTIFICATION_NOT_CONFIGURED)
+    - name: WORKDIR
+      value: /tekton/home
+    volumeMounts:
+    - name: trustification-secret
+      mountPath: /run/secrets/trustification
+  steps:
+  - name: prepare-sboms
+    image: quay.io/redhat-appstudio/appstudio-utils:5bd7d6cb0b17f9f2eab043a8ad16ba3d90551bc2@sha256:8c7fcf86af40c71aeb58e4279625c8308af5144e2f6b8e28b0ec7e795260e5f7
+    script: |
+      #!/usr/bin/env bash
+      set -o errexit -o nounset -o pipefail
+
+      version_lesser_equal() {
+        local first
+        first="$(printf "%s\n%s" "$1" "$2" | sort --version-sort | head -n 1)"
+        [ "$1" = "$first" ]
+      }
+
+      if [[ -f "$TRUSTIFICATION_SECRET_PATH/supported_cyclonedx_version" ]]; then
+        supported_version="$(cat "$TRUSTIFICATION_SECRET_PATH/supported_cyclonedx_version")"
+      else
+        echo "No supported_cyclonedx_version in secret; skipping version checks"
+        supported_version=""
+      fi
+
+      prepared=0
+      for filename in $SBOM_FILES; do
+        filepath="$SBOMS_DIR/$filename"
+
+        if [[ ! -f "$filepath" ]]; then
+          echo "SBOM not found, skipping: $filename"
+          continue
+        fi
+
+        if ! jq -e '.bomFormat == "CycloneDX"' "$filepath" >/dev/null; then
+          echo "Not a CycloneDX SBOM, skipping: $filename"
+          continue
+        fi
+
+        # Give the SBOM a stable display name in TPA (Syft defaults to a filesystem path)
+        tmp="$(mktemp)"
+        jq --arg name "$COMPONENT_ID" '
+          .metadata.component.name = $name |
+          if .metadata.component.bom-ref then .metadata.component.bom-ref = $name else . end
+        ' "$filepath" > "$tmp"
+        mv "$tmp" "$filepath"
+
+        echo "Prepared CycloneDX SBOM: $filename"
+
+        # ID is checksum of content before any version conversion (avoids duplicates)
+        sbom_id="sha256:$(sha256sum "$filepath" | cut -d ' ' -f 1)"
+        sbom_path="$WORKDIR/$sbom_id.json"
+        ln -s "$(realpath "$filepath")" "$sbom_path"
+
+        if [[ -n "$supported_version" ]]; then
+          sbom_version="$(jq -r ".specVersion" "$sbom_path")"
+          if version_lesser_equal "$sbom_version" "$supported_version"; then
+            echo "SBOM version ($sbom_version) is supported (<= $supported_version)"
+          else
+            echo "SBOM version ($sbom_version) needs conversion to $supported_version"
+            printf "%s" "$supported_version" > "${sbom_path}.convert_to_version"
+          fi
+        fi
+
+        prepared=$((prepared + 1))
+      done
+
+      echo "Prepared $prepared SBOM(s) for upload"
+
+  - name: convert-sboms-if-needed
+    image: registry.redhat.io/rh-syft-tech-preview/syft-rhel9:1.0.1@sha256:27c268d678103a27b6964c2cd5169040941b7304d0078f9727789ffb8ffba370
+    script: |
+      #!/usr/bin/env bash
+      set -o errexit -o nounset -o pipefail
+      shopt -s nullglob
+
+      for sbom_path in "$WORKDIR"/*.json; do
+        conversion_attr="${sbom_path}.convert_to_version"
+
+        if [[ -f "$conversion_attr" ]]; then
+          cdx_version="$(cat "$conversion_attr")"
+          echo "Converting $(basename "$sbom_path") to CycloneDX $cdx_version"
+          syft convert "$(realpath "$sbom_path")" -o "cyclonedx-json@${cdx_version}=${sbom_path}.supported_version"
+        else
+          cp --no-dereference "$sbom_path" "${sbom_path}.supported_version"
+        fi
+      done
+
+  - name: upload-sboms
+    image: quay.io/redhat-appstudio/appstudio-utils:5bd7d6cb0b17f9f2eab043a8ad16ba3d90551bc2@sha256:8c7fcf86af40c71aeb58e4279625c8308af5144e2f6b8e28b0ec7e795260e5f7
+    script: |
+      #!/usr/bin/env bash
+      set -o errexit -o nounset -o pipefail
+      shopt -s nullglob
+
+      sboms_to_upload=("$WORKDIR"/*.json)
+
+      if [[ "${#sboms_to_upload[@]}" -eq 0 ]]; then
+        echo "No SBOMs to upload"
+        exit 0
+      fi
+
+      read_required_secret_key() {
+        local key="$1"
+        if [[ -f "$TRUSTIFICATION_SECRET_PATH/$key" ]]; then
+          cat "$TRUSTIFICATION_SECRET_PATH/$key"
+        else
+          echo "Missing configuration: $key" >&2
+          echo "Does the '$TRUSTIFICATION_SECRET_NAME' secret exist and contain the required keys?" >&2
+
+          if [[ "$FAIL_IF_TRUSTIFICATION_NOT_CONFIGURED" == "false" ]]; then
+            echo "WARNING: FAIL_IF_TRUSTIFICATION_NOT_CONFIGURED=false; exiting with success" >&2
+            exit 0
+          else
+            exit 1
+          fi
+        fi
+      }
+
+      bombastic_api_url="$(read_required_secret_key bombastic_api_url)"
+      oidc_issuer_url="$(read_required_secret_key oidc_issuer_url)"
+      oidc_client_id="$(read_required_secret_key oidc_client_id)"
+      oidc_client_secret="$(read_required_secret_key oidc_client_secret)"
+
+      curl_opts=(--silent --show-error --fail-with-body --retry "$HTTP_RETRIES")
+
+      openid_configuration_url="${oidc_issuer_url%/}/.well-known/openid-configuration"
+      echo "Getting OIDC issuer configuration from $openid_configuration_url"
+      token_endpoint="$(curl "${curl_opts[@]}" "$openid_configuration_url" | jq -r .token_endpoint)"
+
+      for sbom_path in "${sboms_to_upload[@]}"; do
+        echo
+        echo "--- Uploading $(basename "$sbom_path") ---"
+
+        token_response="$(
+          curl "${curl_opts[@]}" \
+            -u "${oidc_client_id}:${oidc_client_secret}" \
+            -d "grant_type=client_credentials" \
+            "$token_endpoint"
+        )"
+        access_token="$(jq -r .access_token <<< "$token_response")"
+        token_type="$(jq -r .token_type <<< "$token_response")"
+        expires_in="$(jq -r ".expires_in // empty" <<< "$token_response")"
+
+        retry_max_time=0
+        if [[ -n "$expires_in" ]]; then
+          retry_max_time="$expires_in"
+        fi
+
+        sbom_id="$(basename -s .json "$sbom_path")"
+        supported_version_of_sbom="${sbom_path}.supported_version"
+
+        echo "Uploading SBOM to $bombastic_api_url (id=$sbom_id)"
+        curl "${curl_opts[@]}" \
+          --retry-max-time "$retry_max_time" \
+          -H "authorization: $token_type $access_token" \
+          -H "transfer-encoding: chunked" \
+          -H "content-type: application/json" \
+          --data "@$supported_version_of_sbom" \
+          "$bombastic_api_url/api/v1/sbom?id=$sbom_id"
+      done
