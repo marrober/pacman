@@ -201,16 +201,16 @@ spec:
 ##------------------------------------------------------------------
   - name: upload-sbom-to-tpa
     params:
-  - name: COMPONENT_ID
-    value: ${params.IMAGE_SHORT_NAME}
-  - name: SBOM_FILES
-    value: "sbom-image.json"
-  - name: HTTP_RETRIES
-    value: "3"
-  - name: TRUSTIFICATION_SECRET_NAME
-    value: trustification-secret
-  - name: FAIL_IF_TRUSTIFICATION_NOT_CONFIGURED
-    value: "true"
+    - name: COMPONENT_ID
+      value: ${params.IMAGE_SHORT_NAME}
+    - name: SBOM_FILES
+      value: "sbom-image.json"
+    - name: HTTP_RETRIES
+      value: "3"
+    - name: TRUSTIFICATION_SECRET_NAME
+      value: trustification-secret
+    - name: FAIL_IF_TRUSTIFICATION_NOT_CONFIGURED
+      value: "true"
     runAfter:
      - build
     taskRef:
