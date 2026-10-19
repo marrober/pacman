@@ -390,25 +390,17 @@ cosign download attestation --attachment-tag-prefix=sbom- <image-full-image-url-
 
 NOTE: The above command should use the image digest and not the digest associated with the attestation entry in quay.io. It is also useful to pipe the content to a file for further local processing.
 
-The payload string uses URL-safe base64 encoding (which uses - and _ instead of + and /). Standard linux base64 -d throws an "invalid input" error when it encounters these URL-safe characters. A conversion is required before it can be base64 decoded by :
+The payload string again requries some modification and base64 decoding using the command :
 
 ````bash
-jq -s -r '.[0].payload' sbom.json| tr '_-' '/+'
+jq .payload sbom.json | tr -d '"\n' | base64 -d > sbom-content.json
 ````
 
- The result can then be piped to base64 decode and displayed or searched using jq 
-
- ````bash
-jq -s -r '.[0].payload' sbom.json | tr '_-' '/+' | base64 -d | jq .
-````
-
-again piping to a file for further local processing is useful : 
+Update the SBOM to include a better name for the display in Trusted Profile Analyzer :
 
 ````bash
-jq -s -r '.[0].payload' sbom.json | tr '_-' '/+' | base64 -d > decoded-sbom.json
+jq --arg name "<updated-name>" '.metadata.component.name = $name' sbom-content.json > updated-sbom-content.json
 ````
-
-
 
 
 
