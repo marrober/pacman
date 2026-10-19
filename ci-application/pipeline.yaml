@@ -248,7 +248,7 @@ spec:
     - name: COMPONENT_ID
       value: ${params.IMAGE_SHORT_NAME}
     - name: SBOM_FILE
-      value: $(tasks.generate-sbom.sbom_path)
+      value: $(tasks.generate-sbom.results.sbom_path)
     - name: HTTP_RETRIES
       value: "3"
     - name: TRUSTIFICATION_SECRET_NAME
