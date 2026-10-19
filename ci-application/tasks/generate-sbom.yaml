@@ -1,0 +1,42 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: generate-sbom
+spec:
+  params:
+    params:
+    - name: COMPONENT_ID
+      type: string
+    - name: SBOM_FILE
+      type: string
+    - name: public-url
+      type: string
+  stepTemplate:
+    env:
+      - name: "HOME"
+        value: "/tekton/home"
+  results:
+    - name: sbom_path
+  steps:
+    - name: sbom-syft-generate
+      image: quay.io/redhat-appstudio/syft:v0.94.0
+      script: |
+
+        IMAGE_SBOM="$(workspaces.resources.path)/${params.SBOM_FILE}"
+
+        syft ${params.public-url} --output cyclonedx-json=$IMAGE_SBOM
+
+        head -20 "$IMAGE_SBOM"
+
+         echo -n $IMAGE_SBOM > $(results.sbom_path.path)
+      resources:
+        limits:
+          memory: 500Mi
+          cpu: 500m
+        requests:
+          memory: 250Mi
+          cpu: 150m
+  workspaces:
+    - mountPath: /resources
+      name: sboms
+

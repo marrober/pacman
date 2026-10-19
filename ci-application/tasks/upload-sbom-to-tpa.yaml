@@ -21,7 +21,7 @@ spec:
   - name: COMPONENT_ID
     description: Name shown for the SBOM component in the TPA UI
     type: string
-  - name: SBOM_FILES
+  - name: SBOM_FILE
     default: "sbom-image.json"
     description: >-
       Space-separated list of SBOM filenames (relative to the sboms workspace)
