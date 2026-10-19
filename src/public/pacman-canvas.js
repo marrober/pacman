@@ -295,7 +295,7 @@ function geronimo() {
 
         this.pillSize = 3;
         this.powerpillSizeMin = 2;
-        this.powerpillSizeMax = 4;
+        this.powerpillSizeMax = 5;
         this.powerpillSizeCurrent = this.powerpillSizeMax;
         this.powerPillAnimationCounter = 0;
         this.nextPowerPillSize = function() {
