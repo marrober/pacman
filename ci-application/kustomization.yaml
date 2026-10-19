@@ -15,7 +15,7 @@ resources:
 - tasks/push-image-to-quay.yaml
 - tasks/task-verify-commit.yaml
 - tasks/upload-sbom-to-tpa.yaml
-- tasks/generate-sbom/yaml
+- tasks/generate-sbom.yaml
 - triggers/eventListener.yaml
 - triggers/eventListenerRoute.yaml
 - triggers/triggerBinding.yaml
