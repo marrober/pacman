@@ -100,7 +100,7 @@ spec:
   timeouts:
     pipeline: 1h0m0s
   workspaces:
-  - name: workspace
+  - name: resources
     volumeClaimTemplate:
       metadata:
         creationTimestamp: null

@@ -126,7 +126,7 @@ spec:
               requests:
                 storage: 100Mi
             storageClassName: lvms-vg1
-      - name: workspace
+      - name: resources
         volumeClaimTemplate:
           spec:
             accessModes:
