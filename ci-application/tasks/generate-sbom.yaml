@@ -27,11 +27,15 @@ spec:
 
         syft $(params.public-url) --output spdx-json=$IMAGE_SBOM
 
+        ls -al $IMAGE_SBOM
+
         jq 'del(.predicate.files)' $IMAGE_SBOM > $IMAGE_SBOM-2
 
         rm $IMAGE_SBOM
 
         mv $IMAGE_SBOM-2 $IMAGE_SBOM
+
+        ls -al $IMAGE_SBOM
 
         head -20 "$IMAGE_SBOM"
 

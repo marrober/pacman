@@ -78,12 +78,6 @@ spec:
       #!/usr/bin/env bash
       set -o errexit -o nounset -o pipefail
 
-      version_lesser_equal() {
-        local first
-        first="$(printf "%s\n%s" "$1" "$2" | sort --version-sort | head -n 1)"
-        [ "$1" = "$first" ]
-      }
-
       if [[ -f "$TRUSTIFICATION_SECRET_PATH/supported_cyclonedx_version" ]]; then
         supported_version="$(cat "$TRUSTIFICATION_SECRET_PATH/supported_cyclonedx_version")"
       else
@@ -100,15 +94,6 @@ spec:
           echo "SBOM not found, skipping: $filename"
           continue
         fi
-
-        tmp="$(mktemp)"
-        jq .payload $filepath | tr -d '"\n' | base64 -d > $tmp
-
-
-        tmp2="$(mktemp)"
-        jq --arg name "$(params.COMPONENT_ID)" '.metadata.component.name = $name' $tmp > $tmp2
-
-        mv "$tmp2" "$filepath"
 
         sbom_id="sha256:$(sha256sum "$filepath" | cut -d ' ' -f 1)"
         sbom_path="$WORKDIR/$sbom_id.json"
