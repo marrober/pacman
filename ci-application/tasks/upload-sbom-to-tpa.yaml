@@ -73,7 +73,7 @@ spec:
       mountPath: /run/secrets/trustification
   steps:
   - name: prepare-sboms
-    image: quay.io/redhat-appstudio/appstudio-utils:5bd7d6cb0b17f9f2eab043a8ad16ba3d90551bc2@sha256:8c7fcf86af40c71aeb58e4279625c8308af5144e2f6b8e28b0ec7e795260e5f7
+    image: default-route-openshift-image-registry.apps.ocp4.mr-openshift.co.uk/pacman-ci/terminal:2.4
     script: |
       #!/usr/bin/env bash
       set -o errexit -o nounset -o pipefail
@@ -121,7 +121,7 @@ spec:
       echo "Prepared $prepared SBOM(s) for upload"
 
   - name: upload-sboms
-    image: quay.io/redhat-appstudio/appstudio-utils:5bd7d6cb0b17f9f2eab043a8ad16ba3d90551bc2@sha256:8c7fcf86af40c71aeb58e4279625c8308af5144e2f6b8e28b0ec7e795260e5f7
+    image: default-route-openshift-image-registry.apps.ocp4.mr-openshift.co.uk/pacman-ci/terminal:2.4
     script: |
       #!/usr/bin/env bash
       set -o errexit -o nounset -o pipefail

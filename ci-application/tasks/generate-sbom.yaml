@@ -16,7 +16,7 @@ spec:
     - name: sbom_path
   steps:
     - name: sbom-syft-generate
-      image: quay.io/redhat-appstudio/syft:v0.94.0
+      image: default-route-openshift-image-registry.apps.ocp4.mr-openshift.co.uk/pacman-ci/terminal:2.4
       script: |
 
         IMAGE_SBOM="$(workspaces.resources.path)/$(params.SBOM_FILE)"
