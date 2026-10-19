@@ -226,8 +226,6 @@ spec:
 ##------------------------------------------------------------------
   - name: generate-sbom
     params:
-    - name: COMPONENT_ID
-      value: ${params.IMAGE_SHORT_NAME}
     - name: SBOM_FILE
       value: "sbom-image.json"
     - name: public-url
@@ -246,7 +244,7 @@ spec:
   - name: upload-sbom-to-tpa
     params:
     - name: COMPONENT_ID
-      value: ${params.IMAGE_SHORT_NAME}
+      value: $(params.IMAGE_SHORT_NAME):$(tasks.push-image-to-imagestream.results.new-tag)
     - name: SBOM_FILE
       value: $(tasks.generate-sbom.results.sbom_path)
     - name: HTTP_RETRIES

@@ -101,59 +101,24 @@ spec:
           continue
         fi
 
-        if ! jq -e '.bomFormat == "CycloneDX"' "$filepath" >/dev/null; then
-          echo "Not a CycloneDX SBOM, skipping: $filename"
-          continue
-        fi
-
-        # Give the SBOM a stable display name in TPA (Syft defaults to a filesystem path)
         tmp="$(mktemp)"
-        jq --arg name "$COMPONENT_ID" '
-          .metadata.component.name = $name |
-          if .metadata.component.bom-ref then .metadata.component.bom-ref = $name else . end
-        ' "$filepath" > "$tmp"
-        mv "$tmp" "$filepath"
+        jq .payload $filepath | tr -d '"\n' | base64 -d > $tmp
 
-        echo "Prepared CycloneDX SBOM: $filename"
 
-        # ID is checksum of content before any version conversion (avoids duplicates)
+        tmp2="$(mktemp)"
+        jq --arg name "$(params.COMPONENT_ID)" '.metadata.component.name = $name' $tmp > $tmp2
+
+        mv "$tmp2" "$filepath"
+
         sbom_id="sha256:$(sha256sum "$filepath" | cut -d ' ' -f 1)"
         sbom_path="$WORKDIR/$sbom_id.json"
         ln -s "$(realpath "$filepath")" "$sbom_path"
 
-        if [[ -n "$supported_version" ]]; then
-          sbom_version="$(jq -r ".specVersion" "$sbom_path")"
-          if version_lesser_equal "$sbom_version" "$supported_version"; then
-            echo "SBOM version ($sbom_version) is supported (<= $supported_version)"
-          else
-            echo "SBOM version ($sbom_version) needs conversion to $supported_version"
-            printf "%s" "$supported_version" > "${sbom_path}.convert_to_version"
-          fi
-        fi
 
         prepared=$((prepared + 1))
       done
 
       echo "Prepared $prepared SBOM(s) for upload"
-
-  - name: convert-sboms-if-needed
-    image: registry.redhat.io/rh-syft-tech-preview/syft-rhel9:1.0.1@sha256:27c268d678103a27b6964c2cd5169040941b7304d0078f9727789ffb8ffba370
-    script: |
-      #!/usr/bin/env bash
-      set -o errexit -o nounset -o pipefail
-      shopt -s nullglob
-
-      for sbom_path in "$WORKDIR"/*.json; do
-        conversion_attr="${sbom_path}.convert_to_version"
-
-        if [[ -f "$conversion_attr" ]]; then
-          cdx_version="$(cat "$conversion_attr")"
-          echo "Converting $(basename "$sbom_path") to CycloneDX $cdx_version"
-          syft convert "$(realpath "$sbom_path")" -o "cyclonedx-json@${cdx_version}=${sbom_path}.supported_version"
-        else
-          cp --no-dereference "$sbom_path" "${sbom_path}.supported_version"
-        fi
-      done
 
   - name: upload-sboms
     image: quay.io/redhat-appstudio/appstudio-utils:5bd7d6cb0b17f9f2eab043a8ad16ba3d90551bc2@sha256:8c7fcf86af40c71aeb58e4279625c8308af5144e2f6b8e28b0ec7e795260e5f7

@@ -4,8 +4,6 @@ metadata:
   name: generate-sbom
 spec:
   params:
-  - name: COMPONENT_ID
-    type: string
   - name: SBOM_FILE
     type: string
   - name: public-url
@@ -28,6 +26,12 @@ spec:
         export SYFT_FILE_METADATA_SELECTION="none"
 
         syft $(params.public-url) --output spdx-json=$IMAGE_SBOM
+
+        jq 'del(.predicate.files)' $IMAGE_SBOM > $IMAGE_SBOM-2
+
+        rm $IMAGE_SBOM
+
+        mv $IMAGE_SBOM-2 $IMAGE_SBOM
 
         head -20 "$IMAGE_SBOM"
 
