@@ -12,4 +12,4 @@ resources:
 
 images:
 - name: quay.io/marrober/pacman
-  newTag: wfqwb-271a85f
+  newTag: 4rz24-8dde930
