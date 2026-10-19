@@ -4,13 +4,12 @@ metadata:
   name: generate-sbom
 spec:
   params:
-    params:
-    - name: COMPONENT_ID
-      type: string
-    - name: SBOM_FILE
-      type: string
-    - name: public-url
-      type: string
+  - name: COMPONENT_ID
+    type: string
+  - name: SBOM_FILE
+    type: string
+  - name: public-url
+    type: string
   stepTemplate:
     env:
       - name: "HOME"
