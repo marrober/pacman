@@ -54,8 +54,8 @@ spec:
     env:
     - name: SBOMS_DIR
       value: $(workspaces.sboms.path)
-    - name: SBOM_FILES
-      value: $(params.SBOM_FILES)
+    - name: SBOM_FILE
+      value: $(params.SBOM_FILE)
     - name: COMPONENT_ID
       value: $(params.COMPONENT_ID)
     - name: HTTP_RETRIES
@@ -92,7 +92,7 @@ spec:
       fi
 
       prepared=0
-      for filename in $SBOM_FILES; do
+      for filename in $SBOM_FILE; do
         filepath="$SBOMS_DIR/$filename"
 
         if [[ ! -f "$filepath" ]]; then
