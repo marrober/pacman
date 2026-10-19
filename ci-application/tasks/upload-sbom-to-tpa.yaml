@@ -87,13 +87,19 @@ spec:
       if [[ -f "$TRUSTIFICATION_SECRET_PATH/supported_cyclonedx_version" ]]; then
         supported_version="$(cat "$TRUSTIFICATION_SECRET_PATH/supported_cyclonedx_version")"
       else
-        echo "No supported_cyclonedx_version in secret; skipping version checks"
         supported_version=""
       fi
+
+      echo $SBOM_FILE
+      echo $SBOMS_DIR
+
+      ls -al $SBOMS_DIR
 
       prepared=0
       for filename in $SBOM_FILE; do
         filepath="$SBOMS_DIR/$filename"
+
+        echo $filepath
 
         if [[ ! -f "$filepath" ]]; then
           echo "SBOM not found, skipping: $filename"

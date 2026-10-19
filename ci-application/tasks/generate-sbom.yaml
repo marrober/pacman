@@ -29,7 +29,7 @@ spec:
 
         head -20 "$IMAGE_SBOM"
 
-         echo -n $IMAGE_SBOM > $(results.sbom_path.path)
+         echo -n $(params.SBOM_FILE) > $(results.sbom_path.path)
       resources:
         limits:
           memory: 500Mi
