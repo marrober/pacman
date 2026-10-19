@@ -151,6 +151,8 @@ spec:
         echo
         echo "--- Uploading $(basename "$sbom_path") ---"
 
+        head -20 $sbom_path
+
         token_response="$(
           curl "${curl_opts[@]}" \
             -u "${oidc_client_id}:${oidc_client_secret}" \
