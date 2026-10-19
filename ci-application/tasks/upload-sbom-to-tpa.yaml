@@ -169,7 +169,6 @@ spec:
         fi
 
         sbom_id="$(basename -s .json "$sbom_path")"
-        supported_version_of_sbom="${sbom_path}.supported_version"
 
         echo "Uploading SBOM to $bombastic_api_url (id=$sbom_id)"
         curl "${curl_opts[@]}" \
@@ -177,6 +176,5 @@ spec:
           -H "authorization: $token_type $access_token" \
           -H "transfer-encoding: chunked" \
           -H "content-type: application/json" \
-          --data "@$supported_version_of_sbom" \
-          "$bombastic_api_url/api/v1/sbom?id=$sbom_id"
+          --data "$bombastic_api_url/api/v1/sbom?id=$sbom_id"
       done
