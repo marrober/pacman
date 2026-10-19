@@ -25,7 +25,9 @@ spec:
 
         echo $IMAGE_SBOM
 
-        syft $(params.public-url) --select-catalogers +image,-file --output spdx-json=$IMAGE_SBOM
+        export SYFT_FILE_METADATA_SELECTION="none"
+
+        syft $(params.public-url) --output spdx-json=$IMAGE_SBOM
 
         head -20 "$IMAGE_SBOM"
 
