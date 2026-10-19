@@ -12,9 +12,9 @@ spec:
     serviceAccountName: pipeline
   params:
     ## Image repository parameters
-  - name: git-repo-url
+  - name: GIT_REPO
     value: https://github.com/marrober/pacman.git
-  - name: git-revision
+  - name: GIT_REVISION
     value: e325de895fb38a5dad9592ca530c4cb5d7433b8d
     ## Verify enterprise contract
   - name: quay-instance-url

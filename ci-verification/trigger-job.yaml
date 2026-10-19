@@ -1,0 +1,32 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: pre-deployment-webhook-check
+  namespace: pacman-ci
+  annotations:
+    argocd.argoproj.io/hook: PreSync
+    argocd.argoproj.io/hook-delete-policy: HookSucceeded
+spec:
+  template:
+    spec:
+      containers:
+      - name: webhook-trigger
+        image: default-route-openshift-image-registry.apps.ocp4.mr-openshift.co.uk/pacman-ci/terminal:2.4
+        command: ["/bin/sh", "-c"]
+        args:
+          - |
+            echo "Triggering pre-deployment validation webhook..."
+            RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" -X POST \
+              -H "Content-Type: application/json" \
+              -d '{"app": "my-app", "env": "production"}' \
+              https://yourdomain.com)
+            
+            if [ "$RESPONSE" -eq 200 ]; then
+              echo "Webhook check passed successfully."
+              exit 0
+            else
+              echo "Webhook check failed with status code: $RESPONSE"
+              exit 1
+            fi
+      restartPolicy: Never
+  backoffLimit: 1

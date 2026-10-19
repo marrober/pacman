@@ -1,0 +1,22 @@
+apiVersion: triggers.tekton.dev/v1alpha1
+kind: EventListener
+metadata:
+  name: pacman-ci-verification-pipeline-listener-interceptor
+spec:
+  serviceAccountName: pipeline
+  triggers:
+  - name: github-listener-ci-verification
+    interceptors:
+      - ref:
+          name: "github"
+          kind: ClusterInterceptor
+          apiVersion: triggers.tekton.dev
+        params:
+        - name: "overlays"
+          value:
+          - key: branch
+            expression: "body.ref.split('/')[2]"
+    bindings:
+      - ref: pacman-ci-verification-binding
+    template:
+      ref: pacman-ci-verification-template

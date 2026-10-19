@@ -11,9 +11,9 @@ metadata:
 spec:
   params:
     ## repository parameters
-  - name: git-repo-url
+  - name: GIT_REPO
     type: string
-  - name: git-revision
+  - name: GIT_REVISION
     default: ""
     type: string
 ## Verify enterprise contract
@@ -33,7 +33,6 @@ spec:
     type: string
   - name: tuf_mirror
     type: string
-
   tasks:
     - name: verify-enterprise-contract
       params:
@@ -48,9 +47,9 @@ spec:
         - name: TUF_MIRROR
           value: '$(params.tuf_mirror)'
         - name: CI_PROJECT_URL
-          value: '$(params.git-repo-url)'
+          value: '$(params.GIT_REPO)'
         - name: GIT_REVISION
-          value: '$(params.git-revision)'
+          value: '$(params.GIT_REVISION)'
       taskRef:
         kind: Task
         name: verify-enterprise-contract
