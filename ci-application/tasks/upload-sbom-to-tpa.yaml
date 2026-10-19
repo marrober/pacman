@@ -90,11 +90,6 @@ spec:
         supported_version=""
       fi
 
-      echo $SBOM_FILE
-      echo $SBOMS_DIR
-
-      ls -al $SBOMS_DIR
-
       prepared=0
       for filename in $SBOM_FILE; do
         filepath="$SBOMS_DIR/$filename"

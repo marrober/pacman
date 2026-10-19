@@ -385,7 +385,7 @@ Payload[1] - is the full attestation record of the build process.
 To download the SBOM from quay.io use the command :
 
 ````bash
-cosign download attestation --attachment-tag-prefix=sbom- --predicate-type=cyclonedx <image-full-image-url-using-digest>
+cosign download attestation --attachment-tag-prefix=sbom- --predicate-type=cyclonedx <image-full-image-url-using-digest> > sbom.json
 ````
 
 NOTE: The above command should use the image digest and not the digest associated with the attestation entry in quay.io. It is also useful to pipe the content to a file for further local processing.
@@ -393,13 +393,13 @@ NOTE: The above command should use the image digest and not the digest associate
 The payload string uses URL-safe base64 encoding (which uses - and _ instead of + and /). Standard linux base64 -d throws an "invalid input" error when it encounters these URL-safe characters. A conversion is required before it can be base64 decoded by :
 
 ````bash
-jq -s -r '.[0].payload' attestation.json | tr '_-' '/+'
+jq -s -r '.[0].payload' sbom.json| tr '_-' '/+'
 ````
 
  The result can then be piped to base64 decode and displayed or searched using jq 
 
  ````bash
-jq -s -r '.[0].payload' attestation.json | tr '_-' '/+' | base64 -d | jq .
+jq -s -r '.[0].payload' sbom.json | tr '_-' '/+' | base64 -d | jq .
 ````
 
 again piping to a file for further local processing is useful : 
