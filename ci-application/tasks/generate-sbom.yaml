@@ -23,11 +23,11 @@ spec:
 
         echo $IMAGE_SBOM
 
-        export SYFT_FILE_METADATA_SELECTION="none"
-
         syft $(params.public-url) --output spdx-json=$IMAGE_SBOM
 
-        ls -al $IMAGE_SBOM
+        echo "SBOM generated - now to remove the unwanted content"
+
+        ls -al 
 
         jq 'del(.predicate.files)' $IMAGE_SBOM > $IMAGE_SBOM-2
 
@@ -35,7 +35,7 @@ spec:
 
         mv $IMAGE_SBOM-2 $IMAGE_SBOM
 
-        ls -al $IMAGE_SBOM
+        ls -al 
 
         head -20 "$IMAGE_SBOM"
 
