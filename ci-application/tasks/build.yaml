@@ -111,77 +111,77 @@ spec:
           - SETFCAP
       workingDir: /
 
-    - name: get-annotations
-      script: |
-        container=$(buildah --storage-driver=$(params.STORAGE_DRIVER) --root /files/buildah-containers from --pull-never localhost/my-container-image:latest)
+#    - name: get-annotations
+#      script: |
+#        container=$(buildah --storage-driver=$(params.STORAGE_DRIVER) --root /files/buildah-containers from --pull-never localhost/my-container-image:latest)
 
-        buildah inspect --storage-driver=$(params.STORAGE_DRIVER) --root /files/buildah-containers $container | tee /workspace/container_path | grep -A10 ImageAnnotations
+#        buildah inspect --storage-driver=$(params.STORAGE_DRIVER) --root /files/buildah-containers $container | tee /workspace/container_path | grep -A10 ImageAnnotations
 
-      image: image-registry.openshift-image-registry.svc:5000/pacman-ci/buildah:latest
-      resources:
-        limits:
-          memory: 500Mi
-          cpu: 500m
-        requests:
-          memory: 250Mi
-          cpu: 150m
-      securityContext:
-        capabilities:
-          add:
-          - SETFCAP
-      workingDir: /
-    - name: mount-container
-      image: image-registry.openshift-image-registry.svc:5000/pacman-ci/buildah:latest
-      script: |
-        container=$(buildah --storage-driver=$(params.STORAGE_DRIVER) --root /files/buildah-containers from --pull-never localhost/my-container-image:latest)
-        buildah mount --storage-driver=$(params.STORAGE_DRIVER) --root /files/buildah-containers $container | tee /workspace/container_path
-        echo $container > /workspace/container_name
-      securityContext:
-        capabilities:
-          add:
-            - SETFCAP
-      resources:
-        limits:
-          memory: 500Mi
-          cpu: 500m
-        requests:
-          memory: 250Mi
-          cpu: 150m
+#      image: image-registry.openshift-image-registry.svc:5000/pacman-ci/buildah:latest
+#      resources:
+#        limits:
+#          memory: 500Mi
+#          cpu: 500m
+#        requests:
+#          memory: 250Mi
+#          cpu: 150m
+#      securityContext:
+#        capabilities:
+#          add:
+#          - SETFCAP
+#      workingDir: /
+#    - name: mount-container
+#      image: image-registry.openshift-image-registry.svc:5000/pacman-ci/buildah:latest
+#      script: |
+#        container=$(buildah --storage-driver=$(params.STORAGE_DRIVER) --root /files/buildah-containers from --pull-never localhost/my-container-image:latest)
+#        buildah mount --storage-driver=$(params.STORAGE_DRIVER) --root /files/buildah-containers $container | tee /workspace/container_path
+#        echo $container > /workspace/container_name
+#      securityContext:
+#        capabilities:
+#          add:
+#            - SETFCAP
+#      resources:
+#        limits:
+#          memory: 500Mi
+#          cpu: 500m
+#        requests:
+#          memory: 250Mi
+#          cpu: 150m
 
-    - name: sbom-syft-generate
-      image: quay.io/redhat-appstudio/syft:v0.94.0
-      script: |
+#    - name: sbom-syft-generate
+#      image: quay.io/redhat-appstudio/syft:v0.94.0
+#      script: |
 
-        syft dir:$(workspaces.resources.path)/$(params.app-dir) --output cyclonedx-json=$(workspaces.resources.path)/sbom-source.json
-        if [ -f "/workspace/container_path" ]; then
-            CONTAINER_PATH=$(cat /workspace/container_path)
+#        syft dir:$(workspaces.resources.path)/$(params.app-dir) --output cyclonedx-json=$(workspaces.resources.path)/sbom-source.json
+#        if [ -f "/workspace/container_path" ]; then
+#            CONTAINER_PATH=$(cat /workspace/container_path)
 
-            if [ -d "$CONTAINER_PATH" ]; then
-                find "$CONTAINER_PATH" -xtype l -delete
-                syft dir:"$CONTAINER_PATH" --output cyclonedx-json=$(workspaces.resources.path)/sbom-image.json
-            else
-                echo "Directory inside container_path does not exist: $CONTAINER_PATH"
-                exit 1
-            fi
-        fi
+#            if [ -d "$CONTAINER_PATH" ]; then
+#                find "$CONTAINER_PATH" -xtype l -delete
+ #               syft dir:"$CONTAINER_PATH" --output cyclonedx-json=$(workspaces.resources.path)/sbom-image.json
+ #           else
+ #               echo "Directory inside container_path does not exist: $CONTAINER_PATH"
+ #               exit 1
+ #           fi
+ #       fi
 
-        IMAGE_SBOM="$(workspaces.resources.path)/sbom-image.json"
-        if [ -f "$IMAGE_SBOM" ]; then
-            echo "=== Previewing top 50 lines of sbom-image.json ==="
-            cat "$IMAGE_SBOM"
-        else
-            echo "=== Finished: No image SBOM file was generated to preview ==="
-        fi
-      resources:
-        limits:
-          memory: 500Mi
-          cpu: 500m
-        requests:
-          memory: 250Mi
-          cpu: 150m
-  volumes:
-    - emptyDir: {}
-      name: envparams
+#        IMAGE_SBOM="$(workspaces.resources.path)/sbom-image.json"
+#        if [ -f "$IMAGE_SBOM" ]; then
+#            echo "=== Previewing top 50 lines of sbom-image.json ==="
+#            cat "$IMAGE_SBOM"
+#        else
+#            echo "=== Finished: No image SBOM file was generated to preview ==="
+#        fi
+#      resources:
+#        limits:
+#          memory: 500Mi
+#          cpu: 500m
+#        requests:
+#          memory: 250Mi
+#          cpu: 150m
+#  volumes:
+#    - emptyDir: {}
+#      name: envparams
   workspaces:
     - mountPath: /files
       name: files

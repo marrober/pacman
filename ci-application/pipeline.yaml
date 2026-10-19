@@ -113,7 +113,7 @@ spec:
       name: git-clone
     workspaces:
     - name: output
-      workspace: workspace
+      workspace: resources
 ##------------------------------------------------------------------
 # Base image check
 ##------------------------------------------------------------------
@@ -167,7 +167,7 @@ spec:
       name: verify-commit
     workspaces:
       - name: repository
-        workspace: workspace
+        workspace: resources
 ##------------------------------------------------------------------
 # Build Node.JS application
 ##------------------------------------------------------------------
@@ -193,7 +193,7 @@ spec:
       name: build
     workspaces:
     - name: resources
-      workspace: workspace
+      workspace: resources
     - name: files
       workspace: files
 #------------------------------------------------------------------
@@ -238,8 +238,8 @@ spec:
       kind: Task
       name: generate-sbom
     workspaces:
-    - name: sboms
-      workspace: workspace   
+    - name: resources
+      workspace: resources   
 ##------------------------------------------------------------------
 # Upload SBOM to TPA
 ##------------------------------------------------------------------
@@ -256,13 +256,13 @@ spec:
     - name: FAIL_IF_TRUSTIFICATION_NOT_CONFIGURED
       value: "true"
     runAfter:
-     - build
+     - generate-sbom
     taskRef:
       kind: Task
       name: upload-sbom-to-tpa
     workspaces:
     - name: sboms
-      workspace: workspace   
+      workspace: resources   
 ##------------------------------------------------------------------
 # Perform image build check
 ##------------------------------------------------------------------
@@ -336,7 +336,7 @@ spec:
       - "pass"
     workspaces:
     - name: resources
-      workspace: workspace
+      workspace: resources
     - name: files
       workspace: files
 ##------------------------------------------------------------------
@@ -432,6 +432,6 @@ spec:
     - name: CHAINS-GIT_COMMIT
       value: "$(tasks.fetch-repository.results.commit)"
   workspaces:
-  - name: workspace
+  - name: resources
   - name: files
   - name: violations
