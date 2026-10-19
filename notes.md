@@ -380,12 +380,12 @@ Payload[1] - is the full attestation record of the build process.
 - [ ] Document how to use the attestation record for a rebuild of the container image
 
 
-## Examining the SBOM
+## Examining the SPDX SBOM
 
 To download the SBOM from quay.io use the command :
 
 ````bash
-cosign download attestation --attachment-tag-prefix=sbom- --predicate-type=cyclonedx <image-full-image-url-using-digest> > sbom.json
+cosign download attestation --attachment-tag-prefix=sbom- <image-full-image-url-using-digest> > sbom.json
 ````
 
 NOTE: The above command should use the image digest and not the digest associated with the attestation entry in quay.io. It is also useful to pipe the content to a file for further local processing.

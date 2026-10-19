@@ -25,7 +25,7 @@ spec:
 
         echo $IMAGE_SBOM
 
-        syft $(params.public-url) --output spdx-json=$IMAGE_SBOM
+        syft $(params.public-url) --file-metadata-selection=none --output spdx-json=$IMAGE_SBOM
 
         head -20 "$IMAGE_SBOM"
 
