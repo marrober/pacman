@@ -21,7 +21,7 @@ spec:
       image: quay.io/redhat-appstudio/syft:v0.94.0
       script: |
 
-        IMAGE_SBOM="$(workspaces.resources.path)/${params.SBOM_FILE}"
+        IMAGE_SBOM="$(workspaces.resources.path)/$(params.SBOM_FILE)"
 
         echo $IMAGE_SBOM
 
