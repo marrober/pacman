@@ -176,5 +176,5 @@ spec:
           -H "authorization: $token_type $access_token" \
           -H "transfer-encoding: chunked" \
           -H "content-type: application/json" \
-          "$bombastic_api_url/api/v1/sbom?id=$sbom_id"
+          "$bombastic_api_url/api/v1/sbom?id=$sbom_id -vvv"
       done
