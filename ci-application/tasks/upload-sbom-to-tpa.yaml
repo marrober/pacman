@@ -175,5 +175,5 @@ spec:
           --retry-max-time "$retry_max_time" \
           -H "authorization: $token_type $access_token" \
           -H "transfer-encoding: chunked" \
-          -H "content-type: application/json" "$bombastic_api_url/api/v1/sbom?id=$sbom_id"
+          -H "content-type: application/json" "$bombastic_api_url/api/v3/sbom?id=$sbom_id"
       done
