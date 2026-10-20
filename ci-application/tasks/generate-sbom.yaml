@@ -42,8 +42,8 @@ spec:
          echo -n $(params.SBOM_FILE) > $(results.sbom_path.path)
       resources:
         limits:
-          memory: 500Mi
-          cpu: 500m
+          memory: 1000Mi
+          cpu: 1000m
         requests:
           memory: 250Mi
           cpu: 150m
