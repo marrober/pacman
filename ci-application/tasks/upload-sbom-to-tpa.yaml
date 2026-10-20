@@ -141,7 +141,7 @@ spec:
       oidc_client_id="$(read_required_secret_key oidc_client_id)"
       oidc_client_secret="$(read_required_secret_key oidc_client_secret)"
 
-      curl_opts=(--silent --show-error --fail-with-body --retry "$HTTP_RETRIES")
+      curl_opts=(-vvv --show-error --fail-with-body --retry "$HTTP_RETRIES")
 
       openid_configuration_url="${oidc_issuer_url%/}/.well-known/openid-configuration"
       echo "Getting OIDC issuer configuration from $openid_configuration_url"
@@ -175,6 +175,5 @@ spec:
           --retry-max-time "$retry_max_time" \
           -H "authorization: $token_type $access_token" \
           -H "transfer-encoding: chunked" \
-          -H "content-type: application/json" \
-          "$bombastic_api_url/api/v1/sbom?id=$sbom_id -vvv"
+          -H "content-type: application/json" "$bombastic_api_url/api/v1/sbom?id=$sbom_id"
       done
