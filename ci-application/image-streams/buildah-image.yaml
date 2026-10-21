@@ -5,7 +5,7 @@ metadata:
   namespace: pacman-ci
 spec:
   lookupPolicy:
-    local: false
+    local: true
   tags:
     - name: latest
       from:
