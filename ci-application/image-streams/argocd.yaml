@@ -12,4 +12,6 @@ spec:
         kind: DockerImage
         name: 'quay.io/argoproj/argocd:v3.5.3'
       importPolicy:
-        importMode: PreserveOriginal
+        importMode: Legacy
+      referencePolicy:
+        type: Local

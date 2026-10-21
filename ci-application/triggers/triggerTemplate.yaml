@@ -60,7 +60,7 @@ spec:
         - name: TLSVERIFY
           value: false
         - name: node_js_image_repo
-          value: default-route-openshift-image-registry.apps.ocp4.mr-openshift.co.uk/pacman-ci
+          value: image-registry.openshift-image-registry.svc:5000/pacman-ci
           # value: registry.access.redhat.com/hi
         - name: node_js_short_name
           value: nodejs

@@ -14,4 +14,4 @@ spec:
       importPolicy:
         importMode: Legacy
       referencePolicy:
-        type: Source
+        type: Local
