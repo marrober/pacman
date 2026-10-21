@@ -112,7 +112,7 @@ spec:
         resources:
           requests:
             storage: 1Gi
-        storageClassName: lvms-vg1
+        storageClassName: gp2-csi
   - name: files
     volumeClaimTemplate:
       metadata:
@@ -125,7 +125,7 @@ spec:
         resources:
           requests:
             storage: 20Gi
-        storageClassName: lvms-vg1
+        storageClassName: gp2-csi
   - name: violations
     volumeClaimTemplate:
       metadata:
@@ -138,5 +138,5 @@ spec:
         resources:
           requests:
             storage: 100Mi
-        storageClassName: lvms-vg1
+        storageClassName: gp2-csi
      

@@ -41,7 +41,7 @@ oc create secret generic github-access-token --from-literal=token=
 oc apply -f ~/Downloads/marrober-secret.yml
 ````
 
-## ArgoCD Sync config
+## ArgoCD Sync config - may not be needed 
 
 Login to the ArgoCD instance and create the role and policy
 
@@ -107,7 +107,7 @@ oc create secret generic acs-secret \
 --from-literal=acs_central_endpoint=$(oc get route/central -n stackrox -o jsonpath='{.spec.host}{":443"}')
 ````
 
-# ACS read the Openshift Image Registry
+# ACS read the Openshift Image Registry - may not be needed.
 
 ````bash
 oc get sa/image-pusher -o yaml | grep image-pusher-dockercfg
@@ -155,7 +155,7 @@ subjects:
 To create a token that will not time out quickly use the command below. This will create a token that will last 625 days.
 
 ````bash
-oc create token pipeine --duration=15000h --bound-object-kind Secret --bound-object-name pipeine-dockercfg-<whatever>
+oc create token pipeline --duration=15000h --bound-object-kind Secret --bound-object-name pipeline-dockercfg-<whatever>
 ````
 
 Take the password section from the item with index : default-route-openshift-image-registry.apps.cluster-.....
@@ -230,10 +230,10 @@ To suspend signing of container images in Tekton add the field :
 Check the status of the Tekton signing configuration :
 
 ''''bash
-oc get configmap/chains-config -n openshift-pipelines -o jsonpath='{.data['\''transparency\.enabled'\'']}' ; echo ""\n
-oc get configmap/chains-config -n openshift-pipelines -o jsonpath='{.data['\''artifacts\.oci\.signer'\'']}' ; echo ""\n
-oc get configmap/chains-config -n openshift-pipelines -o jsonpath='{.data['\''artifacts\.pipelinerun\.format'\'']}' ; echo ""\n
-oc get configmap/chains-config -n openshift-pipelines -o jsonpath='{.data['\''transparency\.url'\'']}' ; echo ""\n
+oc get configmap/chains-config -n openshift-pipelines -o jsonpath='{.data['\''transparency\.enabled'\'']}' ; echo ""
+oc get configmap/chains-config -n openshift-pipelines -o jsonpath='{.data['\''artifacts\.oci\.signer'\'']}' ; echo ""
+oc get configmap/chains-config -n openshift-pipelines -o jsonpath='{.data['\''artifacts\.pipelinerun\.format'\'']}' ; echo ""
+oc get configmap/chains-config -n openshift-pipelines -o jsonpath='{.data['\''transparency\.url'\'']}' ; echo ""
  ''''
 
 ## Verification
@@ -282,7 +282,7 @@ The second payload section includes more extensive information on the build proc
 
 ## For signing commits to GitHub
 
-Run the script content at : Note : Copy and paste the content into a command window. Do not run as a shell script.
+Run the script content below, then copy and paste the content into a command window. Do not run as a shell script.
 
 ````bash
 image-git-signing-setup/local-git-signing-setup.txt
@@ -401,6 +401,27 @@ Update the SBOM to include a better name for the display in Trusted Profile Anal
 ````bash
 jq --arg name "<updated-name>" '.metadata.component.name = $name' sbom-content.json > updated-sbom-content.json
 ````
+
+## Upload SBOM to TPA
+
+pipeline task must include the command :
+
+TOKEN=$(curl -s -X POST \
+  "${OIDC_ISSUER}/protocol/openid-connect/token" \
+  -d "grant_type=password" \
+  -d "client_id=cli" \
+  -d "client_secret=${CLI_SECRET}" \
+  -d "username=mark" \
+  -d "password=${USER_PASSWORD}" \
+  -d "scope=openid create:document" \
+  | jq -r .access_token)
+
+curl -X POST "${TPA_URL}/api/v3/sbom" \
+  -H "Authorization: Bearer ${TOKEN}" \
+  -H "Content-Type: application/json" \
+  --data-binary @sbom.json
+
+
 
 
 
