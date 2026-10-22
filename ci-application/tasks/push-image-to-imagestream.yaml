@@ -51,7 +51,9 @@ spec:
 
         echo $REGISTRY_HOST
 
-        buildah login -u serviceaccount -p "$(cat /var/run/secrets/kubernetes.io/serviceaccount/token)" $REGISTRY_HOST
+        NAMESPACE=$(cat /var/run/secrets/kubernetes.io/serviceaccount/namespace)
+
+        buildah login -u "system:serviceaccount:${NAMESPACE}:pipeline" -p "$(cat /var/run/secrets/kubernetes.io/serviceaccount/token)" $REGISTRY_HOST
 
         buildah push --storage-driver=$(params.STORAGE_DRIVER) \
 
