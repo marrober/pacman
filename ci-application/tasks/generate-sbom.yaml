@@ -21,7 +21,11 @@ spec:
 
         IMAGE_SBOM="$(workspaces.resources.path)/$(params.SBOM_FILE)"
 
-        $nameTag = $(echo "$(params.public-url)" | cut -d'/' -f3')
+        PUBLIC_URL = $(params.public-url)
+
+        $nameTag = $(echo "$PUBLIC_URL" | cut -d'/' -f3)
+
+        echo $nameTag
 
         echo $IMAGE_SBOM
 
