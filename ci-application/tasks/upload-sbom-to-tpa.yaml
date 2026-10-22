@@ -159,8 +159,6 @@ spec:
 
       echo $token_endpoint
 
-      curl "${curl_opts[@]}" "$openid_configuration_url" | jq -r .
-
       for sbom_path in "${sboms_to_upload[@]}"; do
         echo
         echo "--- Uploading $(basename "$sbom_path") ---"
@@ -193,11 +191,13 @@ spec:
 
         echo $sbom_path
 
+        echo "UPLOAD FROM HERE ....."
+
         echo "Uploading SBOM to $bombastic_api_url (id=$sbom_id)"
+
         curl "${curl_opts[@]}" -X 'POST' \
           --retry-max-time "$retry_max_time" \
           -H "authorization: $token_type $access_token" \
-          -H "transfer-encoding: chunked" \
-          -H "content-type: application/json" "$bombastic_api_url/api/v3/sbom?id=$sbom_id" \
+          -H "content-type: application/json" "$bombastic_api_url/api/v2/sbom?id=$sbom_id" \
           --data-binary "@$sbom_path"
       done
