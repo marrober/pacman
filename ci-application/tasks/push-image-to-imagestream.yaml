@@ -47,6 +47,12 @@ spec:
 
         echo -n $tag > $(results.new-tag.path)
 
+        REGISTRY_HOST=$(echo "$(params.imagestream-url)" | cut -d'/' -f1)
+
+        echo $REGISTRY_HOST
+
+        buildah login -u serviceaccount -p "$(cat /var/run/secrets/kubernetes.io/serviceaccount/token)" $REGISTRY_HOST
+
         buildah push --storage-driver=$(params.STORAGE_DRIVER) \
 
         --tls-verify=$(params.TLSVERIFY) --root /files/buildah-containers \
