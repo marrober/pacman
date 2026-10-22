@@ -152,6 +152,10 @@ spec:
       echo "Getting OIDC issuer configuration from $openid_configuration_url"
       token_endpoint="$(curl "${curl_opts[@]}" "$openid_configuration_url" | jq -r .token_endpoint)"
 
+      echo $token_endpoint
+
+      curl "${curl_opts[@]}" "$openid_configuration_url" | jq -r .
+
       for sbom_path in "${sboms_to_upload[@]}"; do
         echo
         echo "--- Uploading $(basename "$sbom_path") ---"
