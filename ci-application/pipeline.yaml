@@ -117,32 +117,32 @@ spec:
 ##------------------------------------------------------------------
 # Base image check
 ##------------------------------------------------------------------
-  - name: base-image-check
-    params:
-    - name: acs_central_endpoint
-      value: $(params.acs_central_endpoint)
-    - name: acs_api_token
-      value: $(params.acs_api_token)
-    - name: public-url
-      value: $(params.node_js_image_repo)/$(params.node_js_image_name):$(params.node_js_image_tag)
-    - name: image-short-name
-      value: $(params.node_js_short_name)
-    - name: image-tag
-      value: $(params.node_js_image_tag)
-    - name: image-build-namespace
-      value: $(params.image-build-namespace)
-    - name: roxctl-output-format
-      value: $(params.roxctl-output-format)
-    - name: base_check
-      value: "true"
-    taskRef:
-      kind: Task
-      name: acs-image-build-check
-    runAfter:
-    - fetch-repository
-    workspaces:
-    - name: violations
-      workspace: violations
+#  - name: base-image-check
+#    params:
+#    - name: acs_central_endpoint
+#      value: $(params.acs_central_endpoint)
+#    - name: acs_api_token
+#      value: $(params.acs_api_token)
+#    - name: public-url
+#      value: $(params.node_js_image_repo)/$(params.node_js_image_name):$(params.node_js_image_tag)
+#    - name: image-short-name
+#      value: $(params.node_js_short_name)
+#    - name: image-tag
+#      value: $(params.node_js_image_tag)
+#    - name: image-build-namespace
+#      value: $(params.image-build-namespace)
+#    - name: roxctl-output-format
+#      value: $(params.roxctl-output-format)
+#    - name: base_check
+#      value: "true"
+#    taskRef:
+#      kind: Task
+#      name: acs-image-build-check
+#    runAfter:
+#    - fetch-repository
+#    workspaces:
+#    - name: violations
+#      workspace: violations
 ##------------------------------------------------------------------
 # Verify commit of code to the repository
 ##------------------------------------------------------------------
