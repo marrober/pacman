@@ -141,7 +141,12 @@ spec:
       oidc_client_id="$(read_required_secret_key oidc_client_id)"
       oidc_client_secret="$(read_required_secret_key oidc_client_secret)"
 
-      curl_opts=(-k --show-error --fail-with-body --retry "$HTTP_RETRIES")
+      echo $bombastic_api_url
+      echo $oidc_issuer_url
+      echo $oidc_client_id
+      echo $oidc_client_secret
+
+      curl_opts=(-k -vvv --show-error --fail-with-body --retry "$HTTP_RETRIES")
 
       openid_configuration_url="${oidc_issuer_url%/}/.well-known/openid-configuration"
       echo "Getting OIDC issuer configuration from $openid_configuration_url"
@@ -159,9 +164,16 @@ spec:
             -d "grant_type=client_credentials" \
             "$token_endpoint"
         )"
+
+        echo $token_response
+
         access_token="$(jq -r .access_token <<< "$token_response")"
         token_type="$(jq -r .token_type <<< "$token_response")"
         expires_in="$(jq -r ".expires_in // empty" <<< "$token_response")"
+
+        echo $access_token
+        echo $token_type
+        echo $expires_in
 
         retry_max_time=0
         if [[ -n "$expires_in" ]]; then
