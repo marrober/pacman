@@ -23,25 +23,23 @@ spec:
 
         IMAGE_SBOM="$(workspaces.resources.path)/$(params.SBOM_FILE)"
 
-        $nameTag = $(echo "$PUBLIC_URL" | cut -d'/' -f3)
+        nameTag=$(echo "$PUBLIC_URL" | cut -d'/' -f3)
 
         echo $nameTag
 
         echo $IMAGE_SBOM
 
-        syft $(params.public-url) --output spdx-json=$IMAGE_SBOM
+        syft "$(params.public-url)" --output spdx-json="$IMAGE_SBOM"
 
         echo "SBOM generated - now to remove the unwanted content"
 
         ls -al 
 
-        jq 'del(.predicate.files)' $IMAGE_SBOM > $IMAGE_SBOM-2
-
-        jq --arg name "pacman-update-name" '.name = $nameTag' $IMAGE_SBOM-2 >$IMAGE_SBOM-3
+        jq --arg name "$nameTag" '.name = $name' $IMAGE_SBOM >$IMAGE_SBOM-2
 
         rm $IMAGE_SBOM
 
-        mv $IMAGE_SBOM-3 $IMAGE_SBOM
+        mv $IMAGE_SBOM-2 $IMAGE_SBOM
 
         ls -al 
 
