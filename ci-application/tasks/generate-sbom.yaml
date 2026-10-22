@@ -12,6 +12,8 @@ spec:
     env:
       - name: "HOME"
         value: "/tekton/home"
+      - name: PUBLIC_URL
+        value: $(params.public-url)
   results:
     - name: sbom_path
   steps:
@@ -20,8 +22,6 @@ spec:
       script: |
 
         IMAGE_SBOM="$(workspaces.resources.path)/$(params.SBOM_FILE)"
-
-        PUBLIC_URL = $(params.public-url)
 
         $nameTag = $(echo "$PUBLIC_URL" | cut -d'/' -f3)
 
