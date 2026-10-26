@@ -414,11 +414,11 @@ spec:
       value: $(params.argocd-version)
     taskRef:
       kind: Task
-     name: argocd-sync-and-wait
+      name: argocd-sync-and-wait
     runAfter:
     - update-dev-deployment
 ##------------------------------------------------------------------
-# Workspaces
+# Workspaces and results
 ##------------------------------------------------------------------
   results:
     - name: IMAGE_URL

@@ -10,7 +10,7 @@ metadata:
     pipeline.openshift.io/runtime-version: 16-ubi8
     pipeline.openshift.io/type: kubernetes
     tekton.dev/pipeline: pacman
-  generateName: pacman-pr-
+  generateName: pacman-full-pr-
 spec:
   params:
     ## Repository parameters
