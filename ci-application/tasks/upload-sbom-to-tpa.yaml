@@ -141,23 +141,23 @@ spec:
       oidc_client_id="$(read_required_secret_key oidc_client_id)"
       oidc_client_secret="$(read_required_secret_key oidc_client_secret)"
 
-      //echo $bombastic_api_url
-      //echo $oidc_issuer_url
-      //echo $oidc_client_id
-      //echo $oidc_client_secret
+      # echo $bombastic_api_url
+      # echo $oidc_issuer_url
+      # echo $oidc_client_id
+      # echo $oidc_client_secret
 
       curl_opts=(-k --show-error --fail-with-body --retry "$HTTP_RETRIES")
 
       openid_configuration_url="${oidc_issuer_url%/}/.well-known/openid-configuration"
 
-      //echo $openid_configuration_url
+      # echo $openid_configuration_url
 
-      //curl "${curl_opts[@]}" "$openid_configuration_url" | jq -r .
+      # curl "${curl_opts[@]}" "$openid_configuration_url" | jq -r .
 
       echo "Getting OIDC issuer configuration from $openid_configuration_url"
       token_endpoint="$(curl "${curl_opts[@]}" "$openid_configuration_url" | jq -r .token_endpoint)"
 
-      //echo "Token endpoint : $token_endpoint"
+      # echo "Token endpoint : $token_endpoint"
 
       for sbom_path in "${sboms_to_upload[@]}"; do
         echo
@@ -172,15 +172,15 @@ spec:
             "$token_endpoint"
         )"
 
-        //echo "Token response : $token_response"
+        # echo "Token response : $token_response"
 
         access_token="$(jq -r .access_token <<< "$token_response")"
         token_type="$(jq -r .token_type <<< "$token_response")"
         expires_in="$(jq -r ".expires_in // empty" <<< "$token_response")"
 
-        //echo $access_token
-        //echo $token_type
-        //echo $expires_in
+        # echo $access_token
+        # echo $token_type
+        # echo $expires_in
 
         retry_max_time=0
         if [[ -n "$expires_in" ]]; then
