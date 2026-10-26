@@ -47,14 +47,6 @@ spec:
 
         echo -n $tag > $(results.new-tag.path)
 
-        REGISTRY_HOST=$(echo "$(params.imagestream-url)" | cut -d'/' -f1)
-
-        echo $REGISTRY_HOST
-
-        NAMESPACE=$(cat /var/run/secrets/kubernetes.io/serviceaccount/namespace)
-
-        buildah login -u "admin" -p "" $REGISTRY_HOST
-
         buildah push --storage-driver=$(params.STORAGE_DRIVER) \
 
         --tls-verify=$(params.TLSVERIFY) --root /files/buildah-containers \

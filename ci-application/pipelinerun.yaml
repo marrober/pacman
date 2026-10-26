@@ -34,7 +34,7 @@ spec:
     value: "f9a974355acffb8c3036e52380becaf797f97edc13bf6041400904955625c24a"
     ## Image build parameters
   - name: IMAGE_NAME
-    value: default-route-openshift-image-registry.apps.ocp.pcml5.sandbox3595.opentlc.com/$(context.taskRun.namespace)/pacman
+    value: default-route-openshift-image-registry.apps.ocp4.mr-openshift.co.uk/$(context.taskRun.namespace)/pacman
   - name: IMAGE_SHORT_NAME
     value: pacman
   - name: PATH_CONTEXT
@@ -112,7 +112,7 @@ spec:
         resources:
           requests:
             storage: 1Gi
-        storageClassName: gp2-csi
+        storageClassName: lvms-vg1
   - name: files
     volumeClaimTemplate:
       metadata:
@@ -125,7 +125,7 @@ spec:
         resources:
           requests:
             storage: 20Gi
-        storageClassName: gp2-csi
+        storageClassName: lvms-vg1
   - name: violations
     volumeClaimTemplate:
       metadata:
@@ -138,5 +138,5 @@ spec:
         resources:
           requests:
             storage: 100Mi
-        storageClassName: gp2-csi
+        storageClassName: lvms-vg1
      
