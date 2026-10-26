@@ -7,7 +7,7 @@ metadata:
     pipeline.openshift.io/runtime: nodejs
     pipeline.openshift.io/runtime-version: 16-ubi8
     pipeline.openshift.io/type: kubernetes
-  name: pacman
+  name: pacman-full
 spec:
   params:
     ## Repository parameters
@@ -117,57 +117,57 @@ spec:
 ##------------------------------------------------------------------
 # Base image check
 ##------------------------------------------------------------------
-#  - name: base-image-check
-#    params:
-#    - name: acs_central_endpoint
-#      value: $(params.acs_central_endpoint)
-#    - name: acs_api_token
-#      value: $(params.acs_api_token)
-#    - name: public-url
-#      value: $(params.node_js_image_repo)/$(params.node_js_image_name):$(params.node_js_image_tag)
-#    - name: image-short-name
-#      value: $(params.node_js_short_name)
-#    - name: image-tag
-#      value: $(params.node_js_image_tag)
-#    - name: image-build-namespace
-#      value: $(params.image-build-namespace)
-#    - name: roxctl-output-format
-#      value: $(params.roxctl-output-format)
-#    - name: base_check
-#      value: "true"
-#    taskRef:
-#      kind: Task
-#      name: acs-image-build-check
-#    runAfter:
-#    - fetch-repository
-#    workspaces:
-#    - name: violations
-#      workspace: violations
+  - name: base-image-check
+    params:
+    - name: acs_central_endpoint
+      value: $(params.acs_central_endpoint)
+    - name: acs_api_token
+      value: $(params.acs_api_token)
+    - name: public-url
+      value: $(params.node_js_image_repo)/$(params.node_js_image_name):$(params.node_js_image_tag)
+    - name: image-short-name
+      value: $(params.node_js_short_name)
+    - name: image-tag
+      value: $(params.node_js_image_tag)
+    - name: image-build-namespace
+      value: $(params.image-build-namespace)
+    - name: roxctl-output-format
+      value: $(params.roxctl-output-format)
+    - name: base_check
+      value: "true"
+    taskRef:
+      kind: Task
+      name: acs-image-build-check
+    runAfter:
+    - fetch-repository
+    workspaces:
+    - name: violations
+      workspace: violations
 ##------------------------------------------------------------------
 # Verify commit of code to the repository
 ##------------------------------------------------------------------
-#  - name: verify-commit
-#    params:
-#    - name: certificate-identity
-#      value: $(params.certificate-identity)
-#    - name: oidc-issuer
-#      value: $(params.oidc-issuer)
-#    - name: rekor-url
-#      value: $(params.rekor-url)
-#    - name: tuf-mirror
-#      value: $(params.tuf-mirror)
-#    - name: tuf-root-hash
-#      value: $(params.tuf-root-hash)
-#    - name: git-repo-name
-#      value: $(params.GIT_REPO_NAME)
-#    runAfter:
-#      - fetch-repository
-#    taskRef:
-#      kind: Task
-#      name: verify-commit
-#    workspaces:
-#      - name: repository
-#        workspace: resources
+  - name: verify-commit
+    params:
+    - name: certificate-identity
+      value: $(params.certificate-identity)
+    - name: oidc-issuer
+      value: $(params.oidc-issuer)
+    - name: rekor-url
+      value: $(params.rekor-url)
+    - name: tuf-mirror
+      value: $(params.tuf-mirror)
+    - name: tuf-root-hash
+      value: $(params.tuf-root-hash)
+    - name: git-repo-name
+      value: $(params.GIT_REPO_NAME)
+    runAfter:
+      - fetch-repository
+    taskRef:
+      kind: Task
+      name: verify-commit
+    workspaces:
+      - name: repository
+        workspace: resources
 ##------------------------------------------------------------------
 # Build Node.JS application
 ##------------------------------------------------------------------
@@ -186,8 +186,8 @@ spec:
     - name: node_js_image_tag
       value: $(params.node_js_image_tag)
     runAfter:
-#     - verify-commit
-     - fetch-repository
+     - verify-commit
+#     - fetch-repository
     taskRef:
       kind: Task
       name: build
@@ -264,167 +264,167 @@ spec:
 ##------------------------------------------------------------------
 # Perform image build check
 ##------------------------------------------------------------------
-#  - name: image-build-check
-#    params:
-#    - name: acs_central_endpoint
-#      value: $(params.acs_central_endpoint)
-#    - name: acs_api_token
-#      value: $(params.acs_api_token)
-#    - name: public-url
-#      value: $(params.IMAGE_NAME):$(tasks.push-image-to-imagestream.results.new-tag)
-#    - name: image-short-name
-#      value: $(params.IMAGE_SHORT_NAME)
-#    - name: image-tag
-#      value: $(tasks.push-image-to-imagestream.results.new-tag)
-#    - name: image-build-namespace
-#      value: $(params.image-build-namespace)
-#    - name: roxctl-output-format
-#      value: $(params.roxctl-output-format)
-#    taskRef:
-#      kind: Task
-#      name: acs-image-build-check
-#    runAfter:
-#    - push-image-to-imagestream
-#    workspaces:
-#    - name: violations
-#      workspace: violations
+  - name: image-build-check
+    params:
+    - name: acs_central_endpoint
+      value: $(params.acs_central_endpoint)
+    - name: acs_api_token
+      value: $(params.acs_api_token)
+    - name: public-url
+      value: $(params.IMAGE_NAME):$(tasks.push-image-to-imagestream.results.new-tag)
+    - name: image-short-name
+      value: $(params.IMAGE_SHORT_NAME)
+    - name: image-tag
+      value: $(tasks.push-image-to-imagestream.results.new-tag)
+    - name: image-build-namespace
+      value: $(params.image-build-namespace)
+    - name: roxctl-output-format
+      value: $(params.roxctl-output-format)
+    taskRef:
+      kind: Task
+      name: acs-image-build-check
+    runAfter:
+    - push-image-to-imagestream
+    workspaces:
+    - name: violations
+      workspace: violations
 ##------------------------------------------------------------------
 # Compare base and built image CVE violations
 ##------------------------------------------------------------------
-#  - name: compare-violations
-#    taskRef:
-#      kind: Task
-#      name: compare-violations
-#    runAfter:
-#    - base-image-check
-#    - image-build-check
-#    workspaces:
-#    - name: violations
-#      workspace: violations
+  - name: compare-violations
+    taskRef:
+      kind: Task
+      name: compare-violations
+    runAfter:
+    - base-image-check
+    - image-build-check
+    workspaces:
+    - name: violations
+      workspace: violations
 ##------------------------------------------------------------------
 # Push the new runtime image to quay.io
 ##------------------------------------------------------------------
-#  - name: push-image-to-quay
-#    params:
-#    - name: quay-instance-url
-#      value: $(params.quay-instance-url)
-#    - name: quay-account
-#      value: $(params.quay-account)
-#    - name: quay-repository
-#      value: $(params.quay-repository)
-#    - name: image-stream-location
-#      value: $(params.IMAGE_NAME)
-#    - name: STORAGE_DRIVER
-#      value: $(params.STORAGE_DRIVER)
-#    - name: imageTag
-#      value: $(tasks.push-image-to-imagestream.results.new-tag)
-#    - name: node_js_image_name
-#      value: $(params.node_js_image_name)
-#    - name: rekor-url
-#      value: $(params.rekor-url)
-#    taskRef:
-#      kind: Task
-#      name: push-image-to-quay
-#    runAfter:
-#      - image-build-check
-#    when:
-#    - input: "$(tasks.image-build-check.results.scan-result)"
-#      operator: in
-#      values:
-#      - "pass"
-#    workspaces:
-#    - name: resources
-#      workspace: resources
-#    - name: files
-#      workspace: files
+  - name: push-image-to-quay
+    params:
+    - name: quay-instance-url
+      value: $(params.quay-instance-url)
+    - name: quay-account
+      value: $(params.quay-account)
+    - name: quay-repository
+      value: $(params.quay-repository)
+    - name: image-stream-location
+      value: $(params.IMAGE_NAME)
+    - name: STORAGE_DRIVER
+      value: $(params.STORAGE_DRIVER)
+    - name: imageTag
+      value: $(tasks.push-image-to-imagestream.results.new-tag)
+    - name: node_js_image_name
+      value: $(params.node_js_image_name)
+    - name: rekor-url
+      value: $(params.rekor-url)
+    taskRef:
+      kind: Task
+      name: push-image-to-quay
+    runAfter:
+      - image-build-check
+    when:
+    - input: "$(tasks.image-build-check.results.scan-result)"
+      operator: in
+      values:
+      - "pass"
+    workspaces:
+    - name: resources
+      workspace: resources
+    - name: files
+      workspace: files
 ##------------------------------------------------------------------
 # Perform image build check after push to quay.io
 ##------------------------------------------------------------------
-#  - name: image-build-check-in-quay-io
-#    params:
-#    - name: acs_central_endpoint
-#      value: $(params.acs_central_endpoint)
-#    - name: acs_api_token
-#      value: $(params.acs_api_token)
-#    - name: public-url
-#      value: $(params.quay-instance-url)/$(params.quay-account)/$(params.quay-repository):$(tasks.push-image-to-imagestream.results.new-tag)
-#    - name: image-short-name
-#      value: $(params.IMAGE_SHORT_NAME)
-#    - name: image-tag
-#      value: $(tasks.push-image-to-imagestream.results.new-tag)
-#    - name: image-build-namespace
-#      value: $(params.image-build-namespace)
-#    - name: roxctl-output-format
-#      value: $(params.roxctl-output-format)
-#    taskRef:
-#      kind: Task
-#      name: acs-image-build-check
-#    when:
-#    - input: "$(tasks.image-build-check.results.scan-result)"
-#      operator: in
-#      values:
-#      - "pass"
-#    runAfter:
-#    - push-image-to-quay
-#    workspaces:
-#    - name: violations
-#      workspace: violations
+  - name: image-build-check-in-quay-io
+    params:
+    - name: acs_central_endpoint
+      value: $(params.acs_central_endpoint)
+    - name: acs_api_token
+      value: $(params.acs_api_token)
+    - name: public-url
+      value: $(params.quay-instance-url)/$(params.quay-account)/$(params.quay-repository):$(tasks.push-image-to-imagestream.results.new-tag)
+    - name: image-short-name
+      value: $(params.IMAGE_SHORT_NAME)
+    - name: image-tag
+      value: $(tasks.push-image-to-imagestream.results.new-tag)
+    - name: image-build-namespace
+      value: $(params.image-build-namespace)
+    - name: roxctl-output-format
+      value: $(params.roxctl-output-format)
+    taskRef:
+      kind: Task
+      name: acs-image-build-check
+    when:
+    - input: "$(tasks.image-build-check.results.scan-result)"
+      operator: in
+      values:
+      - "pass"
+    runAfter:
+    - push-image-to-quay
+    workspaces:
+    - name: violations
+      workspace: violations
 ##------------------------------------------------------------------
 # Clone the cd repository and update the argocd application file 
 # to refer to the new tagged image.
 ##------------------------------------------------------------------
-#  - name: update-dev-deployment
-#    params:
-#    - name: GIT_URL
-#      value: $(params.repo_type)/$(params.cd-git-url)
-#    - name: GIT_REPO_NAME
-#      value: $(params.cd-git-repo-name)
-#    - name: GIT_BRANCH
-#      value: "main"
-#    - name: GIT_PATH_TO_CONTENT
-#      value: $(params.cd-git-repo-path-to-content-development)
-#    - name: GIT_USER_NAME
-#      value: $(params.cd-git-user-name)
-#    - name: GIT_USER_EMAIL
-#      value: $(params.cd-git-user-email)
-#    - name: GIT_COMMIT_COMMENT
-#      value: $(params.cd-git-commit-comment-dev)
-#    - name: IMAGE
-#      value: $(params.quay-instance-url)/$(params.quay-account)/$(params.quay-repository):$(tasks.push-image-to-imagestream.results.new-tag)
-#    - name: LOCATION
-#      value: "dev"
-#    taskRef:
-#      kind: Task
-#      name: update-and-commit-argocd-app-file
-#    runAfter:
-#    - push-image-to-quay
-#    workspaces:
-#    - name: files
-#      workspace: files
+  - name: update-dev-deployment
+    params:
+    - name: GIT_URL
+      value: $(params.repo_type)/$(params.cd-git-url)
+    - name: GIT_REPO_NAME
+      value: $(params.cd-git-repo-name)
+    - name: GIT_BRANCH
+      value: "main"
+    - name: GIT_PATH_TO_CONTENT
+      value: $(params.cd-git-repo-path-to-content-development)
+    - name: GIT_USER_NAME
+      value: $(params.cd-git-user-name)
+    - name: GIT_USER_EMAIL
+      value: $(params.cd-git-user-email)
+    - name: GIT_COMMIT_COMMENT
+      value: $(params.cd-git-commit-comment-dev)
+    - name: IMAGE
+      value: $(params.quay-instance-url)/$(params.quay-account)/$(params.quay-repository):$(tasks.push-image-to-imagestream.results.new-tag)
+    - name: LOCATION
+      value: "dev"
+    taskRef:
+      kind: Task
+      name: update-and-commit-argocd-app-file
+    runAfter:
+    - push-image-to-quay
+    workspaces:
+    - name: files
+      workspace: files
 ##------------------------------------------------------------------
 # Force ArgoCD sync
 ##------------------------------------------------------------------
-#  - name: sync-argocd
-#    params:
-#    - name: application-name
-#      value: $(params.argocd-project-name-development)
-#    - name: revision
-#      value: $(params.argocd-revision)
-#    - name: argocd-version
-#      value: $(params.argocd-version)
-#    taskRef:
-#      kind: Task
-#     name: argocd-sync-and-wait
-#    runAfter:
-#    - update-dev-deployment
+  - name: sync-argocd
+    params:
+    - name: application-name
+      value: $(params.argocd-project-name-development)
+    - name: revision
+      value: $(params.argocd-revision)
+    - name: argocd-version
+      value: $(params.argocd-version)
+    taskRef:
+      kind: Task
+     name: argocd-sync-and-wait
+    runAfter:
+    - update-dev-deployment
 ##------------------------------------------------------------------
 # Workspaces
 ##------------------------------------------------------------------
   results:
-#    - name: IMAGE_URL
-#      value: "$(tasks.push-image-to-quay.results.IMAGE_URL)"
-#    - name: IMAGE_DIGEST
-#      value: "$(tasks.push-image-to-quay.results.IMAGE_DIGEST)"
+    - name: IMAGE_URL
+      value: "$(tasks.push-image-to-quay.results.IMAGE_URL)"
+    - name: IMAGE_DIGEST
+      value: "$(tasks.push-image-to-quay.results.IMAGE_DIGEST)"
     - name: CHAINS-GIT_URL
       value: "$(tasks.fetch-repository.results.url)"
     - name: CHAINS-GIT_COMMIT

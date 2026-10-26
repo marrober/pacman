@@ -23,7 +23,7 @@ spec:
         tekton.dev/pipeline: pacman
     spec:
       pipelineRef:
-        name: pacman
+        name: pacman-full
       taskRunTemplate:
         serviceAccountName: pipeline
       timeouts:

@@ -1,0 +1,218 @@
+apiVersion: tekton.dev/v1
+kind: Pipeline
+metadata:
+  labels:
+    app.kubernetes.io/instance: pacman-git
+    app.kubernetes.io/name: pacman-git
+    pipeline.openshift.io/runtime: nodejs
+    pipeline.openshift.io/runtime-version: 16-ubi8
+    pipeline.openshift.io/type: kubernetes
+  name: pacman-sbom
+spec:
+  params:
+    ## Repository parameters
+  - name: GIT_REPO
+    type: string
+  - name: GIT_REVISION
+    default: ""
+    type: string
+  - name: GIT_REPO_NAME
+    type: string
+    ## Git signed verification parameters
+  - name: certificate-identity
+    type: string
+  - name: oidc-issuer
+    type: string
+  - name: rekor-url
+    type: string
+  - name: tuf-mirror
+    type: string
+  - name: tuf-root-hash
+    type: string
+    ## Image build parameters
+  - name: PATH_CONTEXT
+    default: .
+    type: string
+  - name: STORAGE_DRIVER
+    type: string
+  - name: TLSVERIFY
+    type: string
+  - name: node_js_image_repo
+    type: string
+  - name: node_js_short_name
+    type: string
+  - name: node_js_image_name
+    type: string
+  - name: node_js_image_tag
+    type: string
+  - name: image-build-namespace
+    type: string
+  - name: IMAGE_NAME 
+    type: string
+  - name: IMAGE_SHORT_NAME
+    type: string
+    ## Image validation parameters
+  - name: acs_central_endpoint              
+    type: string
+  - name: acs_api_token                     
+    type: string
+  - name: roxctl-output-format             
+    type: string
+    ## Update Argocd application and commit to Github parameters
+  - name: repo_type
+    type: string
+  - name: cd-git-url
+    type: string
+  - name: cd-git-repo-name
+    type: string
+  - name: cd-git-repo-path-to-content-development
+    type: string
+  - name: cd-git-user-name
+    type: string
+  - name: cd-git-user-email
+    type: string
+  - name: cd-git-commit-comment-dev 
+    type: string
+    ## ArgoCD Sync
+  - name: argocd-project-name-development
+    type: string
+  - name: argocd-revision
+    type: string
+  - name: argocd-version
+    type: string
+    ## Push to quay
+  - name: quay-instance-url
+    type: string
+  - name: quay-account                   # Quay account name
+    type: string
+  - name: quay-repository                # Quay repository name
+    type: string
+  tasks:
+##------------------------------------------------------------------
+# Fetch source to build
+##------------------------------------------------------------------
+  - name: fetch-repository
+    params:
+    - name: url
+      value: $(params.GIT_REPO)
+    - name: revision
+      value: $(params.GIT_REVISION)
+    - name: repoName
+      value: $(params.GIT_REPO_NAME)
+    - name: subdirectory
+      value: "."
+    - name: deleteExisting
+      value: "false"
+    taskRef:
+      kind: Task
+      name: git-clone
+    workspaces:
+    - name: output
+      workspace: resources
+
+  - name: build
+    params:
+    - name: TLSVERIFY
+      value: "false"
+    - name: STORAGE_DRIVER
+      value: $(params.STORAGE_DRIVER)
+    - name: app-dir
+      value: $(params.PATH_CONTEXT)
+    - name: node_js_image_repo
+      value: $(params.node_js_image_repo)
+    - name: node_js_image_name
+      value: $(params.node_js_image_name)
+    - name: node_js_image_tag
+      value: $(params.node_js_image_tag)
+    runAfter:
+#     - verify-commit
+     - fetch-repository
+    taskRef:
+      kind: Task
+      name: build
+    workspaces:
+    - name: resources
+      workspace: resources
+    - name: files
+      workspace: files
+#------------------------------------------------------------------
+# Push the new runtime image to OpenShift imagestream
+#------------------------------------------------------------------
+  - name: push-image-to-imagestream
+    params:
+    - name: imagestream-url
+      value: $(params.IMAGE_NAME)
+    - name: STORAGE_DRIVER
+      value: $(params.STORAGE_DRIVER)
+    - name: TLSVERIFY
+      value: "$(params.TLSVERIFY)"
+    - name: pipelineRunName
+      value: $(context.pipelineRun.name)
+    - name: image-short-name
+      value: $(params.IMAGE_SHORT_NAME)
+    - name: git-commit
+      value: $(tasks.fetch-repository.results.commit)
+    taskRef:
+      kind: Task
+      name: push-image-to-ocp
+    runAfter:
+      - build
+    workspaces:
+    - name: files
+      workspace: files
+##------------------------------------------------------------------
+# Generate SBOM
+##------------------------------------------------------------------
+  - name: generate-sbom
+    params:
+    - name: SBOM_FILE
+      value: "sbom-image.json"
+    - name: public-url
+      value: $(params.IMAGE_NAME):$(tasks.push-image-to-imagestream.results.new-tag)
+    runAfter:
+     - push-image-to-imagestream
+    taskRef:
+      kind: Task
+      name: generate-sbom
+    workspaces:
+    - name: resources
+      workspace: resources   
+##------------------------------------------------------------------
+# Upload SBOM to TPA
+##------------------------------------------------------------------
+  - name: upload-sbom-to-tpa
+    params:
+    - name: COMPONENT_ID
+      value: $(params.IMAGE_SHORT_NAME):$(tasks.push-image-to-imagestream.results.new-tag)
+    - name: SBOM_FILE
+      value: $(tasks.generate-sbom.results.sbom_path)
+    - name: HTTP_RETRIES
+      value: "3"
+    - name: TRUSTIFICATION_SECRET_NAME
+      value: trustification-secret
+    - name: FAIL_IF_TRUSTIFICATION_NOT_CONFIGURED
+      value: "true"
+    runAfter:
+     - generate-sbom
+    taskRef:
+      kind: Task
+      name: upload-sbom-to-tpa
+    workspaces:
+    - name: sboms
+      workspace: resources   
+##------------------------------------------------------------------
+# Workspaces
+##------------------------------------------------------------------
+  results:
+#    - name: IMAGE_URL
+#      value: "$(tasks.push-image-to-quay.results.IMAGE_URL)"
+#    - name: IMAGE_DIGEST
+#      value: "$(tasks.push-image-to-quay.results.IMAGE_DIGEST)"
+    - name: CHAINS-GIT_URL
+      value: "$(tasks.fetch-repository.results.url)"
+    - name: CHAINS-GIT_COMMIT
+      value: "$(tasks.fetch-repository.results.commit)"
+  workspaces:
+  - name: resources
+  - name: files
+  - name: violations

@@ -10,7 +10,7 @@ metadata:
     pipeline.openshift.io/runtime-version: 16-ubi8
     pipeline.openshift.io/type: kubernetes
     tekton.dev/pipeline: pacman
-  generateName: pacman-pr-
+  generateName: pacman-pr-sbom-
 spec:
   params:
     ## Repository parameters
@@ -94,7 +94,7 @@ spec:
   - name: quay-repository
     value: "pacman"    
   pipelineRef:
-    name: pacman
+    name: pacman-sbom
   taskRunTemplate:
     serviceAccountName: pipeline
   timeouts:
