@@ -4,7 +4,8 @@ kind: Kustomization
 resources:
 - rbac/argo-cd-admin.yaml
 - rbac/image-push-for-pipeline-sa.yaml
-- pipeline.yaml
+- pipeline-full.yaml
+- pipeline-sbom.yaml
 - tasks/acs-image-build-check.yaml
 - tasks/compare-violations.yaml
 - tasks/build.yaml
