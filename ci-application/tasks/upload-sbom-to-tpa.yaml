@@ -146,7 +146,7 @@ spec:
       echo $oidc_client_id
       echo $oidc_client_secret
 
-      curl_opts=(-k --show-error --fail-with-body --retry "$HTTP_RETRIES")
+      curl_opts=(-k -vvv --show-error --fail-with-body --retry "$HTTP_RETRIES")
 
       openid_configuration_url="${oidc_issuer_url%/}/.well-known/openid-configuration"
 
@@ -157,7 +157,7 @@ spec:
       echo "Getting OIDC issuer configuration from $openid_configuration_url"
       token_endpoint="$(curl "${curl_opts[@]}" "$openid_configuration_url" | jq -r .token_endpoint)"
 
-      echo $token_endpoint
+      echo "Token endpoint : $token_endpoint"
 
       for sbom_path in "${sboms_to_upload[@]}"; do
         echo
@@ -172,7 +172,7 @@ spec:
             "$token_endpoint"
         )"
 
-        echo $token_response
+        echo "Token response : $token_response"
 
         access_token="$(jq -r .access_token <<< "$token_response")"
         token_type="$(jq -r .token_type <<< "$token_response")"
@@ -198,6 +198,6 @@ spec:
         curl "${curl_opts[@]}" -X 'POST' \
           --retry-max-time "$retry_max_time" \
           -H "authorization: $token_type $access_token" \
-          -H "content-type: application/json" "$bombastic_api_url/api/v2/sbom?id=$sbom_id" \
+          -H "content-type: application/json" "$bombastic_api_url/api/v3/sbom?id=$sbom_id" \
           --data-binary "@$sbom_path"
       done
