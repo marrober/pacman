@@ -11,7 +11,7 @@ projects:
 components:
   - name: tools
     container:
-      image: registry.redhat.io/devspaces/udi-rhel8@sha256:d147892c643a0127cfcf868daee0ff416a8df922fe2a7c716ebfc457ff526fa2
+      image: quay.io/marrober/devex-terminal-4:full-terminal-2.0
       endpoints:
         - exposure: public
           name: nodejs
