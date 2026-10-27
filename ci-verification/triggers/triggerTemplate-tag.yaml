@@ -1,19 +1,18 @@
 apiVersion: triggers.tekton.dev/v1alpha1
 kind: TriggerTemplate
 metadata:
-  name: pacman-ci-verification-template
+  name: pacman-ci-verification-tag-template
 spec:
   params:
   - name: gitrepository.url
-  - name: gitrevision
-  - name: branch
+  - name: tag
   resourcetemplates:
   - apiVersion: tekton.dev/v1
     kind: PipelineRun
     metadata:
       annotations:
         chains.tekton.dev/signed: "true"
-      generateName: pacman-ci-verification-tr-
+      generateName: pacman-ci-verification-tag-tr-
       labels:
         app.kubernetes.io/instance: pacman-git
         app.kubernetes.io/name: pacman-git
@@ -31,8 +30,8 @@ spec:
       params:
         - name: GIT_REPO
           value: $(tt.params.gitrepository.url)
-        - name: GIT_REVISION
-          value: $(tt.params.gitrevision)
+        - name: tag
+          value: $(tt.params.tag)
         - name: quay-instance-url
           value: "quay.io"
         - name: quay-account                   

@@ -1,0 +1,53 @@
+apiVersion: triggers.tekton.dev/v1alpha1
+kind: TriggerTemplate
+metadata:
+  name: pacman-ci-verification-rel-template
+spec:
+  params:
+  - name: gitrepository.url
+  - name: tag
+  resourcetemplates:
+  - apiVersion: tekton.dev/v1
+    kind: PipelineRun
+    metadata:
+      annotations:
+        chains.tekton.dev/signed: "true"
+      generateName: pacman-ci-release-tr-
+      labels:
+        app.kubernetes.io/instance: pacman-git
+        app.kubernetes.io/name: pacman-git
+        pipeline.openshift.io/runtime: nodejs
+        pipeline.openshift.io/runtime-version: 16-ubi8
+        pipeline.openshift.io/type: kubernetes
+        tekton.dev/pipeline: pacman
+    spec:
+      pipelineRef:
+        name: pacman-verification
+      taskRunTemplate:
+        serviceAccountName: pipeline
+      timeouts:
+        pipeline: 1h0m0s
+      params:
+        - name: GIT_REPO
+          value: $(tt.params.gitrepository.url)
+        - name: tag
+          value: $(tt.params.tag)
+        - name: quay-instance-url
+          value: "quay.io"
+        - name: quay-account                   
+          value: "marrober"
+        - name: quay-repository                
+          value: "pacman"
+        - name: image-tag
+          value: "hvnvf"
+        - name: component_id
+          value: "pacman"
+        - name: rekor_host
+          value: http://rekor-server.trusted-artifact-signer.svc
+        - name: policy_configuration
+          value: 'git::github.com/redhat-gpe/config//default'
+        - name: tuf_mirror
+          value: http://tuf.trusted-artifact-signer.svc
+      workspaces:
+        - name: images-url
+          emptyDir: {} 

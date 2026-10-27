@@ -1,12 +1,22 @@
 apiVersion: triggers.tekton.dev/v1alpha1
 kind: TriggerBinding
 metadata:
-  name: pacman-ci-verification-binding
+  name: pacman-ci-verification-tag-binding
 spec:
   params:
   - name: gitrepository.url
     value: $(body.repository.clone_url)
-  - name: gitrevision
-    value: $(body.head_commit.id)
-  - name: branch 
-    value: $(extensions.branch)
+  - name: tag
+    value: $(body.ref)
+---
+apiVersion: triggers.tekton.dev/v1alpha1
+kind: TriggerBinding
+metadata:
+  name: pacman-ci-verification-release-binding
+spec:
+  params:
+  - name: gitrepository.url
+    value: $(body.repository.clone_url)
+  - name: tag
+    value: $(body.ref)
+

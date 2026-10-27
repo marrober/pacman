@@ -5,18 +5,40 @@ metadata:
 spec:
   serviceAccountName: pipeline
   triggers:
-  - name: github-listener-ci-verification
+  - name: github-listener-tag-creation
     interceptors:
       - ref:
           name: "github"
           kind: ClusterInterceptor
           apiVersion: triggers.tekton.dev
         params:
-        - name: "overlays"
+        # Look for tag creation events
+        - name: "eventTypes"
+          value: ["create"]
+        - name: "filter"
+          value: "body.ref_type == 'tag'"
+    bindings:
+      - ref: pacman-ci-verification-tag-binding
+    template:
+      ref: pacman-ci-verification-tag-template
+
+  - name: github-listener-release-creation
+    interceptors:
+      - ref:
+          name: "github"
+          kind: ClusterInterceptor
+          apiVersion: triggers.tekton.dev
+        params:
+        # Look for release creation events
+        - name: "eventTypes"
+          value: ["release"]
+        #- name: "filter"
+        #  value: "body.action == 'published'"
+        - name: "tag_name"
           value:
           - key: branch
-            expression: "body.ref.split('/')[2]"
+            expression: "body.release.tag_name"
     bindings:
-      - ref: pacman-ci-verification-binding
+      - ref: pacman-ci-verification-release-binding
     template:
-      ref: pacman-ci-verification-template
+      ref: pacman-ci-verification-release-template
