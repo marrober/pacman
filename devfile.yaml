@@ -11,7 +11,7 @@ projects:
 components:
   - name: tools
     container:
-      image: quay.io/marrober/devex-terminal-4:full-terminal-2.0
+      image: quay.io/marrober/dev-spaces-base:latest
       endpoints:
         - exposure: public
           name: nodejs
