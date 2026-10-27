@@ -9,4 +9,5 @@ resources:
 - triggers/eventListener.yaml
 - triggers/eventListenerRoute.yaml
 - triggers/triggerBinding.yaml
-- triggers/triggerTemplate.yaml
+- triggers/triggerTemplate-release.yaml
+- triggers/triggerTemplate-tag.yaml
