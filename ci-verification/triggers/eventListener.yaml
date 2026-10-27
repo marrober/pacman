@@ -17,6 +17,10 @@ spec:
           value: ["create"]
         - name: "filter"
           value: "body.ref_type == 'tag'"
+        - name: "overlays"
+          value:
+          - key: gitRef
+            expression: "body.ref"
     bindings:
       - ref: pacman-ci-verification-tag-binding
     template:
@@ -34,6 +38,10 @@ spec:
           value: ["release"]
         - name: "filter"
           value: "body.action == 'published'"
+        - name: "overlays"
+          value:
+          - key: gitRef
+            expression: "body.ref"
     bindings:
       - ref: pacman-ci-verification-release-binding
     template:
