@@ -43,6 +43,7 @@ spec:
           value: "body.action == 'published'"
       - ref:
           name: "cel"
+        params:
         - name: "overlays"
           value:
           - key: gitRef
