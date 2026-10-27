@@ -15,6 +15,11 @@ spec:
         # Look for tag creation events
         - name: "eventTypes"
           value: ["create"]
+      - ref:
+          name: "cel"
+          kind: ClusterInterceptor
+          apiVersion: triggers.tekton.dev
+        params:
         - name: "filter"
           value: "body.ref_type == 'tag'"
         - name: "overlays"
@@ -38,6 +43,10 @@ spec:
           value: ["release"]
         - name: "filter"
           value: "body.action == 'published'"
+      - ref:
+          name: "cel"
+          kind: ClusterInterceptor
+          apiVersion: triggers.tekton.dev
         - name: "overlays"
           value:
           - key: gitRef
