@@ -32,12 +32,8 @@ spec:
         # Look for release creation events
         - name: "eventTypes"
           value: ["release"]
-        #- name: "filter"
-        #  value: "body.action == 'published'"
-        - name: "tag_name"
-          value:
-          - key: branch
-            expression: "body.release.tag_name"
+        - name: "filter"
+          value: "body.action == 'published'"
     bindings:
       - ref: pacman-ci-verification-release-binding
     template:
