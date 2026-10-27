@@ -102,6 +102,10 @@ spec:
 
         buildah images --storage-driver=$(params.STORAGE_DRIVER) --root /files/buildah-containers
 
+        ls -al /etc/secret-volume/.dockerconfigjson
+        
+        cat /etc/secret-volume/.dockerconfigjson
+
         echo "push container image"
         buildah push --storage-driver=$(params.STORAGE_DRIVER) --authfile /etc/secret-volume/.dockerconfigjson --root /files/buildah-containers --digestfile $(workspaces.files.path)/image-digest $(params.quay-instance-url)/$(params.quay-account)/$(params.quay-repository):$(params.imageTag)
 
@@ -165,7 +169,7 @@ spec:
   volumes:
     - name: quay-auth-secret
       secret:
-        secretName: quay-api-access-pull-secret
+        secretName: quay-api-access-secret
   workspaces:
   - name: files
     mountPath: /files
