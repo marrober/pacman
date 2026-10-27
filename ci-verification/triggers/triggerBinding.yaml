@@ -9,7 +9,7 @@ spec:
   - name: tag
     value: $(body.ref)
   - name: git-event-type
-    value: $(extensions.github.header.X-Github-Event)
+    value: $(header.X-Github-Event)
   - name: git-tag-or-branch
     value: $(extensions.gitRef)
 ---
@@ -24,7 +24,7 @@ spec:
   - name: tag
     value: $(body.ref)
   - name: git-event-type
-    value: $(extensions.github.header.X-Github-Event)
+    value: $(header.X-Github-Event)
   - name: git-tag-or-branch
     value: $(extensions.gitRef)
 
