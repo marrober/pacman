@@ -8,6 +8,10 @@ spec:
     value: $(body.repository.clone_url)
   - name: tag
     value: $(body.ref)
+  - name: git-event-type
+    value: $(extensions.github.header.X-Github-Event)
+  - name: git-tag-or-branch
+    value: $(extensions.gitRef)
 ---
 apiVersion: triggers.tekton.dev/v1alpha1
 kind: TriggerBinding
@@ -19,4 +23,8 @@ spec:
     value: $(body.repository.clone_url)
   - name: tag
     value: $(body.ref)
+  - name: git-event-type
+    value: $(extensions.github.header.X-Github-Event)
+  - name: git-tag-or-branch
+    value: $(extensions.gitRef)
 

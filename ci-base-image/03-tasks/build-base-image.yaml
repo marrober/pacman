@@ -55,7 +55,7 @@ spec:
   volumes:
     - name: quay-auth-secret
       secret:
-        secretName: quay-auth-secret
+        secretName: quay-api-access-secret
   workspaces:
   - name: files
     mountPath: /files

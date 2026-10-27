@@ -6,6 +6,8 @@ spec:
   params:
   - name: gitrepository.url
   - name: tag
+  - name: git-event-type
+  - name: git-tag-or-branch
   resourcetemplates:
   - apiVersion: tekton.dev/v1
     kind: PipelineRun
@@ -32,6 +34,10 @@ spec:
           value: $(tt.params.gitrepository.url)
         - name: tag
           value: $(tt.params.tag)
+        - name: event-type
+          value: $(tt.params.git-event-type)
+        - name: tag-or-branch
+          value: $(tt.params.git-tag-or-branch)
         - name: quay-instance-url
           value: "quay.io"
         - name: quay-account                   
