@@ -20,7 +20,6 @@ spec:
   - name: gitrepository.url
     value: $(body.repository.clone_url)
   - name: tag
-    value: $(body.ref)
+    value: $(body.release.tag_name)
   - name: git-event-type
     value: $(header.X-Github-Event)
-
