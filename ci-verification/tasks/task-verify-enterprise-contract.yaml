@@ -210,7 +210,7 @@ spec:
       volumeMounts:
       - name: docker-config
         mountPath: $(params.HOMEDIR)/.docker
-      workingDir: /resources/output
+      workingDir: /workspace/output
     - name: list-output-files 
       image: quay.io/enterprise-contract/ec-cli:362c6d6824695987bcdb7936c2efa35fd8ffb0e0
       command: [ls]
