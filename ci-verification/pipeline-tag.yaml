@@ -83,3 +83,5 @@ spec:
       workspaces:
       - name: output
         workspace: resources
+  workspaces:
+  - name: resources
