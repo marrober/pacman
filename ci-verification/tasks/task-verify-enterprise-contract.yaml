@@ -186,7 +186,7 @@ spec:
         - "--images"
         - "/workspace/images.yaml"
         - "--policy"
-        - "$(params.POLICY_CONFIGURATION)"
+        - "/workspace/output/$(params.POLICY_CONFIGURATION)"
         - "--public-key"
         - "/workspace/cosign.pub"
         - "--rekor-url"
@@ -210,7 +210,6 @@ spec:
       volumeMounts:
       - name: docker-config
         mountPath: $(params.HOMEDIR)/.docker
-      workingDir: /workspace/output
     - name: list-output-files 
       image: quay.io/enterprise-contract/ec-cli:362c6d6824695987bcdb7936c2efa35fd8ffb0e0
       command: [ls]
