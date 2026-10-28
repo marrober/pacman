@@ -136,7 +136,7 @@ spec:
         EOF
 
         ls -al /workspace/output
-        ls -al /workspace/output/ci-verification/policy
+        ls -al /workspace/output/pacman/ci-verification/policy
       image: 'ubi8/ubi-minimal'
       resources: {}
     - name: extract-signing-secret

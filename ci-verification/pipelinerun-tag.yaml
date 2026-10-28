@@ -32,13 +32,13 @@ spec:
   - name: rekor_host
     value: http://rekor-server.trusted-artifact-signer.svc
   - name: policy_configuration
-    value: 'ci-verification/policy/policy.yaml'
+    value: 'pacman/ci-verification/policy/policy.yaml'
   - name: tuf_mirror
     value: http://tuf.trusted-artifact-signer.svc
   pipelineRef:
     name: pacman-verification-tag
   taskRunTemplate:
-    serviceAccountName: image-pusher
+    serviceAccountName: pipeline
   timeouts:
     pipeline: 1h0m0s
   workspaces:

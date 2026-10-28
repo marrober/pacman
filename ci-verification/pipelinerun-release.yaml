@@ -1,0 +1,59 @@
+apiVersion: tekton.dev/v1
+kind: PipelineRun
+metadata:
+  annotations:
+    chains.tekton.dev/signed: "true"
+  labels:
+    tekton.dev/pipeline: pacman-verification
+  generateName: pacman-verification-release-pr-
+spec:
+  taskRunSpecs:
+  - pipelineTaskName: verify-enterprise-contract
+    serviceAccountName: pipeline
+  params:
+    ## Image repository parameters
+  - name: GIT_REPO
+    value: https://github.com/marrober/pacman.git
+  - name: GIT_REVISION
+    value: v1.0.0
+  - name: GIT_REPO_NAME
+    value: pacman
+    ## Verify enterprise contract
+  - name: quay-instance-url
+    value: "quay.io"
+  - name: quay-account                   
+    value: "marrober"
+  - name: quay-repository                
+    value: "pacman"
+  - name: image-tag
+    value: "hvnvf"
+  - name: component_id
+    value: "pacman"
+  - name: rekor_host
+    value: http://rekor-server.trusted-artifact-signer.svc
+  - name: policy_configuration
+    value: 'ci-verification/policy/policy.yaml'
+  - name: tuf_mirror
+    value: http://tuf.trusted-artifact-signer.svc
+  pipelineRef:
+    name: pacman-verification-release
+  taskRunTemplate:
+    serviceAccountName: pipeline
+  timeouts:
+    pipeline: 1h0m0s
+  workspaces:
+    - name: images-url
+      emptyDir: {}
+    - name: resources
+      volumeClaimTemplate:
+        metadata:
+          creationTimestamp: null
+          labels:
+            tekton.dev/pipeline: pacman
+        spec:
+          accessModes:
+          - ReadWriteOnce
+          resources:
+            requests:
+              storage: 1Gi
+          storageClassName: lvms-vg1
