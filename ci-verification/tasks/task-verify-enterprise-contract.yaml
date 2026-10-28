@@ -55,18 +55,7 @@ spec:
       type: string
       description: TUF mirror URL. Provide a value when NOT using public sigstore deployment.
       default: ""
-
-    - name: SSL_CERT_DIR
-      type: string
-      description: |
-        Path to a directory containing SSL certs to be used when communicating
-        with external services. This is useful when using the integrated registry
-        and a local instance of Rekor on a development cluster which may use
-        certificates issued by a not-commonly trusted root CA. In such cases,
-        "/var/run/secrets/kubernetes.io/serviceaccount" is a good value. Multiple
-        paths can be provided by using the ":" separator.
-      default: ""
-
+      
     - name: INFO
       type: string
       description: Include rule titles and descriptions in the output. Set to "false" to disable it.
@@ -134,9 +123,6 @@ spec:
                 url: "$(params.CI_PROJECT_URL)"
                 revision: "$(params.GIT_REVISION)"
         EOF
-
-        ls -al /workspace/output
-        ls -al /workspace/output/pacman/ci-verification/policy
       image: 'ubi8/ubi-minimal'
       resources: {}
     - name: extract-signing-secret
@@ -154,12 +140,11 @@ spec:
       script: |
         set +x
         cat /workspace/signing-secrets | jq -r '.data."cosign.pub"' | base64 --decode > /workspace/cosign.pub
-        cat /workspace/cosign.pub
-    - name: version
-      image: quay.io/enterprise-contract/ec-cli:362c6d6824695987bcdb7936c2efa35fd8ffb0e0
-      command: [ec]
-      args:
-        - version
+#    - name: version
+#      image: quay.io/enterprise-contract/ec-cli:362c6d6824695987bcdb7936c2efa35fd8ffb0e0
+#      command: [ec]
+#      args:
+#        - version
     - name: initialize-tuf
       image: quay.io/enterprise-contract/ec-cli:362c6d6824695987bcdb7936c2efa35fd8ffb0e0
       script: |-
@@ -171,7 +156,7 @@ spec:
         fi
 
         echo 'Initializing TUF root...'
-        cosign initialize --mirror "${TUF_MIRROR}" --root "${TUF_MIRROR}/root.json"
+        cosign initialize --mirror "${TUF_MIRROR}" --root "${TUF_MIRROR}/root.json" 2> /dev/null
         echo 'Done!'
       env:
         - name: TUF_MIRROR

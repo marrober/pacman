@@ -34,6 +34,8 @@ spec:
     type: string
   - name: tuf_mirror
     type: string
+  - name: spare
+    type: string
   tasks:
 ##------------------------------------------------------------------
 # Fetch source to verification and to provide slsa policy
