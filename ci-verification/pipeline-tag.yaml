@@ -15,6 +15,8 @@ spec:
     type: string
   - name: GIT_REVISION
     type: string
+  - name: GIT_REPO_NAME
+    type: string
 ## Verify enterprise contract
   - name: quay-instance-url
     type: string
@@ -33,6 +35,30 @@ spec:
   - name: tuf_mirror
     type: string
   tasks:
+##------------------------------------------------------------------
+# Fetch source to verification and to provide slsa policy
+##------------------------------------------------------------------
+    - name: fetch-repository
+      params:
+      - name: url
+        value: $(params.GIT_REPO)
+      - name: revision
+        value: $(params.GIT_REVISION)
+      - name: repoName
+        value: $(params.GIT_REPO_NAME)
+      - name: subdirectory
+        value: "."
+      - name: deleteExisting
+        value: "false"
+      taskRef:
+        kind: Task
+        name: git-clone
+      workspaces:
+      - name: output
+        workspace: resources
+##------------------------------------------------------------------
+# Fetch source to verification and to provide slsa policy
+##------------------------------------------------------------------
     - name: verify-enterprise-contract
       params:
         - name: IMAGE
@@ -52,3 +78,5 @@ spec:
       taskRef:
         kind: Task
         name: verify-enterprise-contract
+      runAfter:
+      - fetch-repository

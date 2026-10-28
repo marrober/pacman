@@ -16,6 +16,8 @@ spec:
     value: https://github.com/marrober/pacman.git
   - name: GIT_REVISION
     value: v1.0.0
+  - name: GIT_REPO_NAME
+    value: pacman
     ## Verify enterprise contract
   - name: quay-instance-url
     value: "quay.io"
@@ -42,3 +44,16 @@ spec:
   workspaces:
     - name: images-url
       emptyDir: {}
+    - name: resources
+      volumeClaimTemplate:
+        metadata:
+          creationTimestamp: null
+          labels:
+            tekton.dev/pipeline: pacman
+        spec:
+          accessModes:
+          - ReadWriteOnce
+          resources:
+            requests:
+              storage: 1Gi
+          storageClassName: lvms-vg1
