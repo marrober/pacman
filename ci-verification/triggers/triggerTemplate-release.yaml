@@ -1,7 +1,7 @@
 apiVersion: triggers.tekton.dev/v1alpha1
 kind: TriggerTemplate
 metadata:
-  name: pacman-ci-verification-rel-template
+  name: pacman-ci-verification-release-template
 spec:
   params:
   - name: gitrepository.url
