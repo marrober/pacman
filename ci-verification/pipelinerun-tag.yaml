@@ -32,7 +32,7 @@ spec:
   - name: rekor_host
     value: http://rekor-server.trusted-artifact-signer.svc
   - name: policy_configuration
-    value: 'git::github.com/redhat-gpe/config//default'
+    value: 'ci-verification/policy/policy.yaml'
   - name: tuf_mirror
     value: http://tuf.trusted-artifact-signer.svc
   pipelineRef:

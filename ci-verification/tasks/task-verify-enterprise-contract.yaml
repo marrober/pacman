@@ -102,6 +102,8 @@ spec:
     - name: data
       description: The workspace where the snapshot spec json file resides
       optional: true
+    - name: output
+      description: The workspace for the source code. Main reason is to get access to the policy document.
 
   results:
     - name: TEST_OUTPUT
@@ -132,6 +134,9 @@ spec:
                 url: "$(params.CI_PROJECT_URL)"
                 revision: "$(params.GIT_REVISION)"
         EOF
+
+        ls -al /workspace/output
+        ls -al /workspace/output/ci-verification/policy
       image: 'ubi8/ubi-minimal'
       resources: {}
     - name: extract-signing-secret
@@ -205,6 +210,7 @@ spec:
       volumeMounts:
       - name: docker-config
         mountPath: $(params.HOMEDIR)/.docker
+      workingDir: /resources/output
     - name: list-output-files 
       image: quay.io/enterprise-contract/ec-cli:362c6d6824695987bcdb7936c2efa35fd8ffb0e0
       command: [ls]

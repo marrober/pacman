@@ -80,3 +80,6 @@ spec:
         name: verify-enterprise-contract
       runAfter:
       - fetch-repository
+      workspaces:
+      - name: output
+        workspace: resources
