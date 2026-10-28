@@ -5,7 +5,7 @@ metadata:
     chains.tekton.dev/signed: "true"
   labels:
     tekton.dev/pipeline: pacman-verification
-  generateName: pacman-verification-pr-
+  generateName: pacman-verification-tag-pr-
 spec:
   taskRunSpecs:
   - pipelineTaskName: verify-enterprise-contract
@@ -15,7 +15,7 @@ spec:
   - name: GIT_REPO
     value: https://github.com/marrober/pacman.git
   - name: GIT_REVISION
-    value: e325de895fb38a5dad9592ca530c4cb5d7433b8d
+    value: v1.0.0
     ## Verify enterprise contract
   - name: quay-instance-url
     value: "quay.io"
@@ -34,7 +34,7 @@ spec:
   - name: tuf_mirror
     value: http://tuf.trusted-artifact-signer.svc
   pipelineRef:
-    name: pacman-verification
+    name: pacman-verification-tag
   taskRunTemplate:
     serviceAccountName: image-pusher
   timeouts:

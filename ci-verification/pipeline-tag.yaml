@@ -7,14 +7,13 @@ metadata:
     pipeline.openshift.io/runtime: nodejs
     pipeline.openshift.io/runtime-version: 16-ubi8
     pipeline.openshift.io/type: kubernetes
-  name: pacman-verification
+  name: pacman-verification-tag
 spec:
   params:
     ## repository parameters
   - name: GIT_REPO
     type: string
   - name: GIT_REVISION
-    default: ""
     type: string
 ## Verify enterprise contract
   - name: quay-instance-url

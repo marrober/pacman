@@ -31,6 +31,8 @@ spec:
       params:
         - name: GIT_REPO
           value: $(tt.params.gitrepository.url)
+        - name: GIT_REVISION
+          value: $(tt.params.tag)
         - name: tag
           value: $(tt.params.tag)
         - name: git-event-type
