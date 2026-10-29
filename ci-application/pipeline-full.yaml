@@ -7,6 +7,8 @@ metadata:
     pipeline.openshift.io/runtime: nodejs
     pipeline.openshift.io/runtime-version: 16-ubi8
     pipeline.openshift.io/type: kubernetes
+  annotations:
+    chains.tekton.dev/signed: "true"
   name: pacman-full
 spec:
   params:
