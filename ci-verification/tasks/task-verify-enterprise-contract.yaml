@@ -76,7 +76,7 @@ spec:
     - name: GIT_REVISION
       type: string
     - name: QUAY_INSTANCE_URL
-       type: string
+      type: string
     - name: QUAY_ACCOUNT
       type: string
     - name: QUAY_REPOSITORY
