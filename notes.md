@@ -418,7 +418,17 @@ curl -X POST "${TPA_URL}/api/v3/sbom" \
 
 
 
+## Release process 
 
+Remove and reapply a tag to cause the triggers to fire for the verification and release process.
+
+````bash
+git tag -d v1.0.0
+git push origin --delete v1.0.0
+git fetch --prune --prune-tags origin
+git tag -m "New tag for release" v1.0.0
+git push origin v1.0.0
+````
 
 
 
