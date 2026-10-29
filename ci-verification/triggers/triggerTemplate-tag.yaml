@@ -33,6 +33,8 @@ spec:
           value: $(tt.params.gitrepository.url)
         - name: GIT_REVISION
           value: $(tt.params.tag)
+        - name: GIT_REPO_NAME
+          value: pacman
         - name: tag
           value: $(tt.params.tag)
         - name: git-event-type
