@@ -23,7 +23,7 @@ spec:
         tekton.dev/pipeline: pacman
     spec:
       pipelineRef:
-        name: pacman-verification
+        name: pacman-verification-release
       taskRunTemplate:
         serviceAccountName: pipeline
       timeouts:
