@@ -75,6 +75,13 @@ spec:
           value: '$(params.GIT_REPO)'
         - name: GIT_REVISION
           value: '$(params.GIT_REVISION)'
+        - name: QUAY_INSTANCE_URL
+          value: '$(params.quay-instance-url)'
+        - name: QUAY_ACCOUNT
+          value: '$(params.quay-account)'
+        - name: QUAY_REPOSITORY
+          value: '$(params.quay-repository)'
+        
       taskRef:
         kind: Task
         name: verify-enterprise-contract

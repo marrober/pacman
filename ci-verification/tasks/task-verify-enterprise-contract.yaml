@@ -33,10 +33,8 @@ spec:
   params:
     - name: IMAGE
       type: string
-
     - name: COMPONENT_ID
       type: string
-
     - name: POLICY_CONFIGURATION
       type: string
       description: |
@@ -44,48 +42,46 @@ spec:
         resource) to use. `namespace/name` or `name` syntax supported. If
         namespace is omitted the namespace where the task runs is used.
       default: "enterprise-contract-service/default"
-
     - name: IGNORE_REKOR
       type: string
       description: >-
         Skip Rekor transparency log checks during validation.
       default: "false"
-
     - name: TUF_MIRROR
       type: string
       description: TUF mirror URL. Provide a value when NOT using public sigstore deployment.
-      default: ""
-      
+      default: ""    
     - name: INFO
       type: string
       description: Include rule titles and descriptions in the output. Set to "false" to disable it.
       default: "true"
-
     - name: STRICT
       type: string
       description: Fail the task if policy fails. Set to "false" to disable it.
       default: "true"
-
     - name: HOMEDIR
       type: string
       description: Value for the HOME environment variable.
       default: /tekton/home
-
     - name: EFFECTIVE_TIME
       type: string
       description: Run policy checks with the provided time.
       default: "now"
-
     - name: REKOR_HOST
       type: string
       description: Rekor host for transparency log lookups
       default: https://rekor.sigstore.dev
-
     - name: CI_PROJECT_URL
       type: string
-
     - name: GIT_REVISION
       type: string
+    - name: QUAY_INSTANCE_URL
+       type: string
+    - name: QUAY_ACCOUNT
+      type: string
+    - name: QUAY_REPOSITORY
+      type: string
+  
 
   workspaces:
     - name: data
@@ -112,12 +108,29 @@ spec:
         value: "$(params.HOMEDIR)"
 
   steps:
+    - name: get-image-information
+      script: |
+        commit-id=$(git rev-list -n 1 $(params.GIT_REVISION))
+        echo "Commit ID : $commit_id"
+
+        tag=${$commit_id:0:7}
+
+        image-url=$(params.QUAY_INSTANCE_URL)/$(params.QUAY_ACCOUNT)/$(params.QUAY_REPOSITORY):$tag
+        echo "Image URL : $image-url"
+
+        echo -n $image-url > /tekton/home/image-url.txt
+
+      image: 'image-registry.openshift-image-registry.svc:5000/pacman-ci/terminal:2.3'
     - name: create-images-yaml
       script: |
+        image-url=$(cat /tekton/home/image-url.txt)
+
+        echo "Image URL : $image-url"
+
         cat <<EOF | tee /workspace/images.yaml
         ---
         components:
-          - containerImage: "$(params.IMAGE)"
+          - containerImage: "$image-url"
             source:
               git:
                 url: "$(params.CI_PROJECT_URL)"

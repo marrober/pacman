@@ -430,9 +430,43 @@ git tag -m "New tag for release" v1.0.0
 git push origin v1.0.0
 ````
 
+Getting the GitHub release and tag information 
 
+To get a list of git tags :
 
+````bash
+git --no-pager tag
+````
 
+To tell gh command to return to the command prompt after displaying text, rather than operate as an interactive command :
+
+````bash
+gh config set pager cat
+````
+
+To get a list of git releases :
+
+````bash
+gh release list
+````
+
+To generate a json output use :
+
+````bash
+gh release list -q . --json name,tagName,isPrerelease
+````
+
+Output format is :
+
+````bash
+[
+  {
+    "isPrerelease": true,
+    "name": "",
+    "tagName": "v1.0.0"
+  }
+]
+````
 
 
 
