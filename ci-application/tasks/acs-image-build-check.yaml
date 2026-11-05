@@ -80,13 +80,11 @@ spec:
           failTask=true
         fi
 
-        dnf install -yq jq 
-
         ./roxctl image check --image "$(params.public-url)" --insecure-skip-tls-verify -e "$ROX_CENTRAL_ENDPOINT" -o json --retries 0 > imageScanResult-json 2>imageScanError
 
-        cat imageScanResult-json
+        # cat imageScanResult-json
 
-        jq '[.results[].violatedPolicies[]  | select(.name == "Fixable CVE with a severity of important or Critical") | .violation] | if length == 1 then .[0] elif length > 0 then . else {} end' imageScanResult-json > /workspace/violations.json
+        jq '[.results[].violatedPolicies[]  | select(.name == "Full vulnerability list") | .violation] | if length == 1 then .[0] elif length > 0 then . else {} end' imageScanResult-json > /workspace/violations.json
 
         if [[ "$(params.base_check)" == "true" ]]; then
           cp /workspace/violations.json /workspace/base-violations.json
