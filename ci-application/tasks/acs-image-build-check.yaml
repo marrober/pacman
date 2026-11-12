@@ -60,7 +60,11 @@ spec:
           --output ./roxctl > /dev/null
         echo "Getting roxctl"
 
+        ls -al
+
         chmod +x ./roxctl > /dev/null
+
+        ls -al
 
         failTask="false"
 
