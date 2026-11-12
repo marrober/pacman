@@ -56,7 +56,7 @@ spec:
         set +x
 
         curl -s -k -L -H "Authorization: Bearer $ROX_API_TOKEN" \
-          "https://$ROX_CENTRAL_ENDPOINT/api/cli/download/roxctl-linux" \
+          "https://$ROX_CENTRAL_ENDPOINT/api/cli/download/roxctl-linux-amd64" \
           --output ./roxctl > /dev/null
         echo "Getting roxctl"
 
