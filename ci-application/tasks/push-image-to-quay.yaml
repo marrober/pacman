@@ -140,7 +140,7 @@ spec:
           mountPath: /etc/secret-volume
           readOnly: true
     - name: sign-and-attest-sbom
-      image: image-registry.openshift-image-registry.svc:5000/pacman-ci/terminal:2.3
+      image: image-registry.openshift-image-registry.svc:5000/pacman-ci/terminal:2.4
       env: 
         - name: DOCKER_CONFIG
           value: "/etc/secret-volume"
