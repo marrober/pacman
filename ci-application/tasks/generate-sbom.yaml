@@ -20,7 +20,7 @@ spec:
     - name: sbom_path
   steps:
     - name: sbom-syft-generate
-      image: image-registry.openshift-image-registry.svc:5000/pacman-ci/terminal:2.4
+      image: image-registry.openshift-image-registry.svc:5000/pacman-ci/terminal:2.5
       script: |
 
         IMAGE_SBOM="$(workspaces.resources.path)/$(params.SBOM_FILE)"

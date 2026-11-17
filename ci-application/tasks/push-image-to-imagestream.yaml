@@ -77,7 +77,7 @@ spec:
 
         oc import-image $(params.image-short-name):$tag --from=$(params.imagestream-url):$tag -n $(context.taskRun.namespace) --confirm -o name
 
-      image: image-registry.openshift-image-registry.svc:5000/pacman-ci/terminal:2.4
+      image: image-registry.openshift-image-registry.svc:5000/pacman-ci/terminal:2.5
       securityContext:
         capabilities:
           add: ["SETFCAP"]
