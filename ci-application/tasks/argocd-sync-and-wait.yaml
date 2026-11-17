@@ -2,6 +2,8 @@ apiVersion: tekton.dev/v1beta1
 kind: Task
 metadata:
   name: argocd-sync-and-wait
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"
 spec:
   params:
     - description: name of the application to sync

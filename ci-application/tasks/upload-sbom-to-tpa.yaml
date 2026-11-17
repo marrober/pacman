@@ -3,6 +3,7 @@ kind: Task
 metadata:
   annotations:
     tekton.dev/tags: "sbom, trustification"
+    argocd.argoproj.io/sync-wave: "3"
   name: upload-sbom-to-tpa
 spec:
   description: |-

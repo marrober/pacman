@@ -3,6 +3,8 @@ kind: ImageStream
 metadata:
   name: argocd
   namespace: pacman-ci
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
 spec:
   lookupPolicy:
     local: true

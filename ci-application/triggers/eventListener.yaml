@@ -2,6 +2,8 @@ apiVersion: triggers.tekton.dev/v1alpha1
 kind: EventListener
 metadata:
   name: pacman-ci-pipeline-listener-interceptor
+  annotations:
+    argocd.argoproj.io/sync-wave: "4"
 spec:
   serviceAccountName: pipeline
   triggers:

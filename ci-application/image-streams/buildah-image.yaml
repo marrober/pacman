@@ -3,6 +3,8 @@ apiVersion: image.openshift.io/v1
 metadata:
   name: buildah
   namespace: pacman-ci
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
 spec:
   lookupPolicy:
     local: true

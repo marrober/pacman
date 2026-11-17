@@ -8,6 +8,8 @@ metadata:
     pipeline.openshift.io/runtime-version: 16-ubi8
     pipeline.openshift.io/type: kubernetes
   name: pacman-sbom
+  annotations:
+    argocd.argoproj.io/sync-wave: "4"
 spec:
   params:
     ## Repository parameters

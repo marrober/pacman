@@ -2,6 +2,8 @@ apiVersion: tekton.dev/v1beta1
 kind: Task
 metadata:
   name: acs-image-build-check
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"
 spec:
   params:
     - name: acs_central_endpoint

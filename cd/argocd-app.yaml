@@ -1,11 +1,12 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  creationTimestamp: null
-  name: pacman-argo-app
+  name: pacman-ci-root
   namespace: openshift-gitops
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
 spec:
-  project: pacman
+  project: pacman-ci
   destination:
     namespace: openshift-gitops
     server: https://kubernetes.default.svc

@@ -2,6 +2,7 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
 resources:
+- ci-namespace.yaml
 - rbac/argo-cd-admin.yaml
 - rbac/image-push-for-pipeline-sa.yaml
 - pipeline-full.yaml

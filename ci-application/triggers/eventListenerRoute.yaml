@@ -4,6 +4,8 @@ metadata:
   labels:
     eventlistener: pacman-ci-pipeline-listener-interceptor
   name: pacman-ci-listener-el
+  annotations:
+    argocd.argoproj.io/sync-wave: "4"
 spec:
   port:
     targetPort: http-listener

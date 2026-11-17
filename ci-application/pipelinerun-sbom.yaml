@@ -3,6 +3,7 @@ kind: PipelineRun
 metadata:
   annotations:
     chains.tekton.dev/signed: "true"
+    argocd.argoproj.io/sync-wave: "4"
   labels:
     app.kubernetes.io/instance: pacman-git
     app.kubernetes.io/name: pacman-git
