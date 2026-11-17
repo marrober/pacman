@@ -24,6 +24,10 @@ spec:
   - name: certificate-identity
     type: string
     ## Image build parameters
+  - name: IMAGE_NAME
+    type: string
+  - name: IMAGE_SHORT_NAME
+    type: string
   - name: PATH_CONTEXT
     default: .
     type: string
@@ -59,7 +63,9 @@ spec:
     workspaces:
     - name: output
       workspace: resources
-
+##------------------------------------------------------------------
+# Build container image
+##------------------------------------------------------------------
   - name: build
     params:
     - name: TLSVERIFY
@@ -75,7 +81,6 @@ spec:
     - name: node_js_image_tag
       value: $(params.node_js_image_tag)
     runAfter:
-#     - verify-commit
      - fetch-repository
     taskRef:
       kind: Task

@@ -26,6 +26,8 @@ spec:
     value: ".*"
   - name: IMAGE_NAME
     value: default-route-openshift-image-registry.apps.ocp4.mr-openshift.co.uk/$(context.taskRun.namespace)/pacman
+  - name: IMAGE_NAME 
+    value: default-route-openshift-image-registry.apps.ocp4.mr-openshift.co.uk/$(context.taskRun.namespace)/pacman
   - name: IMAGE_SHORT_NAME
     value: pacman
   - name: PATH_CONTEXT
