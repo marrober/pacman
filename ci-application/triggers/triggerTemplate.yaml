@@ -74,9 +74,7 @@ spec:
           ## Image validation parameters
         - name: image-build-namespace
           value: $(context.taskRun.namespace)
-        - name: acs_central_endpoint
-          value: acs-secret
-        - name: acs_api_token
+        - name: acs_secret
           value: acs-secret
         - name: roxctl-output-format
           value: "table"
