@@ -41,8 +41,6 @@ spec:
     type: string
   - name: node_js_image_repo
     type: string
-  - name: node_js_short_name
-    type: string
   - name: node_js_image_name
     type: string
   - name: node_js_image_tag
@@ -59,9 +57,7 @@ spec:
   - name: IMAGE_SHORT_NAME
     type: string
     ## Image validation parameters
-  - name: acs_central_endpoint              
-    type: string
-  - name: acs_api_token                     
+  - name: acs_secret            
     type: string
   - name: roxctl-output-format             
     type: string
@@ -121,14 +117,12 @@ spec:
 ##------------------------------------------------------------------
   - name: base-image-check
     params:
-    - name: acs_central_endpoint
-      value: $(params.acs_central_endpoint)
-    - name: acs_api_token
-      value: $(params.acs_api_token)
+    - name: acs_secret
+      value: $(params.acs_secret)
     - name: public-url
       value: $(params.node_js_image_repo)/$(params.node_js_image_name):$(params.node_js_image_tag)
     - name: image-short-name
-      value: $(params.node_js_short_name)
+      value: $(params.node_js_image_name)
     - name: image-tag
       value: $(params.node_js_image_tag)
     - name: image-build-namespace
@@ -268,10 +262,8 @@ spec:
 ##------------------------------------------------------------------
   - name: image-build-check
     params:
-    - name: acs_central_endpoint
-      value: $(params.acs_central_endpoint)
-    - name: acs_api_token
-      value: $(params.acs_api_token)
+    - name: acs_secret
+      value: $(params.acs_secret)
     - name: public-url
       value: $(params.IMAGE_NAME):$(tasks.push-image-to-imagestream.results.new-tag)
     - name: image-short-name

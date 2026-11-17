@@ -6,11 +6,8 @@ metadata:
     argocd.argoproj.io/sync-wave: "3"
 spec:
   params:
-    - name: acs_central_endpoint
-      description: Secret containing the address:port tuple for ACS Central (example - rox.stackrox.io:443)
-      type: string
-    - name: acs_api_token
-      description: Secret containing the ACS API token with CI permissions
+    - name: acs_secret
+      description: Secret containing the central address and the token in different keys within the secret
       type: string
     - name: public-url
       type: string
@@ -44,12 +41,12 @@ spec:
           valueFrom:
             secretKeyRef:
               key: acs_api_token
-              name: $(params.acs_api_token)
+              name: $(params.acs_secret)
         - name: ROX_CENTRAL_ENDPOINT
           valueFrom:
             secretKeyRef:
               key: acs_central_endpoint
-              name: $(params.acs_central_endpoint)
+              name: $(params.acs_secret)
       image: image-registry.openshift-image-registry.svc:5000/pacman-ci/terminal:2.4
       resources: {}
       script: |
