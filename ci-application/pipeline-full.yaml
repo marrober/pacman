@@ -392,6 +392,11 @@ spec:
       name: update-and-commit-argocd-app-file
     runAfter:
     - push-image-to-quay
+    when:
+    - input: "$(tasks.image-build-check.results.scan-result)"
+      operator: in
+      values:
+      - "pass"
     workspaces:
     - name: files
       workspace: files
@@ -409,6 +414,11 @@ spec:
     taskRef:
       kind: Task
       name: argocd-sync-and-wait
+    when:
+    - input: "$(tasks.image-build-check.results.scan-result)"
+      operator: in
+      values:
+      - "pass"
     runAfter:
     - update-dev-deployment
 ##------------------------------------------------------------------
