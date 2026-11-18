@@ -32,6 +32,10 @@ spec:
 
         echo $ARGOCD_AUTH_TOKEN
 
+        echo "Application name : $(params.application-name)"
+
+        echo "Revision : $(params.revision)"
+
         echo "Syncing $(params.application-name) against $ARGOCD_SERVER"
 
         # Test if the token can view the app (returns 'yes' or 'no')
