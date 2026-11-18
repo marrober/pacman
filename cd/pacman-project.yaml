@@ -35,11 +35,8 @@ spec:
   namespaceResourceBlacklist:
   namespaceResourceWhitelist:
 
-
   roles:
-  - name: developer
-    groups:
-    - developers
+  - name: pacman-sync
+    description: Allow syncing the pacman-development application
     policies:
-    - p, proj:pacman:developer, applications, get, *, allow
-    - p, proj:pacman:developer, applications, sync, *, allow  
+      - p, proj:pacman-ci:pacman-sync, applications, sync, pacman-ci/pacman-development, allow
