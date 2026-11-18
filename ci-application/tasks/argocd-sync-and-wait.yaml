@@ -28,6 +28,15 @@ spec:
       name: login
       resources: {}
       script: >
+        echo $ARGOCD_SERVER
+        echo $ARGOCD_AUTH_TOKEN
+
         echo "Syncing $(params.application-name) against $ARGOCD_SERVER"
+
+        # Test if the token can view the app (returns 'yes' or 'no')
+        argocd account can-i get applications pacman-ci/pacman-development --grpc-web --insecure
+
+        # Test if the token can sync the app (returns 'yes' or 'no')
+        argocd account can-i sync applications pacman-ci/pacman-development --grpc-web --insecure
 
         argocd app sync "$(params.application-name)" --revision "$(params.revision)"  --insecure --grpc-web
