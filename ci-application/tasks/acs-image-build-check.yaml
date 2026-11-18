@@ -69,14 +69,17 @@ spec:
 
         ./roxctl image scan --image "$(params.public-url)" --insecure-skip-tls-verify -e "$ROX_CENTRAL_ENDPOINT" --force > /dev/null 2>&1
 
-        ./roxctl image check --image $(params.public-url) --insecure-skip-tls-verify -e $ROX_CENTRAL_ENDPOINT -o $(params.roxctl-output-format) --retries 0 > imageScanResult 2>&1
+        if ./roxctl image check --image "$(params.public-url)" --insecure-skip-tls-verify -e "$ROX_CENTRAL_ENDPOINT" -o "$(params.roxctl-output-format)" --retries 0 > imageScanResult 2>&1; then
+          failTask=false
+        else
+          failTask=true
+        fi
 
         cat imageScanResult
 
-        imageScanResultNewVar=$(cat imageScanResult)
-
-        if [[ "$imageScanResultNewVar" == *"failed policies found"* ]]; then
+        if grep -Fq "ERROR:        checking image failed: retrieving alerts: could not check build-time alerts" imageScanResult; then
           failTask=true
+          echo "Unable to perform a vulnerability scan. Check the authentication of the connection to the ACS server"
         fi
 
         ./roxctl image check --image "$(params.public-url)" --insecure-skip-tls-verify -e "$ROX_CENTRAL_ENDPOINT" -o json --retries 0 > imageScanResult-json 2>imageScanError
@@ -96,8 +99,6 @@ spec:
           echo "Built image violations"
           cat /workspace/image-violations.json
         fi
-
-        ls -al /workspace
 
         if [[ "$failTask" == "true" ]]; then
           echo "Setting overall result to fail"
