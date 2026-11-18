@@ -129,6 +129,15 @@ data:
   .dockerconfigjson: <encoded>
 ````
 
+Also create a secret with a plain username and password for the quay robot account to be used by cosign :
+
+````bash
+oc create secret -n pacman-ci generic quay-robot \
+  --from-literal=username='<username>' \
+  --from-literal=password='<password>'
+  ````
+
+
 and the <encoded> text is base 64 encoded robot account credentials.
 
 A Secret called trustification-secret is required in the project. To create it use the command :
@@ -152,6 +161,31 @@ oc create secret generic trustification-secret -n pacman-ci \
   --from-literal=oidc_client_id="$OIDC_CLIENT_ID" \
   --from-literal=oidc_client_secret="$OIDC_CLIENT_SECRET"
   ````
+
+### Create a long lived token
+
+To create a token that will not time out quickly use the command below. This will create a token that will last 625 days.
+
+````bash
+oc create token pipeline --duration=15000h --bound-object-kind Secret --bound-object-name pipeline-dockercfg-<whatever>
+````
+
+Get the token and add it to the ACS registry integration as described below.
+
+Get the default route : 
+
+````bash
+ oc get is/nodejs -o jsonpath='{"https://"}''{.status.publicDockerImageRepository}' | cut -d "/" -f 1-3
+ ````
+
+In ACS go to Platform configurations -> Integrations -> Image integration -> Generic Docker Registry and press the ‘Create integration’ button.
+Fill in the details as :
+	Integration name : OCP Registry
+	Endpoint : https://default-route-openshift-image-registry.apps.cluster-.....
+	Username : admin
+	Password : token from above
+	Check the option : Disable TLS certificate validation (insecure)
+Test the integration and save if successful.
 
 -----------------------------------------------------------------------------------------------------------------
 
@@ -200,32 +234,7 @@ subjects:
   namespace: pacman-ci
 ````
 
-### Create a long lived token
 
-To create a token that will not time out quickly use the command below. This will create a token that will last 625 days.
-
-````bash
-oc create token pipeline --duration=15000h --bound-object-kind Secret --bound-object-name pipeline-dockercfg-<whatever>
-````
-
-Take the password section from the item with index : default-route-openshift-image-registry.apps.cluster-.....
-
-base64 decode the output and use the token below.
-
-Get the default route : 
-
-````bash
- oc get is/nodejs -o jsonpath='{"https://"}''{.status.publicDockerImageRepository}' | cut -d "/" -f 1-3
- ````
-
-In ACS go to Platform configurations -> Integrations -> Image integration -> Generic Docker Registry and press the ‘Create integration’ button.
-Fill in the details as :
-	Integration name : OCP Registry
-	Endpoint : https://default-route-openshift-image-registry.apps.cluster-.....
-	Username : admin
-	Password : token from above
-	Check the option : Disable TLS certificate validation (insecure)
-Test the integration and save if successful.
 
 ## For signing container images
 

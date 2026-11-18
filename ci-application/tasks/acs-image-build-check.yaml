@@ -69,25 +69,24 @@ spec:
 
         ./roxctl image scan --image "$(params.public-url)" --insecure-skip-tls-verify -e "$ROX_CENTRAL_ENDPOINT" --output=json --force > imageScanOutput 2>&1
 
-        if ./roxctl image check --image "$(params.public-url)" --insecure-skip-tls-verify -e "$ROX_CENTRAL_ENDPOINT" -o "$(params.roxctl-output-format)" --retries 0 > imageScanResult 2>&1; then
+        if ./roxctl image check --image "$(params.public-url)" --insecure-skip-tls-verify -e "$ROX_CENTRAL_ENDPOINT" -o "$(params.roxctl-output-format)" --retries 0 > imageCheckResult 2>&1; then
           failTask=false
         else
           failTask=true
         fi
 
-        cat imageScanOutput
-        cat imageScanResult
+        cat imageCheckResult
 
-        if grep -Eq 'checking image failed: retrieving alerts: could not check build-time alerts' imageScanOutput imageScanResult; then
+        if grep -Eq 'checking image failed: retrieving alerts: could not check build-time alerts' imageScanOutput imageCheckResult; then
           failTask=true
           echo "Unable to perform a vulnerability scan. Check the authentication of the connection to the ACS server"
         fi
 
-        ./roxctl image check --image "$(params.public-url)" --insecure-skip-tls-verify -e "$ROX_CENTRAL_ENDPOINT" -o json --retries 0 > imageScanResult-json 2>imageScanError
+        ./roxctl image check --image "$(params.public-url)" --insecure-skip-tls-verify -e "$ROX_CENTRAL_ENDPOINT" -o json --retries 0 > imageCheckResult-json 2>imageScanError
 
-        # cat imageScanResult-json
+        # cat imageCheckResult-json
 
-        jq '[.results[].violatedPolicies[]  | select(.name == "Full vulnerability list") | .violation] | if length == 1 then .[0] elif length > 0 then . else {} end' imageScanResult-json > /workspace/violations.json
+        jq '[.results[].violatedPolicies[]  | select(.name == "Full vulnerability list") | .violation] | if length == 1 then .[0] elif length > 0 then . else {} end' imageCheckResult-json > /workspace/violations.json
 
         if [[ "$(params.base_check)" == "true" ]]; then
           cp /workspace/violations.json /workspace/base-violations.json
