@@ -3,5 +3,3 @@ kind: Kustomization
 
 resources:
 - cd/
-- cd/ci-automation/tekton-resources-build.yaml
-- cd/ci-automation/tekton-resources-verify.yaml
