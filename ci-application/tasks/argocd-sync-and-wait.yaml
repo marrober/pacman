@@ -29,6 +29,7 @@ spec:
       resources: {}
       script: >
         echo $ARGOCD_SERVER
+
         echo $ARGOCD_AUTH_TOKEN
 
         echo "Syncing $(params.application-name) against $ARGOCD_SERVER"
