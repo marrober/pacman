@@ -107,6 +107,56 @@ oc create secret generic acs-secret \
 --from-literal=acs_central_endpoint=$(oc get route/central -n stackrox -o jsonpath='{.spec.host}{":443"}')
 ````
 
+## REQUIRED
+-----------------------------------------------------------------------------------------------------------------
+````bash
+oc create secret generic github-access-token --from-literal=token=
+oc apply -f ~/data/<name>-api-access-secret.yml
+oc create secret generic -n pacman-ci argocd-env-secret --from-literal=ARGOCD_PASSWORD=$(oc get secret/openshift-gitops-cluster  -n openshift-gitops -o jsonpath='{.data.admin\.password}' | base64 -d) --from-literal=ARGOCD_USERNAME=admin
+oc create secret generic acs-secret \
+  --from-literal=acs_api_token=<token> \
+  --from-literal=acs_central_endpoint=$(oc get route/central -n stackrox -o jsonpath='{.spec.host}{":443"}')
+````
+
+Note that : ~/data/<name>-api-access-secret.yml is in the format:
+
+````bash
+apiVersion: v1
+kind: Secret
+metadata:
+  name: quay-api-access-secret
+data:
+  .dockerconfigjson: <encoded>
+````
+
+and the <encoded> text is base 64 encoded robot account credentials.
+
+A Secret called trustification-secret is required in the project. To create it use the command :
+
+````bash
+BOMBASTIC_API_URL="https://$(oc get route -n trusted-profile-analyzer -l app.kubernetes.io/component=server -o jsonpath='{.items[0].spec.host}')"
+OIDC_ISSUER_URL=$(oc get cm server-auth -n trusted-profile-analyzer \
+  -o jsonpath='{.data.auth\.yaml}' | awk '/clientId: cli/{f=1} f&&/issuerUrl:/{print $2; exit}')
+OIDC_CLIENT_ID=cli
+OIDC_CLIENT_SECRET=$(oc get secret oidc-cli -n trusted-profile-analyzer \
+  -o jsonpath='{.data.client-secret}' | base64 -d)
+
+echo $BOMBASTIC_API_URL
+echo $OIDC_ISSUER_URL
+echo $OIDC_CLIENT_ID
+echo $OIDC_CLIENT_SECRET
+
+oc create secret generic trustification-secret -n pacman-ci \
+  --from-literal=bombastic_api_url="$BOMBASTIC_API_URL" \
+  --from-literal=oidc_issuer_url="$OIDC_ISSUER_URL" \
+  --from-literal=oidc_client_id="$OIDC_CLIENT_ID" \
+  --from-literal=oidc_client_secret="$OIDC_CLIENT_SECRET"
+  ````
+
+-----------------------------------------------------------------------------------------------------------------
+
+
+
 # ACS read the Openshift Image Registry - may not be needed.
 
 ````bash
@@ -300,12 +350,17 @@ oc get is/nodejs -o jsonpath='{.status.publicDockerImageRepository}' | cut -d "/
 A Secret called trustification-secret is required in the project. To create it use the command :
 
 ````bash
-BOMBASTIC_API_URL="https://$(oc get route -n trusted-profile-analyzer -o jsonpath='{.items[0].spec.host}')"
+BOMBASTIC_API_URL="https://$(oc get route -n trusted-profile-analyzer -l app.kubernetes.io/component=server -o jsonpath='{.items[0].spec.host}')"
 OIDC_ISSUER_URL=$(oc get cm server-auth -n trusted-profile-analyzer \
   -o jsonpath='{.data.auth\.yaml}' | awk '/clientId: cli/{f=1} f&&/issuerUrl:/{print $2; exit}')
 OIDC_CLIENT_ID=cli
 OIDC_CLIENT_SECRET=$(oc get secret oidc-cli -n trusted-profile-analyzer \
   -o jsonpath='{.data.client-secret}' | base64 -d)
+
+echo $BOMBASTIC_API_URL
+echo $OIDC_ISSUER_URL
+echo $OIDC_CLIENT_ID
+echo $OIDC_CLIENT_SECRET
 
 oc create secret generic trustification-secret -n pacman-ci \
   --from-literal=bombastic_api_url="$BOMBASTIC_API_URL" \

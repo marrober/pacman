@@ -67,7 +67,7 @@ spec:
 
         ./roxctl version
 
-        ./roxctl image scan --image "$(params.public-url)" --insecure-skip-tls-verify -e "$ROX_CENTRAL_ENDPOINT" --force > /dev/null 2>&1
+        ./roxctl image scan --image "$(params.public-url)" --insecure-skip-tls-verify -e "$ROX_CENTRAL_ENDPOINT" --force > imageScanOutput 2>&1
 
         if ./roxctl image check --image "$(params.public-url)" --insecure-skip-tls-verify -e "$ROX_CENTRAL_ENDPOINT" -o "$(params.roxctl-output-format)" --retries 0 > imageScanResult 2>&1; then
           failTask=false
@@ -75,9 +75,10 @@ spec:
           failTask=true
         fi
 
+        cat imageScanOutput
         cat imageScanResult
 
-        if grep -Fq "ERROR:        checking image failed: retrieving alerts: could not check build-time alerts" imageScanResult; then
+        if grep -Eq 'checking image failed: retrieving alerts: could not check build-time alerts' imageScanOutput imageScanResult; then
           failTask=true
           echo "Unable to perform a vulnerability scan. Check the authentication of the connection to the ACS server"
         fi
