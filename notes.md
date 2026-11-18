@@ -192,7 +192,7 @@ Test the integration and save if successful.
 Generate an argocd sync token and add it to a secret :
 
 ````bash
-ARGOCD_TOKEN=$(argocd proj role create-token pacman-ci pacman-sync --grpc-web | grep Token | tr -d " " | awk -F':' '{print $2}')
+ARGOCD_TOKEN=$(argocd proj role create-token pacman-delivery pacman-sync --grpc-web | grep Token | tr -d " " | awk -F':' '{print $2}')
 
 oc create secret generic argocd-env-secret -n pacman-ci --from-literal=ARGOCD_AUTH_TOKEN="$ARGOCD_TOKEN"
 ````

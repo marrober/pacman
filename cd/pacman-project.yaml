@@ -39,4 +39,4 @@ spec:
   - name: pacman-sync
     description: Allow syncing the pacman-development application
     policies:
-      - p, proj:pacman-ci:pacman-sync, applications, sync, pacman-ci/pacman-development, allow
+      - p, proj:pacman-delivery:pacman-sync, applications, sync, pacman-delivery/pacman-dev-01, allow
