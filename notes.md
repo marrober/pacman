@@ -187,9 +187,34 @@ Fill in the details as :
 	Check the option : Disable TLS certificate validation (insecure)
 Test the integration and save if successful.
 
+## ArgoCD Sync token
+
+Generate an argocd sync token and add it to a secret :
+
+````bash
+ARGOCD_TOKEN=$(argocd proj role create-token pacman-ci pacman-sync --grpc-web | grep Token | tr -d " " | awk -F':' '{print $2}')
+
+oc create secret generic argocd-env-secret -n pacman-ci --from-literal=ARGOCD_AUTH_TOKEN="$ARGOCD_TOKEN"
+````
+
+## For signing container images
+
+To enable tekton chains to sign container images and commit signatures and attestations to quay.io create a secret that provides the credentials for a quay.io robot account.
+
+````bash
+oc create secret generic quay-chains-creds --from-file=.dockerconfigjson=<(oc create secret docker-registry temp-quay-secret \
+    --docker-server=quay.io \
+    --docker-username='marrober+api_access' \
+    --docker-password='<quay-robot-account-password>' \
+    --dry-run=client -o jsonpath='{.data.\.dockerconfigjson}' | base64 -d) --type=kubernetes.io/dockerconfigjson -n pacman-ci
+````
+
+Then patch the pipeline service account to reference the above secret
+
+````bash
+oc patch serviceaccount pipeline   -n pacman-ci   --type='json'   -p='[{"op": "add", "path": "/secrets/-", "value": {"name": "quay-chains-creds"}}]'
+
 -----------------------------------------------------------------------------------------------------------------
-
-
 
 # ACS read the Openshift Image Registry - may not be needed.
 
@@ -236,22 +261,7 @@ subjects:
 
 
 
-## For signing container images
 
-To enable tekton chains to sign container images and commit signatures and attestations to quay.io create a secret that provides the credentials for a quay.io robot account.
-
-````bash
-oc create secret generic quay-chains-creds --from-file=.dockerconfigjson=<(oc create secret docker-registry temp-quay-secret \
-    --docker-server=quay.io \
-    --docker-username='marrober+api_access' \
-    --docker-password='<quay-robot-account-password>' \
-    --dry-run=client -o jsonpath='{.data.\.dockerconfigjson}' | base64 -d) --type=kubernetes.io/dockerconfigjson -n pacman-ci
-````
-
-Then patch the pipeline service account to reference the above secret
-
-````bash
-oc patch serviceaccount pipeline   -n pacman-ci   --type='json'   -p='[{"op": "add", "path": "/secrets/-", "value": {"name": "quay-chains-creds"}}]'
 ````
 
 Update the TektonInstallerSet custom resource definition :
