@@ -14,14 +14,10 @@ spec:
       description: Path to the built image violations file
       type: string
       default: /workspace/image-violations.json
-    - name: output-file
-      description: Path for violation messages only present in the built image
+    - name: report-format
       type: string
-      default: /workspace/new-image-cves.json
-    - name: summary-file
-      description: Path for the violation comparison summary
-      type: string
-      default: /workspace/violation-comparison-summary.json
+      description: json or table
+      default: table
   results:
     - name: base-violation-count
       description: Number of unique CVE/GHSA IDs in the base image violations file
@@ -43,8 +39,8 @@ spec:
         report="vulnerability-comparison.$(params.report-format)"
 
         python3 ci-application/scripts/compare_vulnerability_logs.py \
-          "$(params.base-log)" \
-          "$(params.image-log)" \
+          "$(params.base-violations-file)" \
+          "$(params.image-violations-file)" \
           --format "$(params.report-format)" \
           > "$report"
 
