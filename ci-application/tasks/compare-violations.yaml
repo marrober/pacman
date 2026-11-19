@@ -19,12 +19,7 @@ spec:
       description: json or table
       default: table
   results:
-    - name: base-violation-count
-      description: Number of unique CVE/GHSA IDs in the base image violations file
-    - name: image-violation-count
-      description: Number of unique CVE/GHSA IDs in the built image violations file
-    - name: exclusive-image-violation-count
-      description: Number of unique CVE/GHSA IDs only present in the built image
+    - name: report-file
   workspaces:
     - name: violations
       description: Workspace containing base and image violation files
@@ -34,6 +29,7 @@ spec:
       image: image-registry.openshift-image-registry.svc:5000/pacman-ci/python:v3.1.2-17944
       script: |
         #!/usr/bin/env bash
+        
         set -euo pipefail
 
         report="vulnerability-comparison.$(params.report-format)"
