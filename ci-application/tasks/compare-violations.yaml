@@ -36,8 +36,6 @@ spec:
 
         report="vulnerability-comparison.$(params.report-format)"
 
-        ls -al /resources
-
         python3 /resources/pacman/ci-application/scripts/compare_vulnerability_logs.py \
           "$(params.base-violations-file)" \
           "$(params.image-violations-file)" \
@@ -46,4 +44,7 @@ spec:
 
         echo "Created $report"
         printf '%s' "$report" > "$(results.report-file.path)"
+
+        echo $report
+
       workingDir: /workspace
