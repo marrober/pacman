@@ -88,25 +88,21 @@ spec:
 
         echo -n "$(params.quay-instance-url)/$(params.quay-account)/$(params.quay-repository):$(params.imageTag)" | tee $(results.IMAGE_URL.path); echo
 
-        container=$(buildah from --storage-driver=$(params.STORAGE_DRIVER) --root /files/buildah-containers --pull-never $(params.quay-instance-url)/$(params.quay-account)/$(params.quay-repository):$(params.imageTag))
+        # container=$(buildah from --storage-driver=$(params.STORAGE_DRIVER) --root /files/buildah-containers --pull-never $(params.quay-instance-url)/$(params.quay-account)/$(params.quay-repository):$(params.imageTag))
 
-        echo "Container"
-        echo $container
+        # echo "Container"
+        # echo $container
 
-        buildah copy --storage-driver=$(params.STORAGE_DRIVER) --root /files/buildah-containers $container  $(workspaces.resources.path)/sbom-image.json /root/buildinfo/content_manifests/
+        # buildah copy --storage-driver=$(params.STORAGE_DRIVER) --root /files/buildah-containers $container  $(workspaces.resources.path)/sbom-image.json /root/buildinfo/content_manifests/
 
-        echo "copy done"
+        # echo "copy done"
 
-        buildah config --storage-driver=$(params.STORAGE_DRIVER) --root /files/buildah-containers -a org.opencontainers.image.base.name=${base_image_name} -a org.opencontainers.image.base.digest=${base_image_digest} $container
+        # buildah config --storage-driver=$(params.STORAGE_DRIVER) --root /files/buildah-containers -a org.opencontainers.image.base.name=${base_image_name} -a org.opencontainers.image.base.digest=${base_image_digest} $container
 
-        echo "commit container image"
-        buildah --storage-driver=$(params.STORAGE_DRIVER) --root /files/buildah-containers commit $container $(params.quay-instance-url)/$(params.quay-account)/$(params.quay-repository):$(params.imageTag)
+        # echo "commit container image"
+        # buildah --storage-driver=$(params.STORAGE_DRIVER) --root /files/buildah-containers commit $container $(params.quay-instance-url)/$(params.quay-account)/$(params.quay-repository):$(params.imageTag)
 
         buildah images --storage-driver=$(params.STORAGE_DRIVER) --root /files/buildah-containers
-
-        ls -al /etc/secret-volume/.dockerconfigjson
-        
-        cat /etc/secret-volume/.dockerconfigjson
 
         echo "push container image"
         buildah push --storage-driver=$(params.STORAGE_DRIVER) --authfile /etc/secret-volume/.dockerconfigjson --root /files/buildah-containers --digestfile $(workspaces.files.path)/image-digest $(params.quay-instance-url)/$(params.quay-account)/$(params.quay-repository):$(params.imageTag)
@@ -114,13 +110,10 @@ spec:
         echo " --- image pushed ---"
         cat "$(workspaces.files.path)"/image-digest | tee $(results.IMAGE_DIGEST.path); echo
 
-        echo " - "
-
         echo -n "$(params.quay-instance-url)/$(params.quay-account)/$(params.quay-repository)" > $(results.IMAGE_URL.path)
-        cat "$(workspaces.files.path)"/image-digest > $(results.IMAGE_DIGEST.path)
 
-        echo $(results.IMAGE_URL.path)
-        echo $(results.IMAGE_DIGEST.path)
+        cat $(results.IMAGE_URL.path)
+        cat $(results.IMAGE_DIGEST.path)
 
         echo -n "$(params.quay-instance-url)/$(params.quay-account)/$(params.quay-repository):$(params.imageTag)" > $(results.quay-image-repo-location.path)
 
@@ -157,14 +150,10 @@ spec:
               name: quay-robot
               key: password
       script: |
-        ls -al /tekton/results
         
         cat /tekton/results/IMAGE_DIGEST; echo 
 
         export IMAGE=$(cat /tekton/results/IMAGE_DIGEST)
-
-        echo $QUAY_ROBOT_USERNAME
-        echo $QUAY_ROBOT_PASSWORD
 
         cosign-2 attest --registry-username=$QUAY_ROBOT_USERNAME --registry-password=$QUAY_ROBOT_PASSWORD --key k8s://openshift-pipelines/signing-secrets --type cyclonedx --predicate sbom-image.json --insecure-skip-verify=true --attachment-tag-prefix=sbom- --tlog-upload=false $(params.quay-instance-url)/$(params.quay-account)/$(params.quay-repository)@$IMAGE
       workingDir: $(workspaces.resources.path)
