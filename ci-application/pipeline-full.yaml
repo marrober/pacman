@@ -295,6 +295,8 @@ spec:
     workspaces:
     - name: violations
       workspace: violations
+    - name: resources
+      workspace: resources
 ##------------------------------------------------------------------
 # Push the new runtime image to quay.io
 ##------------------------------------------------------------------

@@ -24,17 +24,21 @@ spec:
     - name: violations
       description: Workspace containing base and image violation files
       mountPath: /workspace
+    - name: resources
+      mountPath: /resources
   steps:
     - name: compare-cves
       image: image-registry.openshift-image-registry.svc:5000/pacman-ci/python:v3.1.2-17944
       script: |
         #!/usr/bin/env bash
-        
+
         set -euo pipefail
 
         report="vulnerability-comparison.$(params.report-format)"
 
-        python3 ci-application/scripts/compare_vulnerability_logs.py \
+        ls -al /resources
+
+        python3 /resources/ci-application/scripts/compare_vulnerability_logs.py \
           "$(params.base-violations-file)" \
           "$(params.image-violations-file)" \
           --format "$(params.report-format)" \
