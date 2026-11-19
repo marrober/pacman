@@ -82,11 +82,9 @@ spec:
           echo "Unable to perform a vulnerability scan. Check the authentication of the connection to the ACS server"
         fi
 
-        ./roxctl image check --image "$(params.public-url)" --insecure-skip-tls-verify -e "$ROX_CENTRAL_ENDPOINT" -o json --retries 0 > imageCheckResult-json 2>imageScanError
+        cat imageScanOutput
 
-        # cat imageCheckResult-json
-
-        jq '[.results[].violatedPolicies[]  | select(.name == "Full vulnerability list") | .violation] | if length == 1 then .[0] elif length > 0 then . else {} end' imageCheckResult-json > /workspace/violations.json
+        jq -r '.result.vulnerabilities[] | [.cveId, .componentName, .componentVersion]' imageScanOutput > /workspace/violations.json
 
         if [[ "$(params.base_check)" == "true" ]]; then
           cp /workspace/violations.json /workspace/base-violations.json

@@ -7,3 +7,4 @@ resources:
 - git-init-rhel9.yaml
 - argocd.yaml
 - rhel9-nodejs.yaml
+- python.yaml

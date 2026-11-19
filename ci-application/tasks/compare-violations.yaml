@@ -35,102 +35,19 @@ spec:
       mountPath: /workspace
   steps:
     - name: compare-cves
-      image: image-registry.openshift-image-registry.svc:5000/pacman-ci/terminal:2.5
+      image: image-registry.openshift-image-registry.svc:5000/pacman-ci/python:v3.1.2-17944
       script: |
         #!/usr/bin/env bash
-
         set -euo pipefail
 
-        BASE_FILE="$(params.base-violations-file)"
-        APP_FILE="$(params.image-violations-file)"
-        OUTPUT_FILE="$(params.output-file)"
-        SUMMARY_FILE="$(params.summary-file)"
+        report="vulnerability-comparison.$(params.report-format)"
 
-        for file in "$BASE_FILE" "$APP_FILE"; do
-          if [[ ! -f "$file" ]]; then
-            echo "Required file not found: $file"
-            exit 1
-          fi
-        done
+        python3 ci-application/scripts/compare_vulnerability_logs.py \
+          "$(params.base-log)" \
+          "$(params.image-log)" \
+          --format "$(params.report-format)" \
+          > "$report"
 
-        COMPARISON_RESULT=$(jq -n \
-          --slurpfile base "$BASE_FILE" \
-          --slurpfile app "$APP_FILE" \
-          '
-            def extract_id:
-              if test("CVE-[0-9]{4}-[0-9]+") then (match("CVE-[0-9]{4}-[0-9]+") | .string)
-              elif test("GHSA-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}") then (match("GHSA-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}") | .string)
-              else null end;
-
-            def parse:
-              . as $line |
-              ($line | extract_id) as $id |
-              (if $line | test("component '\''[^'\'']+'\''") then
-                ($line | match("component '\''([^'\'']+)'\''") | .captures[0].string)
-              else null end) as $component |
-              (if $line | test("\\(version [^)]+\\)") then
-                ($line | match("\\(version ([^)]+)\\)") | .captures[0].string)
-              else null end) as $version |
-              select($id != null and $component != null and $version != null) |
-              {id: $id, component: $component, version: $version, key: ($id + "|" + $component + "|" + $version)};
-
-            def group_by_id:
-              group_by(.id) |
-              map({
-                id: .[0].id,
-                components: ([.[] | {component, version}] | unique | sort_by(.component, .version))
-              }) |
-              sort_by(.id);
-
-            ([$base[0][]? | parse]) as $base_entries |
-            ([$app[0][]? | parse]) as $app_entries |
-            ($base_entries | map({key: .key, value: true}) | from_entries) as $base_keys |
-            ([$app_entries[] | select($base_keys[.key] | not)] ) as $app_only_entries |
-            ($base_entries | group_by_id) as $base_vulns |
-            ($app_only_entries | group_by_id) as $app_vulns |
-            {
-              base_violation_count: ($base_vulns | length),
-              app_layer_count: ($app_vulns | length),
-              base_vulnerabilities: $base_vulns,
-              app_layer_vulnerabilities: $app_vulns
-            }
-          ')
-
-        echo "$COMPARISON_RESULT" | jq '{
-          base_vulnerabilities,
-          app_layer_vulnerabilities
-        }' > "$OUTPUT_FILE"
-
-        echo "$COMPARISON_RESULT" | jq '{
-          base_violation_count,
-          app_layer_count
-        }' > "$SUMMARY_FILE"
-
-        BASE_COUNT=$(jq -r '.base_violation_count' "$SUMMARY_FILE")
-        APP_LAYER_COUNT=$(jq -r '.app_layer_count' "$SUMMARY_FILE")
-
-        print_vulns() {
-          local field="$1"
-          jq -r --arg field "$field" '
-            .[$field][]? |
-            .id,
-            (.components[] | "  - \(.component) (\(.version))")
-          ' "$OUTPUT_FILE"
-        }
-
-        echo "Base image vulnerabilities ($BASE_COUNT):"
-        print_vulns base_vulnerabilities
-        echo ""
-
-        echo "App-layer vulnerabilities ($APP_LAYER_COUNT):"
-        print_vulns app_layer_vulnerabilities
-        echo ""
-
-        echo "Violation comparison summary:"
-        echo "  Base image vulnerabilities:            $BASE_COUNT"
-        echo "  App layer introduced vulnerabilities:  $APP_LAYER_COUNT"
-        echo ""
-
-        echo "Details written to: $OUTPUT_FILE"
-        echo "Summary written to: $SUMMARY_FILE"
+        echo "Created $report"
+        printf '%s' "$report" > "$(results.report-file.path)"
       workingDir: /workspace
