@@ -38,7 +38,7 @@ spec:
 
         ls -al /resources
 
-        python3 /resources/ci-application/scripts/compare_vulnerability_logs.py \
+        python3 /resources/pacman/ci-application/scripts/compare_vulnerability_logs.py \
           "$(params.base-violations-file)" \
           "$(params.image-violations-file)" \
           --format "$(params.report-format)" \
