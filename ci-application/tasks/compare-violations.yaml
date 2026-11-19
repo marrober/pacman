@@ -45,6 +45,6 @@ spec:
         echo "Created $report"
         printf '%s' "$report" > "$(results.report-file.path)"
 
-        echo $report
+        cat $report
 
       workingDir: /workspace
