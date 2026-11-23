@@ -42,7 +42,6 @@ spec:
           --format "$(params.report-format)" \
           > "$report"
 
-        echo "Created $report"
         printf '%s' "$report" > "$(results.report-file.path)"
 
         cat $report

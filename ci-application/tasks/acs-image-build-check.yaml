@@ -84,7 +84,7 @@ spec:
 
         cat imageScanOutput
 
-        jq -r '.result.vulnerabilities[] | [.cveId, .componentName, .componentVersion]' imageScanOutput > /workspace/violations.json
+        cp imageScanOutput /workspace/violations.json
 
         if [[ "$(params.base_check)" == "true" ]]; then
           cp /workspace/violations.json /workspace/base-violations.json

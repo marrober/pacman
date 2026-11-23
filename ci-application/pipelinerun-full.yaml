@@ -55,7 +55,7 @@ spec:
     # value: 1-1777524498
     # value: 1-1777916853
     # value: nodejs-22-1-177 # Version in the Cluster image registry in the pacman-ci namespace with the name nodejs
-    value: '22.23.3'
+    value: '22.23.5'
   - name: image-build-namespace
     value: $(context.taskRun.namespace)
     ## Image validation parameters
