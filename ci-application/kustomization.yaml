@@ -7,7 +7,7 @@ resources:
 - rbac/image-push-for-pipeline-sa.yaml
 - pipeline-full.yaml
 - pipeline-sbom.yaml
-- pipleline-quick-to-quay.yaml
+- pipeline-quick-to-quay.yaml
 - tasks/acs-image-build-check.yaml
 - tasks/compare-violations.yaml
 - tasks/build.yaml
