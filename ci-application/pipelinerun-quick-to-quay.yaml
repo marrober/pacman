@@ -21,12 +21,7 @@ spec:
     value: "main"
   - name: GIT_REPO_NAME
     value: pacman
-    ## Verify git commit parameters
-  - name: certificate-identity
-    value: ".*"
   - name: IMAGE_NAME
-    value: default-route-openshift-image-registry.apps.ocp4.mr-openshift.co.uk/$(context.taskRun.namespace)/pacman
-  - name: IMAGE_NAME 
     value: default-route-openshift-image-registry.apps.ocp4.mr-openshift.co.uk/$(context.taskRun.namespace)/pacman
   - name: IMAGE_SHORT_NAME
     value: pacman
@@ -48,6 +43,12 @@ spec:
     # value: 1-1777916853
     value: nodejs-22-1-177
     ## Image validation parameters
+  - name: quay-instance-url
+    value: "quay.io"
+  - name: quay-account
+    value: "marrober"
+  - name: quay-repository
+    value: "pacman" 
   pipelineRef:
     name: pacman-quick-to-quay
   taskRunTemplate:

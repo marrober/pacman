@@ -20,17 +20,6 @@ spec:
     type: string
   - name: GIT_REPO_NAME
     type: string
-    ## Git signed verification parameters
-  - name: certificate-identity
-    type: string
-  - name: oidc-issuer
-    type: string
-  - name: rekor-url
-    type: string
-  - name: tuf-mirror
-    type: string
-  - name: tuf-root-hash
-    type: string
     ## Image build parameters
   - name: PATH_CONTEXT
     default: .
@@ -50,38 +39,9 @@ spec:
  #   type: string
     # OpenShift imagestream URL parameters
     #
-  - name: image-build-namespace
-    type: string
   - name: IMAGE_NAME 
     type: string
   - name: IMAGE_SHORT_NAME
-    type: string
-    ## Image validation parameters
-  - name: acs_secret            
-    type: string
-  - name: roxctl-output-format             
-    type: string
-    ## Update Argocd application and commit to Github parameters
-  - name: repo_type
-    type: string
-  - name: cd-git-url
-    type: string
-  - name: cd-git-repo-name
-    type: string
-  - name: cd-git-repo-path-to-content-development
-    type: string
-  - name: cd-git-user-name
-    type: string
-  - name: cd-git-user-email
-    type: string
-  - name: cd-git-commit-comment-dev 
-    type: string
-    ## ArgoCD Sync
-  - name: argocd-project-name-development
-    type: string
-  - name: argocd-revision
-    type: string
-  - name: argocd-version
     type: string
     ## Push to quay
   - name: quay-instance-url
