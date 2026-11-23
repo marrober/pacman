@@ -43,6 +43,8 @@ spec:
     # value: 1-1777916853
     value: nodejs-22-1-177
     ## Image validation parameters
+  - name: rekor-url
+    value: http://rekor-server.trusted-artifact-signer.svc
   - name: quay-instance-url
     value: "quay.io"
   - name: quay-account

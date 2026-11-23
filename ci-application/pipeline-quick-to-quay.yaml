@@ -44,6 +44,8 @@ spec:
   - name: IMAGE_SHORT_NAME
     type: string
     ## Push to quay
+  - name: rekor-url
+    type: string
   - name: quay-instance-url
     type: string
   - name: quay-account                   # Quay account name
