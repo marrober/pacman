@@ -82,8 +82,6 @@ spec:
           echo "Unable to perform a vulnerability scan. Check the authentication of the connection to the ACS server"
         fi
 
-        cat imageScanOutput
-
         cp imageScanOutput /workspace/violations.json
 
         if [[ "$(params.base_check)" == "true" ]]; then
