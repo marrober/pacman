@@ -1,0 +1,97 @@
+apiVersion: tekton.dev/v1
+kind: PipelineRun
+metadata:
+  annotations:
+    chains.tekton.dev/signed: "true"
+    argocd.argoproj.io/sync-wave: "4"
+  labels:
+    app.kubernetes.io/instance: pacman-git
+    app.kubernetes.io/name: pacman-git
+    pipeline.openshift.io/runtime: nodejs
+    pipeline.openshift.io/runtime-version: 16-ubi8
+    pipeline.openshift.io/type: kubernetes
+    tekton.dev/pipeline: pacman
+  generateName: pacman-pr-q-to-q-
+spec:
+  params:
+    ## Repository parameters
+  - name: GIT_REPO
+    value: https://github.com/marrober/pacman.git
+  - name: GIT_REVISION
+    value: "main"
+  - name: GIT_REPO_NAME
+    value: pacman
+    ## Verify git commit parameters
+  - name: certificate-identity
+    value: ".*"
+  - name: IMAGE_NAME
+    value: default-route-openshift-image-registry.apps.ocp4.mr-openshift.co.uk/$(context.taskRun.namespace)/pacman
+  - name: IMAGE_NAME 
+    value: default-route-openshift-image-registry.apps.ocp4.mr-openshift.co.uk/$(context.taskRun.namespace)/pacman
+  - name: IMAGE_SHORT_NAME
+    value: pacman
+  - name: PATH_CONTEXT
+    value: $(params.GIT_REPO_NAME)/src
+  - name: STORAGE_DRIVER
+    value: vfs   
+  - name: TLSVERIFY
+    value: false
+  - name: node_js_image_repo
+    # value: registry.redhat.io/rhel9
+    # value: registry.access.redhat.com/hi
+    value: image-registry.openshift-image-registry.svc:5000/pacman-ci
+  - name: node_js_image_name
+    # value: nodejs-22
+    value: nodejs
+  - name: node_js_image_tag
+    # value: 1-1777524498
+    # value: 1-1777916853
+    value: nodejs-22-1-177
+    ## Image validation parameters
+  pipelineRef:
+    name: pacman-quick-to-quay
+  taskRunTemplate:
+    serviceAccountName: pipeline
+  timeouts:
+    pipeline: 1h0m0s
+  workspaces:
+  - name: resources
+    volumeClaimTemplate:
+      metadata:
+        creationTimestamp: null
+        labels:
+          tekton.dev/pipeline: pacman
+      spec:
+        accessModes:
+        - ReadWriteOnce
+        resources:
+          requests:
+            storage: 1Gi
+        storageClassName: lvms-vg1
+  - name: files
+    volumeClaimTemplate:
+      metadata:
+        creationTimestamp: null
+        labels:
+          tekton.dev/pipeline: pacman
+      spec:
+        accessModes:
+        - ReadWriteOnce
+        resources:
+          requests:
+            storage: 20Gi
+        storageClassName: lvms-vg1
+  - name: violations
+    volumeClaimTemplate:
+      metadata:
+        creationTimestamp: null
+        labels:
+          tekton.dev/pipeline: pacman
+      spec:
+        accessModes:
+        - ReadWriteOnce
+        resources:
+          requests:
+            storage: 100Mi
+        storageClassName: lvms-vg1
+     
