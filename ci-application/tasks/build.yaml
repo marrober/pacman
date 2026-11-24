@@ -121,7 +121,7 @@ spec:
 
         skopeo inspect --format '{{.Digest}}' \
           "containers-storage:[/files/buildah-containers+$(params.STORAGE_DRIVER)]${IMAGE}"
-      image: image-registry.openshift-image-registry.svc:5000/pacman-ci/buildah:latest
+      image: image-registry.openshift-image-registry.svc:5000/pacman-ci/terminal:2.6
       resources:
         limits:
           memory: 500Mi
