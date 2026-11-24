@@ -32,16 +32,17 @@ spec:
   - name: TLSVERIFY
     value: false
   - name: node_js_image_repo
-    # value: registry.redhat.io/rhel9
+    value: registry.redhat.io/rhel9
     # value: registry.access.redhat.com/hi
-    value: image-registry.openshift-image-registry.svc:5000/pacman-ci
+    # value: image-registry.openshift-image-registry.svc:5000/pacman-ci
   - name: node_js_image_name
-    # value: nodejs-22
-    value: nodejs
+    value: nodejs-22
+    # value: nodejs
   - name: node_js_image_tag
     # value: 1-1777524498
     # value: 1-1777916853
-    value: nodejs-22-1-177
+    value: 9.9-1795499639
+    # value: nodejs-22-1-177
     ## Image validation parameters
   - name: rekor-url
     value: http://rekor-server.trusted-artifact-signer.svc

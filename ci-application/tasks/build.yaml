@@ -112,6 +112,28 @@ spec:
           add:
           - SETFCAP
       workingDir: /
+    - name: skopeo-inspect
+      script: |
+        #!/usr/bin/env bash
+        set -eux
+        IMAGE="localhost/my-container-image:latest"
+        # containers-storage:[/root+driver]reference
+
+        skopeo inspect --format '{{.Digest}}' \
+          "containers-storage:[/files/buildah-containers+$(params.STORAGE_DRIVER)]${IMAGE}"
+      image: image-registry.openshift-image-registry.svc:5000/pacman-ci/buildah:latest
+      resources:
+        limits:
+          memory: 500Mi
+          cpu: 500m
+        requests:
+          memory: 250Mi
+          cpu: 150m
+      securityContext:
+        capabilities:
+          add:
+          - SETFCAP
+      workingDir: /
   workspaces:
     - mountPath: /files
       name: files
