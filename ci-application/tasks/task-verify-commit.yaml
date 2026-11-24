@@ -28,7 +28,7 @@ spec:
       - name: GITSIGN_REKOR_URL
         value: $(params.rekor-url)
   steps:
-  - image: image-registry.openshift-image-registry.svc:5000/pacman-ci/terminal:2.5
+  - image: image-registry.openshift-image-registry.svc:5000/pacman-ci/terminal:2.6
     name: git-verify
     script: |
       cd /workspace/repository/$(params.git-repo-name)

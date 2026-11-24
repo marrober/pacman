@@ -74,7 +74,7 @@ spec:
       mountPath: /run/secrets/trustification
   steps:
   - name: prepare-sboms
-    image: image-registry.openshift-image-registry.svc:5000/pacman-ci/terminal:2.5
+    image: image-registry.openshift-image-registry.svc:5000/pacman-ci/terminal:2.6
     script: |
       #!/usr/bin/env bash
       set -o errexit -o nounset -o pipefail
@@ -107,7 +107,7 @@ spec:
       echo "Prepared $prepared SBOM(s) for upload"
 
   - name: upload-sboms
-    image: image-registry.openshift-image-registry.svc:5000/pacman-ci/terminal:2.5
+    image: image-registry.openshift-image-registry.svc:5000/pacman-ci/terminal:2.6
     script: |
       #!/usr/bin/env bash
       set -o errexit -o nounset -o pipefail
