@@ -46,8 +46,10 @@ spec:
         buildah push --storage-driver=$(params.STORAGE_DRIVER) \
 
         --tls-verify=$(params.TLSVERIFY) --root /files/buildah-containers \
+        
+        --digestfile $(workspaces.files.path)/image-digest-to-image-stream \
 
-        localhost/my-container-image:latest --digestfile $(workspaces.files.path)/image-digest-to-image-stream \
+        localhost/my-container-image:latest  \
 
         docker://$(params.imagestream-url):$tag
 
