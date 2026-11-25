@@ -119,8 +119,8 @@ spec:
         IMAGE="localhost/my-container-image:latest"
         # containers-storage:[/root+driver]reference
 
-        skopeo inspect --format '{{.Digest}}' \
-          "containers-storage:[/files/buildah-containers+$(params.STORAGE_DRIVER)]${IMAGE}"
+        skopeo --storage-driver="$(params.STORAGE_DRIVER)" inspect "containers-storage:[/files/buildah-containers]${IMAGE}"
+        
       image: image-registry.openshift-image-registry.svc:5000/pacman-ci/terminal:2.7
       resources:
         limits:
