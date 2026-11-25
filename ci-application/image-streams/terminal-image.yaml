@@ -9,10 +9,10 @@ spec:
   lookupPolicy:
     local: true
   tags:
-    - name: '2.6'
+    - name: '2.7'
       from:
         kind: DockerImage
-        name: 'quay.io/marrober/devex-terminal-4:full-terminal-2.6'
+        name: 'quay.io/marrober/devex-terminal-4:full-terminal-2.7'
       importPolicy:
         importMode: Legacy
       referencePolicy:
