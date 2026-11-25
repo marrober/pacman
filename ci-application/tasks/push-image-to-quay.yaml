@@ -134,6 +134,27 @@ spec:
         - name: quay-auth-secret
           mountPath: /etc/secret-volume
           readOnly: true
+    - name: get-layers
+      script: >-
+        #!/usr/bin/env bash
+
+        set +x
+
+        buildah inspect  --type image --storage-driver=$(params.STORAGE_DRIVER) --root /files/buildah-containers --format '{{range .OCIv1.RootFS.DiffIDs}}{{println .}}{{end}}' docker://$(params.quay-instance-url)/$(params.quay-account)/$(params.quay-repository):$(params.imageTag)
+
+      image: image-registry.openshift-image-registry.svc:5000/pacman-ci/buildah:latest
+      resources:
+        limits:
+          memory: 500Mi
+          cpu: 500m
+        requests:
+          memory: 250Mi
+          cpu: 150m
+      securityContext:
+        capabilities:
+          add:
+          - SETFCAP
+      workingDir: /
     - name: sign-and-attest-sbom
       image: image-registry.openshift-image-registry.svc:5000/pacman-ci/terminal:2.7
       env: 

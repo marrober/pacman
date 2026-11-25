@@ -113,7 +113,7 @@ spec:
           - SETFCAP
       workingDir: /
 
-    - name: getlayers
+    - name: get-layers
       script: >-
         #!/usr/bin/env bash
 

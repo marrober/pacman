@@ -63,6 +63,35 @@ spec:
         capabilities:
           add: ["SETFCAP"]
       resources: {}
+    - name: get-layers
+      script: >-
+        #!/usr/bin/env bash
+
+        set +x
+
+        var1=$(params.git-commit)
+
+        echo $var1
+
+        var1=${var1:0:7}
+
+        tag=$var1
+
+        buildah inspect  --type image --storage-driver=$(params.STORAGE_DRIVER) --root /files/buildah-containers --format '{{range .OCIv1.RootFS.DiffIDs}}{{println .}}{{end}}' docker://$(params.imagestream-url):$tag
+
+      image: image-registry.openshift-image-registry.svc:5000/pacman-ci/buildah:latest
+      resources:
+        limits:
+          memory: 500Mi
+          cpu: 500m
+        requests:
+          memory: 250Mi
+          cpu: 150m
+      securityContext:
+        capabilities:
+          add:
+          - SETFCAP
+      workingDir: /
     - name: register-global-tag
       script: >-
         #!/usr/bin/env bash
