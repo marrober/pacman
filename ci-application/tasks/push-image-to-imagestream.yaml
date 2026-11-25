@@ -77,7 +77,7 @@ spec:
 
         tag=$var1
 
-        buildah inspect  --type image --storage-driver=$(params.STORAGE_DRIVER) --root /files/buildah-containers --format '{{range .OCIv1.RootFS.DiffIDs}}{{println .}}{{end}}' docker://$(params.imagestream-url):$tag
+        buildah inspect  --type image --storage-driver=$(params.STORAGE_DRIVER) --root /files/buildah-containers --format '{{range .OCIv1.RootFS.DiffIDs}}{{println .}}{{end}}' $(params.imagestream-url):$tag
 
       image: image-registry.openshift-image-registry.svc:5000/pacman-ci/buildah:latest
       resources:
