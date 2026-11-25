@@ -112,6 +112,28 @@ spec:
           add:
           - SETFCAP
       workingDir: /
+
+    - name: get layers
+      script: >-
+        #!/usr/bin/env bash
+
+        set +x
+
+        skopeo inspect docker://localhost/my-container-image:latest | jq .Layers
+
+      image: image-registry.openshift-image-registry.svc:5000/pacman-ci/terminal:2.7
+      resources:
+        limits:
+          memory: 500Mi
+          cpu: 500m
+        requests:
+          memory: 250Mi
+          cpu: 150m
+      securityContext:
+        capabilities:
+          add:
+          - SETFCAP
+      workingDir: /
   workspaces:
     - mountPath: /files
       name: files
