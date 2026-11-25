@@ -28,7 +28,7 @@ spec:
   - name: PATH_CONTEXT
     value: $(params.GIT_REPO_NAME)/src
   - name: STORAGE_DRIVER
-    value: vfs   
+    value: overlay   
   - name: TLSVERIFY
     value: false
   - name: node_js_image_repo

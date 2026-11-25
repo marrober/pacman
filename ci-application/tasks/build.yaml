@@ -113,15 +113,15 @@ spec:
           - SETFCAP
       workingDir: /
 
-    - name: get-layers
+    - name: getlayers
       script: >-
         #!/usr/bin/env bash
 
         set +x
 
-        skopeo inspect docker://localhost/my-container-image:latest | jq .Layers
+        buildah inspect  --type image --format '{{range .OCIv1.RootFS.DiffIDs}}{{println .}}{{end}}' localhost/my-container-image:latest
 
-      image: image-registry.openshift-image-registry.svc:5000/pacman-ci/terminal:2.7
+      image: image-registry.openshift-image-registry.svc:5000/pacman-ci/buildah:latest
       resources:
         limits:
           memory: 500Mi
