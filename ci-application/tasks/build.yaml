@@ -119,7 +119,7 @@ spec:
 
         set +x
 
-        buildah inspect  --type image --format '{{range .OCIv1.RootFS.DiffIDs}}{{println .}}{{end}}' localhost/my-container-image:latest
+        buildah inspect  --type image --storage-driver=$(params.STORAGE_DRIVER) --root /files/buildah-containers --format '{{range .OCIv1.RootFS.DiffIDs}}{{println .}}{{end}}' localhost/my-container-image:latest
 
       image: image-registry.openshift-image-registry.svc:5000/pacman-ci/buildah:latest
       resources:
