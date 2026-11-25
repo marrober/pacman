@@ -47,9 +47,13 @@ spec:
 
         --tls-verify=$(params.TLSVERIFY) --root /files/buildah-containers \
 
-        localhost/my-container-image:latest \
+        localhost/my-container-image:latest --digestfile $(workspaces.files.path)/image-digest-to-image-stream \
 
         docker://$(params.imagestream-url):$tag
+
+        echo " --- image pushed ---"
+
+        cat "$(workspaces.files.path)"/image-digest-to-image-stream; echo
 
       image: image-registry.openshift-image-registry.svc:5000/pacman-ci/buildah:latest  
       securityContext:
