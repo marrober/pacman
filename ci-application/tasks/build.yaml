@@ -112,15 +112,17 @@ spec:
           add:
           - SETFCAP
       workingDir: /
-    - name: skopeo-inspect
+    - name: inspect-image-digest
       script: |
         #!/usr/bin/env bash
         set -eux
         IMAGE="localhost/my-container-image:latest"
-        # containers-storage:[driver@/graph-root]reference
-        skopeo inspect \
-          "containers-storage:[$(params.STORAGE_DRIVER)@/files/buildah-containers]${IMAGE}"
-      image: image-registry.openshift-image-registry.svc:5000/pacman-ci/terminal:2.7
+        buildah inspect \
+          --storage-driver="$(params.STORAGE_DRIVER)" \
+          --root /files/buildah-containers \
+          --format '{{.Digest}}' \
+          "${IMAGE}"
+      image: image-registry.openshift-image-registry.svc:5000/pacman-ci/buildah:latest
       resources:
         limits:
           memory: 500Mi
