@@ -105,7 +105,7 @@ spec:
         buildah images --storage-driver=$(params.STORAGE_DRIVER) --root /files/buildah-containers
 
         echo "push container image"
-        buildah push --storage-driver=$(params.STORAGE_DRIVER) --force-compression=false --authfile /etc/secret-volume/.dockerconfigjson --root /files/buildah-containers --digestfile $(workspaces.files.path)/image-digest-to-quay $(params.quay-instance-url)/$(params.quay-account)/$(params.quay-repository):$(params.imageTag)
+        buildah push --storage-driver=$(params.STORAGE_DRIVER) --blob-cache /files/buildah-blob-cache --force-compression=false --authfile /etc/secret-volume/.dockerconfigjson --root /files/buildah-containers --digestfile $(workspaces.files.path)/image-digest-to-quay $(params.quay-instance-url)/$(params.quay-account)/$(params.quay-repository):$(params.imageTag)
 
         echo " --- image pushed ---"
         cat "$(workspaces.files.path)"/image-digest-to-quay | tee $(results.IMAGE_DIGEST.path); echo

@@ -60,6 +60,15 @@ spec:
 
         cat new-dockerfile
 
+        buildah pull \
+        --storage-driver=overlay \
+        --root /files/buildah-containers \
+        --blob-cache /files/buildah-blob-cache \
+        $(params.node_js_image_repo)/$(params.node_js_image_name):$(params.node_js_image_tag)
+
+        buildah images --storage-driver=$(params.STORAGE_DRIVER) --root /files/buildah-containers        
+
+
       image: image-registry.openshift-image-registry.svc:5000/pacman-ci/buildah:latest
       resources:
         limits:
