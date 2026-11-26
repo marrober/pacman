@@ -73,7 +73,8 @@ spec:
       command:
       - buildah
       - bud
-      - --format docker
+      - --format 
+      - docker
       - --tls-verify=$(params.TLSVERIFY)
       - --storage-driver=$(params.STORAGE_DRIVER)
       - --root
