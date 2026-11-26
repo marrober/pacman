@@ -31,6 +31,18 @@ spec:
 
         set +x
 
+        echo "/etc/containers"
+
+        ls /etc/containers
+
+        cat /etc/containers/containers.conf
+
+        echo "~/.config/containers"
+
+        ls ~/.config/containers
+
+        cat ~/.config/containers/containers.conf
+
         var1=$(params.git-commit)
 
         echo $var1
