@@ -45,6 +45,8 @@ spec:
 
         buildah push --storage-driver=$(params.STORAGE_DRIVER) \
 
+        --force-compression=false \
+
         --tls-verify=$(params.TLSVERIFY) --root /files/buildah-containers \
         
         --digestfile $(workspaces.files.path)/image-digest-to-image-stream \
