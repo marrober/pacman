@@ -140,7 +140,7 @@ spec:
 
         set +x
 
-        buildah inspect  --type image --storage-driver=$(params.STORAGE_DRIVER) --root /files/buildah-containers --format '{{range .OCIv1.RootFS.DiffIDs}}{{println .}}{{end}}' docker://$(params.quay-instance-url)/$(params.quay-account)/$(params.quay-repository):$(params.imageTag)
+        buildah inspect  --type image --format '{{range .OCIv1.RootFS.DiffIDs}}{{println .}}{{end}}' docker://$(params.quay-instance-url)/$(params.quay-account)/$(params.quay-repository):$(params.imageTag)
 
       image: image-registry.openshift-image-registry.svc:5000/pacman-ci/buildah:latest
       resources:
