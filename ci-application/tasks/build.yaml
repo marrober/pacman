@@ -60,6 +60,27 @@ spec:
 
         cat new-dockerfile
 
+      image: image-registry.openshift-image-registry.svc:5000/pacman-ci/buildah:latest
+      resources:
+        limits:
+          memory: 500Mi
+          cpu: 500m
+        requests:
+          memory: 250Mi
+          cpu: 150m
+      workingDir: /resources/$(params.app-dir)
+    - name: pull-base-image
+      script: >-
+        #!/usr/bin/env bash
+
+        set +x
+
+        # NODE_IMAGE_URL=$(oc get is/$(params.node_js_image_name) -o jsonpath='{.status.publicDockerImageRepository}')
+
+         NODE_IMAGE_URL=$(params.node_js_image_repo)/$(params.node_js_image_name):$(params.node_js_image_tag)
+        
+        echo $NODE_IMAGE_URL
+
         buildah pull \
         --storage-driver=overlay \
         --root /files/buildah-containers \
@@ -67,7 +88,6 @@ spec:
         $(params.node_js_image_repo)/$(params.node_js_image_name):$(params.node_js_image_tag)
 
         buildah images --storage-driver=$(params.STORAGE_DRIVER) --root /files/buildah-containers        
-
 
       image: image-registry.openshift-image-registry.svc:5000/pacman-ci/buildah:latest
       resources:
@@ -77,6 +97,10 @@ spec:
         requests:
           memory: 250Mi
           cpu: 150m
+      securityContext:
+        capabilities:
+          add:
+          - SETFCAP
       workingDir: /resources/$(params.app-dir)
     - name: build
       command:
